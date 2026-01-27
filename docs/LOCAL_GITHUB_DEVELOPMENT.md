@@ -59,21 +59,36 @@ Keep using `.env.example` (no secrets) so others know which variables to set.
 
 ---
 
-## 7. First-time push (what we set up)
+## 7. First-time push (what is set up)
+
+Already done in this repo:
 
 1. **Init and remote**
    - `git init`
    - `git remote add origin https://github.com/CuulCat/RAG-Advanced.git`
+   - `git branch -M main`
 
 2. **First commit**
-   - `git add .` (respecting `.gitignore`)
+   - `git add -A` (respecting `.gitignore`)
    - `git commit -m "Initial commit: RAG-Advanced orchestration, API, evaluation"`
 
-3. **Branch and push**
-   - `git branch -M main`
-   - `git push -u origin main`
+**You still need to push from your machine** (Git needs your credentials):
 
-After that, normal loop: **pull → change → commit → push**.
+```bash
+cd /Users/heekyung/Documents/Github/RAG-Advanced
+git push -u origin main
+```
+
+If the repo does not exist on GitHub yet: create **CuulCat/RAG-Advanced** at https://github.com/new (no need to add a README or .gitignore). Then run the command above.
+
+Use **HTTPS** with a personal access token, or **SSH** (e.g. `git@github.com:CuulCat/RAG-Advanced.git`) if you use SSH keys. To switch to SSH:
+
+```bash
+git remote set-url origin git@github.com:CuulCat/RAG-Advanced.git
+git push -u origin main
+```
+
+After the first push, normal loop: **pull → change → commit → push**.
 
 ---
 

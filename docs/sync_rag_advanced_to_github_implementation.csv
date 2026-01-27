@@ -1,0 +1,10 @@
+folder_or_file,description,action
+/,RAG-Advanced project root,workspace
+.git/,Git metadata (created),git init
+.gitignore,Ignore env/cache/secrets (unchanged),unchanged
+docs/LOCAL_GITHUB_DEVELOPMENT.md,Local–GitHub best-practice guide,created
+docs/sync_rag_advanced_to_github_implementation.csv,This implementation summary,created
+origin remote,https://github.com/CuulCat/RAG-Advanced.git,git remote add origin
+branch,main (default),git branch -M main
+initial commit,"Initial commit: RAG-Advanced orchestration, API, evaluation",git commit
+push,User runs: git push -u origin main,manual (credentials required)
