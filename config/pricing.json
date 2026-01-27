@@ -1,0 +1,76 @@
+{
+  "pricing_history": [
+    {
+      "effective_date": "2026-01-01T00:00:00Z",
+      "currency": "USD",
+      "models": {
+        "gpt-4o": {
+          "input_per_1k": 0.0025,
+          "output_per_1k": 0.01,
+          "description": "GPT-4o (latest)"
+        },
+        "gpt-4o-mini": {
+          "input_per_1k": 0.00015,
+          "output_per_1k": 0.0006,
+          "description": "GPT-4o Mini - fast and cost-effective"
+        },
+        "gpt-4-turbo": {
+          "input_per_1k": 0.01,
+          "output_per_1k": 0.03,
+          "description": "GPT-4 Turbo"
+        },
+        "text-embedding-3-small": {
+          "input_per_1k": 0.00002,
+          "output_per_1k": 0.0,
+          "description": "Small embedding model - 1536 dimensions"
+        },
+        "text-embedding-3-large": {
+          "input_per_1k": 0.00013,
+          "output_per_1k": 0.0,
+          "description": "Large embedding model - 3072 dimensions"
+        },
+        "claude-3-5-sonnet-20241022": {
+          "input_per_1k": 0.003,
+          "output_per_1k": 0.015,
+          "description": "Claude 3.5 Sonnet"
+        },
+        "claude-3-5-haiku-20241022": {
+          "input_per_1k": 0.0008,
+          "output_per_1k": 0.004,
+          "description": "Claude 3.5 Haiku"
+        }
+      }
+    },
+    {
+      "effective_date": "2025-01-01T00:00:00Z",
+      "currency": "USD",
+      "models": {
+        "gpt-4o": {
+          "input_per_1k": 0.005,
+          "output_per_1k": 0.015,
+          "description": "GPT-4o (2025 pricing)"
+        },
+        "gpt-4o-mini": {
+          "input_per_1k": 0.00015,
+          "output_per_1k": 0.0006,
+          "description": "GPT-4o Mini"
+        },
+        "text-embedding-3-small": {
+          "input_per_1k": 0.00002,
+          "output_per_1k": 0.0,
+          "description": "Small embedding model"
+        },
+        "text-embedding-3-large": {
+          "input_per_1k": 0.00013,
+          "output_per_1k": 0.0,
+          "description": "Large embedding model"
+        }
+      }
+    }
+  ],
+  "defaults": {
+    "input_per_1k": 0.001,
+    "output_per_1k": 0.002,
+    "description": "Default pricing for unknown models"
+  }
+}

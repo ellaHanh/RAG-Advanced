@@ -1,0 +1,218 @@
+---
+description: Task Master AI execution workflow with lessons learned
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Task Master Workflow Guide
+
+## Initial Setup
+
+### 1. Configure AI Providers
+Edit `.taskmaster/config.json` to set your preferred provider:
+
+```json
+{
+  "models": {
+    "main": {
+      "provider": "openai",  // or "anthropic", "perplexity"
+      "modelId": "gpt-5.1-codex-max", //changed from "gpt-4o"
+      "maxTokens": 16000,
+      "temperature": 0.2
+    },
+    "research": {
+      "provider": "openai",  // Perplexity requires separate API key
+      "modelId": "gpt-4o-mini"
+    },
+    "fallback": {
+      "provider": "openai",
+      "modelId": "gpt-4o-mini"
+    }
+  }
+}
+```
+
+**Common Error**: "Unauthorized" or "API key not set" → Check provider matches your available API keys.
+
+### 2. Parse PRD into Tasks
+
+```bash
+npx task-master parse-prd --input .taskmaster/docs/prd.txt
+```
+
+This creates `tasks/tasks.json` with generated tasks.
+
+---
+
+## Complexity Analysis Workflow
+
+### Step 1: Analyze Complexity
+
+```bash
+npx task-master analyze-complexity --output json
+```
+
+**GOTCHA**: The `--output json` creates a file named `json` in the project root, NOT in `.taskmaster/reports/`.
+
+**Fix**: Move the output file manually:
+```bash
+mkdir -p .taskmaster/reports
+mv json .taskmaster/reports/task-complexity-report.json
+```
+
+### Step 2: View Complexity Report
+
+```bash
+npx task-master complexity-report
+```
+
+**Note**: There is NO `--threshold` option. The threshold is read from the report's metadata.
+
+### Step 3: Interpret the Report
+
+Key metrics to watch:
+- **Tasks at/below threshold**: Target 90%+ for manageable work
+- **Complexity scores**: 1-10 scale, threshold typically 5
+- **Expansion recommendations**: Which tasks need breaking down
+
+### Step 4: Expand High-Complexity Tasks
+
+```bash
+npx task-master expand --id=X --num=3
+```
+
+This creates subtasks under the parent task.
+
+**Important**: Expanding tasks does NOT reduce the parent's complexity score. To genuinely reduce complexity, you must modify the PRD to have more granular features.
+
+---
+
+## Iteration Strategy for 90% Threshold Target
+
+### If stuck at ~85-88%:
+
+1. **Identify stubborn high-complexity tasks** from complexity report
+2. **Modify the PRD** - break abstract features into concrete, atomic features
+3. **Re-parse PRD**: `npx task-master parse-prd --input .taskmaster/docs/prd.txt`
+4. **Re-analyze**: `npx task-master analyze-complexity --output json`
+5. **Check progress**: `npx task-master complexity-report`
+
+### PRD Modification Examples:
+
+**Before** (high complexity):
+```markdown
+### Feature: Sequential Chaining
+Execute strategies in sequence, passing results between steps.
+```
+
+**After** (lower complexity):
+```markdown
+### Feature: Chain State Management
+Immutable dataclass holding query, results, and metadata for chain execution.
+
+### Feature: Sequential Strategy Executor  
+Execute single strategy step using ChainState, return updated state.
+
+### Feature: Chain Fallback Handler
+Handle individual step failures with configurable fallback behavior.
+```
+
+---
+
+## Task Execution Workflow
+
+### 1. Get Next Task
+```bash
+npx task-master next
+```
+
+Returns the next dependency-resolved, executable task.
+
+### 2. View Task Details
+```bash
+npx task-master show --id=X
+```
+
+### 3. List All Tasks
+```bash
+npx task-master list
+```
+
+**GOTCHA**: `--with-subtasks` summary shows "0/0" even when subtasks exist. This is misleading - check `tasks.json` directly to verify subtasks.
+
+### 4. Complete Task
+```bash
+npx task-master complete --id=X
+```
+
+### 5. Generate Task Files
+```bash
+npx task-master generate
+```
+
+Creates individual task files in `tasks/` directory.
+
+---
+
+## Critical Commands Reference
+
+| Command | Purpose |
+|---------|---------|
+| `parse-prd --input FILE` | Generate tasks from PRD |
+| `analyze-complexity --output json` | Create complexity report |
+| `complexity-report` | View complexity summary |
+| `expand --id=X --num=N` | Break task into N subtasks |
+| `next` | Get next executable task |
+| `list` | Show all tasks |
+| `show --id=X` | Show task details |
+| `complete --id=X` | Mark task done |
+| `generate` | Create task files |
+
+---
+
+## Common Pitfalls & Solutions
+
+### 1. "No complexity report found"
+**Cause**: `analyze-complexity` output file not in expected location.
+**Fix**: `mv json .taskmaster/reports/task-complexity-report.json`
+
+### 2. API Authorization Errors
+**Cause**: Config uses provider without API key set.
+**Fix**: Update `.taskmaster/config.json` to use available provider.
+
+### 3. High-complexity tasks won't reduce after expand
+**Cause**: Parent task inherent complexity unchanged.
+**Fix**: Modify PRD to have more atomic features, then re-parse.
+
+### 4. Subtask count shows 0/0
+**Cause**: Known display issue with `list --with-subtasks`.
+**Fix**: Read `tasks/tasks.json` directly to verify subtasks exist.
+
+### 5. Tasks missing bootstrap/scaffolding code
+**Cause**: PRD focused on features, not deployment glue.
+**Fix**: Add "Application Bootstrap & Developer Experience" capability to PRD (see `prd_completeness.mdc` rule).
+
+---
+
+## File Locations
+
+| File | Purpose |
+|------|---------|
+| `.taskmaster/config.json` | AI provider configuration |
+| `.taskmaster/docs/prd.txt` | Product requirements document |
+| `.taskmaster/tasks/tasks.json` | Generated task hierarchy |
+| `.taskmaster/reports/task-complexity-report.json` | Complexity analysis |
+| `tasks/[id]/*` | Individual task files (after generate) |
+
+---
+
+## Workflow Summary
+
+```
+1. Configure providers → config.json
+2. Write/refine PRD → prd.txt
+3. Parse PRD → tasks.json
+4. Analyze complexity → complexity report
+5. Iterate (expand or modify PRD) until 90% under threshold
+6. Execute tasks in order (next → implement → complete → repeat)
+```

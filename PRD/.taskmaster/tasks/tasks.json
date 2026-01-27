@@ -1,0 +1,766 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": "21",
+        "title": "Setup Project Repository",
+        "description": "Initialize the project repository with the necessary structure and configuration files.",
+        "details": "Create a Git repository and set up the initial directory structure as outlined in the PRD. Include a README.md and a .gitignore file. Initialize a Python virtual environment and install initial dependencies such as FastAPI and Pydantic.",
+        "testStrategy": "Verify the repository structure matches the PRD. Ensure all initial dependencies are installed without errors.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 3,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T16:55:04.922Z"
+      },
+      {
+        "id": "22",
+        "title": "Implement Strategy Registry",
+        "description": "Develop a central registry for type-safe strategy lookup and metadata.",
+        "details": "Create a decorator-based registration system for strategies. Implement validation to ensure strategies conform to expected interfaces. Provide a method to list all registered strategies with their metadata.",
+        "testStrategy": "Write unit tests to register, list, and validate strategies. Ensure duplicate registrations are handled gracefully.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on implement strategy registry.",
+        "updatedAt": "2026-01-22T19:01:45.192Z"
+      },
+      {
+        "id": "23",
+        "title": "Develop Cost Tracking Module",
+        "description": "Create a module to calculate and aggregate API costs using versioned pricing.",
+        "details": "Load pricing data from a JSON configuration file. Implement functions to calculate costs based on input and output tokens, supporting historical pricing. Provide a fallback to default pricing if necessary.",
+        "testStrategy": "Test cost calculations with various token counts and pricing configurations. Validate historical pricing support.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop cost tracking module.",
+        "updatedAt": "2026-01-22T20:06:46.416Z"
+      },
+      {
+        "id": "24",
+        "title": "Build Single Strategy Execution",
+        "description": "Implement the execution of a single RAG strategy with configuration and metrics tracking.",
+        "details": "Develop a function to execute a strategy based on its name and configuration. Track execution metrics such as cost, latency, and token counts. Integrate with the strategy registry and cost tracking modules.",
+        "testStrategy": "Mock strategy executions and verify that metrics are accurately tracked and returned.",
+        "priority": "medium",
+        "dependencies": [
+          "22",
+          "23"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Execution Logic",
+            "description": "Create a detailed design for executing a RAG strategy.",
+            "dependencies": [],
+            "details": "Outline the steps and components needed to execute a strategy based on its configuration. Define interfaces and data flow.",
+            "status": "pending",
+            "testStrategy": "Review design with stakeholders and validate against requirements.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement Metrics Tracking",
+            "description": "Develop functionality to track execution metrics.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement tracking for cost, latency, and token counts. Ensure metrics are collected and stored efficiently.",
+            "status": "pending",
+            "testStrategy": "Simulate executions and verify metrics are recorded accurately.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 3,
+            "title": "Integrate with Strategy Registry",
+            "description": "Connect the execution logic with the strategy registry.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure the execution function can retrieve strategies from the registry. Handle errors and validate strategy data.",
+            "status": "pending",
+            "testStrategy": "Test integration with mock registry data to ensure correct strategy retrieval.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 4,
+            "title": "Test Execution and Metrics",
+            "description": "Test the execution logic and metrics tracking.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Develop tests to ensure the execution function works as expected and metrics are tracked correctly. Use mock data for testing.",
+            "status": "pending",
+            "testStrategy": "Use unit and integration tests to validate execution and metrics accuracy.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 7,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T21:02:22.717Z"
+      },
+      {
+        "id": "25",
+        "title": "Create Chain State Management",
+        "description": "Manage immutable ChainContext that passes between strategy steps.",
+        "details": "Implement a frozen dataclass for ChainContext. Include methods for functional updates using with_* methods to maintain immutability.",
+        "testStrategy": "Test the immutability of ChainContext and the correctness of functional updates.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create chain state management.",
+        "updatedAt": "2026-01-22T20:32:12.823Z"
+      },
+      {
+        "id": "26",
+        "title": "Implement Sequential Strategy Executor",
+        "description": "Develop functionality to execute strategies sequentially in a chain.",
+        "details": "Create a function to iterate through a list of strategies, executing each in sequence and updating the ChainContext. Ensure each step's results are appended to the context.",
+        "testStrategy": "Test sequential execution with mock strategies, verifying context updates at each step.",
+        "priority": "medium",
+        "dependencies": [
+          "24",
+          "25"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Strategy Execution Flow",
+            "description": "Outline the flow for executing strategies in sequence.",
+            "dependencies": [],
+            "details": "Create a flowchart or diagram to visualize the sequential execution of strategies, ensuring each step updates the ChainContext appropriately.",
+            "status": "pending",
+            "testStrategy": null,
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement Strategy Execution Logic",
+            "description": "Develop the core logic to execute strategies sequentially.",
+            "dependencies": [
+              1
+            ],
+            "details": "Write a function that iterates through a list of strategies, executing each one in order and updating the ChainContext with the results of each step.",
+            "status": "pending",
+            "testStrategy": "Use mock strategies to verify that each step updates the context correctly.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 3,
+            "title": "Test Sequential Execution",
+            "description": "Verify the sequential execution of strategies and context updates.",
+            "dependencies": [
+              2
+            ],
+            "details": "Develop tests to ensure that strategies are executed in the correct order and that the ChainContext is updated accurately after each execution.",
+            "status": "pending",
+            "testStrategy": "Implement unit tests with mock strategies to validate the execution order and context updates.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 6,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T21:12:46.812Z"
+      },
+      {
+        "id": "27",
+        "title": "Add Chain Fallback Handler",
+        "description": "Handle failures during chain execution with graceful fallback mechanisms.",
+        "details": "Implement error handling to log failures and attempt fallback strategies if configured. Use exception chaining to provide detailed error context.",
+        "testStrategy": "Simulate failures and test fallback execution paths. Verify error logging and exception chaining.",
+        "priority": "medium",
+        "dependencies": [
+          "26"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Fallback Mechanism",
+            "description": "Create a detailed design for the fallback mechanism to handle chain execution failures.",
+            "dependencies": [],
+            "details": "Outline the fallback strategies and error handling flow. Consider different failure scenarios and how the system should respond.",
+            "status": "pending",
+            "testStrategy": "Review design with stakeholders and validate against requirements.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement Error Handling and Fallback Logic",
+            "description": "Develop the error handling and fallback logic for chain execution.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement logging of failures and configure fallback strategies. Use exception chaining to provide detailed error context.",
+            "status": "pending",
+            "testStrategy": "Simulate various failure scenarios and verify that fallback logic executes correctly.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 3,
+            "title": "Test Fallback Scenarios",
+            "description": "Test the implemented fallback mechanisms to ensure reliability and correctness.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create test cases to simulate failures and verify that the fallback mechanisms work as intended. Ensure error logging and exception chaining are functioning.",
+            "status": "pending",
+            "testStrategy": "Run automated tests and perform manual testing to cover edge cases.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 6,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T21:14:27.223Z"
+      },
+      {
+        "id": "28",
+        "title": "Develop Parallel Execution Engine",
+        "description": "Run multiple strategies concurrently using asyncio.gather.",
+        "details": "Implement a function to execute strategies concurrently. Use asyncio.gather to manage parallel execution and handle exceptions.",
+        "testStrategy": "Test concurrent execution with mock strategies, ensuring results and errors are correctly handled.",
+        "priority": "medium",
+        "dependencies": [
+          "24"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Strategy Execution Function",
+            "description": "Develop a function to execute multiple strategies concurrently using asyncio.gather.",
+            "dependencies": [],
+            "details": "Create a function that accepts a list of strategy functions and uses asyncio.gather to run them concurrently. Ensure that the function can handle exceptions gracefully and return results or errors appropriately.",
+            "status": "pending",
+            "testStrategy": "Test with mock strategies to ensure concurrent execution and error handling.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Integrate Exception Handling in Parallel Execution",
+            "description": "Enhance the parallel execution engine to manage exceptions effectively during strategy execution.",
+            "dependencies": [
+              1
+            ],
+            "details": "Modify the execution function to include robust exception handling. Use try-except blocks to capture and log exceptions without stopping the execution of other strategies. Ensure that exceptions are returned in a structured format.",
+            "status": "pending",
+            "testStrategy": "Test with strategies designed to fail, ensuring exceptions are logged and handled without affecting other executions.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop parallel execution engine.",
+        "updatedAt": "2026-01-22T21:04:06.670Z"
+      },
+      {
+        "id": "29",
+        "title": "Implement Resource Semaphore Manager",
+        "description": "Limit concurrent access to shared resources using semaphores.",
+        "details": "Use asyncio.Semaphore to manage resource limits for database and API connections. Implement cleanup using AsyncExitStack.",
+        "testStrategy": "Test resource limiting with mock strategies, ensuring semaphores are respected.",
+        "priority": "medium",
+        "dependencies": [
+          "28"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T21:06:14.823Z"
+      },
+      {
+        "id": "30",
+        "title": "Create Comparison Result Aggregator",
+        "description": "Aggregate results from parallel execution for comparison.",
+        "details": "Develop functionality to aggregate execution results, calculate relative metrics, and rank strategies by latency, cost, and accuracy.",
+        "testStrategy": "Test aggregation logic with varied results, verifying correct metric calculations and rankings.",
+        "priority": "medium",
+        "dependencies": [
+          "28"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create comparison result aggregator.",
+        "updatedAt": "2026-01-22T21:08:10.252Z"
+      },
+      {
+        "id": "31",
+        "title": "Add Timeout and Partial Failure Handler",
+        "description": "Handle timeouts and partial failures in parallel execution.",
+        "details": "Implement logic to separate successful results from failures, log timeouts, and continue processing with available results.",
+        "testStrategy": "Simulate timeouts and failures, verifying correct handling and logging.",
+        "priority": "medium",
+        "dependencies": [
+          "28"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on add timeout and partial failure handler.",
+        "updatedAt": "2026-01-22T21:08:41.905Z"
+      },
+      {
+        "id": "32",
+        "title": "Implement IR Metrics Calculation",
+        "description": "Calculate IR metrics such as Precision@k, Recall@k, MRR, and NDCG@k.",
+        "details": "Use the ir-measures library to calculate metrics. Implement comprehensive validation and edge case handling.",
+        "testStrategy": "Test metric calculations with various input scenarios, including edge cases.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Precision@k and Recall@k Calculation",
+            "description": "Develop functions to calculate Precision@k and Recall@k using the ir-measures library.",
+            "dependencies": [],
+            "details": "Use the ir-measures library to implement functions for calculating Precision@k and Recall@k. Ensure the functions handle various input sizes and edge cases.",
+            "status": "pending",
+            "testStrategy": "Test with different k values and edge cases.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement MRR and NDCG@k Calculation",
+            "description": "Create functions to calculate MRR and NDCG@k using the ir-measures library.",
+            "dependencies": [
+              1
+            ],
+            "details": "Utilize the ir-measures library to implement functions for MRR and NDCG@k. Include validation for input data and handle edge cases effectively.",
+            "status": "pending",
+            "testStrategy": "Test with diverse datasets and edge cases to ensure accuracy.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on implement ir metrics calculation.",
+        "updatedAt": "2026-01-22T20:34:44.726Z"
+      },
+      {
+        "id": "33",
+        "title": "Develop Benchmark Runner",
+        "description": "Run multiple queries across strategies for statistical analysis.",
+        "details": "Implement a runner to execute benchmarks with multiple iterations for stability. Provide statistical summaries and strategy rankings.",
+        "testStrategy": "Test benchmark execution with mock data, verifying statistical accuracy.",
+        "priority": "medium",
+        "dependencies": [
+          "32"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Benchmark Framework",
+            "description": "Create a framework to support benchmark execution and analysis.",
+            "dependencies": [],
+            "details": "Outline the architecture for the benchmark runner, including modules for execution, data collection, and analysis. Define interfaces for strategy integration.",
+            "status": "pending",
+            "testStrategy": "Review design with stakeholders and validate against requirements.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement Execution Logic",
+            "description": "Develop the logic to execute benchmarks with multiple iterations.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement the core execution engine using asyncio for parallel execution. Ensure it can handle multiple strategies and iterations for stability.",
+            "status": "pending",
+            "testStrategy": "Test execution with mock strategies to ensure correct iteration and concurrency handling.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 3,
+            "title": "Develop Statistical Analysis",
+            "description": "Create modules to analyze benchmark results and provide statistical summaries.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Implement functions to calculate statistical metrics such as mean, median, and standard deviation. Rank strategies based on performance metrics.",
+            "status": "pending",
+            "testStrategy": "Use sample data to verify statistical calculations and rankings.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 7,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T20:37:40.369Z"
+      },
+      {
+        "id": "34",
+        "title": "Create Ground Truth Management",
+        "description": "Load, validate, and manage test datasets with ground truth.",
+        "details": "Implement functionality to load datasets, validate schema, and support train/test splits. Use LLM-assisted generation for ground truth.",
+        "testStrategy": "Test dataset loading and validation with sample data. Verify train/test split functionality.",
+        "priority": "medium",
+        "dependencies": [
+          "32"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Load and Validate Datasets",
+            "description": "Implement functionality to load datasets and validate their schema.",
+            "dependencies": [],
+            "details": "Develop a module to load datasets from various sources and validate their schema against predefined standards.",
+            "status": "pending",
+            "testStrategy": "Test with sample datasets to ensure correct loading and schema validation.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Implement Train/Test Split Support",
+            "description": "Add support for splitting datasets into training and testing sets.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create functions to split datasets into train and test sets based on configurable ratios.",
+            "status": "pending",
+            "testStrategy": "Verify the split functionality with different dataset sizes and configurations.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 3,
+            "title": "Integrate LLM-Assisted Ground Truth Generation",
+            "description": "Use LLMs to assist in generating ground truth data for datasets.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Integrate LLMs to enhance ground truth data generation, ensuring compatibility with existing data structures.",
+            "status": "pending",
+            "testStrategy": "Test LLM integration by generating ground truth for sample datasets and validating output accuracy.",
+            "parentId": "undefined"
+          }
+        ],
+        "complexity": 6,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T20:41:07.187Z"
+      },
+      {
+        "id": "35",
+        "title": "Generate Markdown Report",
+        "description": "Create markdown-formatted evaluation reports.",
+        "details": "Develop a report generator to produce markdown reports with metrics tables, strategy rankings, and cost breakdowns.",
+        "testStrategy": "Test report generation with sample data, verifying formatting and content accuracy.",
+        "priority": "medium",
+        "dependencies": [
+          "33"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on generate markdown report.",
+        "updatedAt": "2026-01-22T20:43:19.734Z"
+      },
+      {
+        "id": "36",
+        "title": "Create HTML Report Generator",
+        "description": "Generate styled HTML evaluation reports with interactive elements.",
+        "details": "Implement HTML report generation with CSS styling and placeholders for visual charts. Ensure reports are interactive and visually appealing.",
+        "testStrategy": "Test HTML generation and styling, ensuring reports are correctly formatted and interactive.",
+        "priority": "medium",
+        "dependencies": [
+          "35"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create html report generator.",
+        "updatedAt": "2026-01-22T20:46:15.738Z"
+      },
+      {
+        "id": "37",
+        "title": "Develop JSON Report Exporter",
+        "description": "Export evaluation data as structured JSON.",
+        "details": "Implement functionality to serialize evaluation data into JSON format, including all metrics and configuration details.",
+        "testStrategy": "Test JSON serialization and deserialization, ensuring data integrity.",
+        "priority": "medium",
+        "dependencies": [
+          "35"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop json report exporter.",
+        "updatedAt": "2026-01-22T20:46:56.589Z"
+      },
+      {
+        "id": "38",
+        "title": "Setup API Key Hash Verification",
+        "description": "Verify API keys using SHA256 hash against a database.",
+        "details": "Implement API key verification by hashing the key and checking against stored hashes. Ensure keys are active and not expired.",
+        "testStrategy": "Test key verification with valid, invalid, and expired keys.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on setup api key hash verification.",
+        "updatedAt": "2026-01-22T20:48:59.411Z"
+      },
+      {
+        "id": "39",
+        "title": "Implement Atomic Key Usage Update",
+        "description": "Update API key usage timestamp atomically during verification.",
+        "details": "Use a single UPDATE...RETURNING query to update the last_used_at timestamp, preventing race conditions.",
+        "testStrategy": "Test concurrent key verification, ensuring timestamps are updated correctly.",
+        "priority": "medium",
+        "dependencies": [
+          "38"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T20:49:56.275Z"
+      },
+      {
+        "id": "40",
+        "title": "Develop Redis Sliding Window Counter",
+        "description": "Implement sliding window rate limiting with Redis sorted sets.",
+        "details": "Use Redis ZADD, ZREMRANGEBYSCORE, and ZCARD operations to implement rate limiting. Clean up old entries and calculate current request counts.",
+        "testStrategy": "Test rate limiting behavior with mock Redis, verifying correct request counting and cleanup.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop redis sliding window counter.",
+        "updatedAt": "2026-01-22T20:51:53.680Z"
+      },
+      {
+        "id": "41",
+        "title": "Create Rate Limit Result Calculator",
+        "description": "Calculate rate limit status from Redis counter data.",
+        "details": "Implement logic to determine if requests are allowed based on current count, max limit, and window reset time.",
+        "testStrategy": "Test rate limit calculations with various scenarios, ensuring correct results.",
+        "priority": "medium",
+        "dependencies": [
+          "40"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create rate limit result calculator.",
+        "updatedAt": "2026-01-22T20:53:36.657Z"
+      },
+      {
+        "id": "42",
+        "title": "Add Rate Limiter Fail-Open Handler",
+        "description": "Handle Redis failures gracefully in rate limiting.",
+        "details": "Implement a fail-open strategy that logs errors and allows requests if Redis is unavailable.",
+        "testStrategy": "Simulate Redis failures and verify fail-open behavior.",
+        "priority": "medium",
+        "dependencies": [
+          "40"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on add rate limiter fail-open handler.",
+        "updatedAt": "2026-01-22T20:53:47.435Z"
+      },
+      {
+        "id": "43",
+        "title": "Develop Strategy Endpoints",
+        "description": "Create REST endpoints for strategy execution, chaining, and comparison.",
+        "details": "Implement FastAPI endpoints for executing, chaining, and comparing strategies. Use Pydantic for request validation and provide OpenAPI documentation.",
+        "testStrategy": "Test endpoints with various requests, verifying correct execution and response formatting.",
+        "priority": "medium",
+        "dependencies": [
+          "24",
+          "26",
+          "28",
+          "38"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop strategy endpoints.",
+        "updatedAt": "2026-01-22T21:20:24.745Z"
+      },
+      {
+        "id": "44",
+        "title": "Create Metrics Calculation Endpoint",
+        "description": "Develop a POST endpoint for calculating IR metrics.",
+        "details": "Implement an endpoint that accepts retrieved and ground truth IDs, calculates metrics, and returns results in JSON format.",
+        "testStrategy": "Test endpoint with sample data, verifying metric calculations and response structure.",
+        "priority": "medium",
+        "dependencies": [
+          "32",
+          "38"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create metrics calculation endpoint.",
+        "updatedAt": "2026-01-22T21:16:26.545Z"
+      },
+      {
+        "id": "45",
+        "title": "Add Batch Metrics Endpoint",
+        "description": "Develop a POST endpoint for evaluating multiple queries at once.",
+        "details": "Implement functionality to process multiple queries in a single request, aggregate results, and return summary statistics.",
+        "testStrategy": "Test batch processing with sample data, ensuring correct aggregation and response.",
+        "priority": "medium",
+        "dependencies": [
+          "44"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on add batch metrics endpoint.",
+        "updatedAt": "2026-01-22T21:16:58.019Z"
+      },
+      {
+        "id": "46",
+        "title": "Create Async Benchmark Trigger Endpoint",
+        "description": "Develop a POST endpoint to start long-running benchmarks asynchronously.",
+        "details": "Implement an endpoint to queue benchmark tasks and return a benchmark ID for status polling. Ensure immediate response after queuing.",
+        "testStrategy": "Test task queuing and immediate response, verifying benchmark execution.",
+        "priority": "medium",
+        "dependencies": [
+          "33",
+          "38"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create async benchmark trigger endpoint.",
+        "updatedAt": "2026-01-22T21:18:37.713Z"
+      },
+      {
+        "id": "47",
+        "title": "Develop Benchmark Status Endpoint",
+        "description": "Create a GET endpoint to check benchmark progress and results.",
+        "details": "Implement functionality to query benchmark status and return progress or results if complete. Support pending, running, and complete states.",
+        "testStrategy": "Test status checking with various benchmark states, ensuring correct progress reporting.",
+        "priority": "medium",
+        "dependencies": [
+          "46"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on develop benchmark status endpoint.",
+        "updatedAt": "2026-01-22T21:18:48.753Z"
+      },
+      {
+        "id": "48",
+        "title": "Setup Embedding Cache Core",
+        "description": "Implement LRU cache storage for embedding vectors.",
+        "details": "Develop a thread-safe LRU cache for storing embedding vectors. Use SHA256 hashes as keys and implement eviction policies.",
+        "testStrategy": "Test cache operations, including insertion, eviction, and concurrent access.",
+        "priority": "medium",
+        "dependencies": [
+          "21"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on setup embedding cache core.",
+        "updatedAt": "2026-01-22T20:55:59.329Z"
+      },
+      {
+        "id": "49",
+        "title": "Create Embedding Cache Key Generator",
+        "description": "Generate deterministic cache keys for embeddings using SHA256.",
+        "details": "Implement a function to generate cache keys by hashing text and model names. Ensure keys are unique and collision-resistant.",
+        "testStrategy": "Test key generation with various inputs, verifying uniqueness and consistency.",
+        "priority": "medium",
+        "dependencies": [
+          "48"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 3,
+        "expansionPrompt": "Break down this task with a focus on create embedding cache key generator.",
+        "updatedAt": "2026-01-22T20:56:56.417Z"
+      },
+      {
+        "id": "50",
+        "title": "Develop Query Result TTL Cache",
+        "description": "Implement a time-based cache for strategy execution results.",
+        "details": "Create a TTL cache for storing execution results. Configure per-strategy TTLs and ensure automatic expiration of old entries.",
+        "testStrategy": "Test TTL expiration and cache behavior with different strategies.",
+        "priority": "medium",
+        "dependencies": [
+          "48"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 0,
+        "expansionPrompt": "No expansion needed for this task.",
+        "updatedAt": "2026-01-22T20:58:50.978Z"
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-01-22T21:20:24.745Z",
+      "taskCount": 30,
+      "completedCount": 30,
+      "tags": [
+        "master"
+      ]
+    }
+  }
+}

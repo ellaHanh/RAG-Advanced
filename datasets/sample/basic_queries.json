@@ -1,0 +1,213 @@
+{
+  "metadata": {
+    "name": "basic_queries",
+    "description": "Sample dataset with basic factual queries for testing evaluation",
+    "created_at": "2026-01-22T00:00:00Z",
+    "version": "1.0",
+    "author": "RAG-Advanced Team"
+  },
+  "queries": [
+    {
+      "query_id": "q1",
+      "query": "What is machine learning?",
+      "relevant_doc_ids": ["doc_ml_intro", "doc_ml_basics"],
+      "relevance_scores": {
+        "doc_ml_intro": 2,
+        "doc_ml_basics": 1
+      },
+      "category": "definition"
+    },
+    {
+      "query_id": "q2",
+      "query": "How does retrieval-augmented generation work?",
+      "relevant_doc_ids": ["doc_rag_overview", "doc_rag_architecture"],
+      "relevance_scores": {
+        "doc_rag_overview": 2,
+        "doc_rag_architecture": 2
+      },
+      "category": "explanation"
+    },
+    {
+      "query_id": "q3",
+      "query": "What are the benefits of vector databases?",
+      "relevant_doc_ids": ["doc_vector_db", "doc_semantic_search"],
+      "relevance_scores": {
+        "doc_vector_db": 2,
+        "doc_semantic_search": 1
+      },
+      "category": "benefits"
+    },
+    {
+      "query_id": "q4",
+      "query": "Explain the difference between precision and recall",
+      "relevant_doc_ids": ["doc_ir_metrics", "doc_evaluation"],
+      "relevance_scores": {
+        "doc_ir_metrics": 2,
+        "doc_evaluation": 1
+      },
+      "category": "comparison"
+    },
+    {
+      "query_id": "q5",
+      "query": "What is semantic search?",
+      "relevant_doc_ids": ["doc_semantic_search", "doc_embeddings"],
+      "relevance_scores": {
+        "doc_semantic_search": 2,
+        "doc_embeddings": 1
+      },
+      "category": "definition"
+    },
+    {
+      "query_id": "q6",
+      "query": "How do transformers process text?",
+      "relevant_doc_ids": ["doc_transformers", "doc_attention"],
+      "relevance_scores": {
+        "doc_transformers": 2,
+        "doc_attention": 2
+      },
+      "category": "explanation"
+    },
+    {
+      "query_id": "q7",
+      "query": "What is the reranking strategy in RAG?",
+      "relevant_doc_ids": ["doc_reranking", "doc_cross_encoder"],
+      "relevance_scores": {
+        "doc_reranking": 2,
+        "doc_cross_encoder": 1
+      },
+      "category": "strategy"
+    },
+    {
+      "query_id": "q8",
+      "query": "Explain query expansion techniques",
+      "relevant_doc_ids": ["doc_query_expansion", "doc_multi_query"],
+      "relevance_scores": {
+        "doc_query_expansion": 2,
+        "doc_multi_query": 2
+      },
+      "category": "technique"
+    },
+    {
+      "query_id": "q9",
+      "query": "What is contextual retrieval?",
+      "relevant_doc_ids": ["doc_contextual_retrieval", "doc_anthropic_cr"],
+      "relevance_scores": {
+        "doc_contextual_retrieval": 2,
+        "doc_anthropic_cr": 2
+      },
+      "category": "strategy"
+    },
+    {
+      "query_id": "q10",
+      "query": "How to measure RAG system performance?",
+      "relevant_doc_ids": ["doc_evaluation", "doc_ir_metrics", "doc_benchmarking"],
+      "relevance_scores": {
+        "doc_evaluation": 2,
+        "doc_ir_metrics": 2,
+        "doc_benchmarking": 1
+      },
+      "category": "evaluation"
+    },
+    {
+      "query_id": "q11",
+      "query": "What is NDCG metric?",
+      "relevant_doc_ids": ["doc_ndcg", "doc_ir_metrics"],
+      "relevance_scores": {
+        "doc_ndcg": 2,
+        "doc_ir_metrics": 1
+      },
+      "category": "metric"
+    },
+    {
+      "query_id": "q12",
+      "query": "Explain embedding models",
+      "relevant_doc_ids": ["doc_embeddings", "doc_openai_embeddings"],
+      "relevance_scores": {
+        "doc_embeddings": 2,
+        "doc_openai_embeddings": 1
+      },
+      "category": "explanation"
+    },
+    {
+      "query_id": "q13",
+      "query": "What is chunking in document processing?",
+      "relevant_doc_ids": ["doc_chunking", "doc_ingestion"],
+      "relevance_scores": {
+        "doc_chunking": 2,
+        "doc_ingestion": 1
+      },
+      "category": "process"
+    },
+    {
+      "query_id": "q14",
+      "query": "How to optimize RAG for cost efficiency?",
+      "relevant_doc_ids": ["doc_cost_optimization", "doc_caching"],
+      "relevance_scores": {
+        "doc_cost_optimization": 2,
+        "doc_caching": 1
+      },
+      "category": "optimization"
+    },
+    {
+      "query_id": "q15",
+      "query": "What is self-reflective RAG?",
+      "relevant_doc_ids": ["doc_self_reflective", "doc_advanced_rag"],
+      "relevance_scores": {
+        "doc_self_reflective": 2,
+        "doc_advanced_rag": 1
+      },
+      "category": "strategy"
+    },
+    {
+      "query_id": "q16",
+      "query": "Explain agentic RAG patterns",
+      "relevant_doc_ids": ["doc_agentic_rag", "doc_tool_use"],
+      "relevance_scores": {
+        "doc_agentic_rag": 2,
+        "doc_tool_use": 1
+      },
+      "category": "pattern"
+    },
+    {
+      "query_id": "q17",
+      "query": "What is pgvector?",
+      "relevant_doc_ids": ["doc_pgvector", "doc_vector_db"],
+      "relevance_scores": {
+        "doc_pgvector": 2,
+        "doc_vector_db": 1
+      },
+      "category": "technology"
+    },
+    {
+      "query_id": "q18",
+      "query": "How does cross-encoder reranking work?",
+      "relevant_doc_ids": ["doc_cross_encoder", "doc_reranking"],
+      "relevance_scores": {
+        "doc_cross_encoder": 2,
+        "doc_reranking": 1
+      },
+      "category": "technique"
+    },
+    {
+      "query_id": "q19",
+      "query": "What is MRR in information retrieval?",
+      "relevant_doc_ids": ["doc_mrr", "doc_ir_metrics"],
+      "relevance_scores": {
+        "doc_mrr": 2,
+        "doc_ir_metrics": 1
+      },
+      "category": "metric"
+    },
+    {
+      "query_id": "q20",
+      "query": "Explain document ingestion pipeline",
+      "relevant_doc_ids": ["doc_ingestion", "doc_chunking", "doc_embeddings"],
+      "relevance_scores": {
+        "doc_ingestion": 2,
+        "doc_chunking": 1,
+        "doc_embeddings": 1
+      },
+      "category": "process"
+    }
+  ]
+}
