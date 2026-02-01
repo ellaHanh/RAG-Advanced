@@ -71,6 +71,8 @@ from orchestration.errors import (
     StrategyExecutionError,
     StrategyNotFoundError,
 )
+from strategies.agents import register_all_strategies
+from strategies.utils.embedder import embed_query as embed_query_fn
 
 
 # =============================================================================
@@ -166,14 +168,29 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"Failed to configure rate limiter: {e}")
 
-    # Initialize API key auth (if database is configured)
+    # Initialize database pool (if DATABASE_URL is set)
     database_url = os.getenv("DATABASE_URL")
     if database_url:
         try:
-            app_state.api_key_auth = ApiKeyAuth(db_pool=None)  # Will use pool when available
-            logger.info("API key auth configured")
+            import asyncpg
+            app_state.db_pool = await asyncpg.create_pool(
+                database_url,
+                min_size=int(os.getenv("DATABASE_MIN_CONNECTIONS", "2")),
+                max_size=int(os.getenv("DATABASE_MAX_CONNECTIONS", "10")),
+                command_timeout=int(os.getenv("DATABASE_COMMAND_TIMEOUT", "60")),
+            )
+            logger.info("Database pool initialized")
+            app_state.api_key_auth = ApiKeyAuth(db_pool=app_state.db_pool)
+            logger.info("API key auth configured with database")
         except Exception as e:
-            logger.warning(f"Failed to configure API key auth: {e}")
+            logger.warning(f"Failed to initialize database pool: {e}")
+            app_state.db_pool = None
+            app_state.api_key_auth = ApiKeyAuth(db_pool=None)
+    else:
+        app_state.api_key_auth = ApiKeyAuth(db_pool=None)
+
+    # Always register strategies (they will error clearly if DB not configured)
+    register_all_strategies(app_state.db_pool, embed_query_fn)
 
     logger.info("RAG-Advanced API started successfully")
 
@@ -350,7 +367,7 @@ async def health_check() -> HealthResponse:
     # Check database
     if app_state.db_pool:
         try:
-            # Simple connection check would go here
+            await app_state.db_pool.fetchval("SELECT 1")
             components["database"] = "healthy"
         except Exception:
             components["database"] = "unhealthy"
@@ -464,7 +481,7 @@ async def compare_strategies(request: CompareRequest) -> CompareResponse:
 )
 async def calculate_metrics(request: MetricsRequest) -> MetricsResponse:
     """Calculate IR metrics for a query."""
-    return await calculate_metrics_endpoint(request)
+    return calculate_metrics_endpoint(request)
 
 
 @app.post(
@@ -476,7 +493,7 @@ async def calculate_metrics(request: MetricsRequest) -> MetricsResponse:
 )
 async def calculate_batch_metrics(request: BatchMetricsRequest) -> BatchMetricsResponse:
     """Calculate batch IR metrics."""
-    return await calculate_batch_metrics_endpoint(request)
+    return calculate_batch_metrics_endpoint(request)
 
 
 # =============================================================================

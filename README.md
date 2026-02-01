@@ -86,9 +86,9 @@ flowchart TB
     DSETS["Datasets\n(`datasets/*`)"]
   end
 
-  subgraph INGEST["Ingestion (WIP)"]
-    DOCS["Documents\n(PDF/MD/HTML/etc.)"]
-    CHUNK["Chunking + Embedding\n(TBD)"]
+  subgraph INGEST["Ingestion\n(`strategies/ingestion/`)"]
+    DOCS["Documents\n(PDF/MD/DOCX/audio)"]
+    CHUNK["Chunking + Embedding\n(`python -m strategies.ingestion.ingest`)"]
   end
 
   %% ------------------------- Ingestion path -------------------------
@@ -155,35 +155,60 @@ cp .env.example .env
 
 ### 3. Setup Database
 
-```bash
-# Run base schema
-psql $DATABASE_URL < strategies/utils/schema.sql
+**Option A — Using Docker Compose (recommended)**  
+If you will run `docker-compose up -d` in step 4, Postgres applies the schema automatically on first start. You can **skip step 3**.
 
-# Run evaluation extensions
-psql $DATABASE_URL < evaluation/schema_extension.sql
-```
+**Option B — Using an existing Postgres**  
+Apply the schema once so the database has the required tables and extensions (pgvector, uuid-ossp, documents, chunks, api_keys, etc.):
+
+- **If you have `psql` installed:**
+  ```bash
+  psql $DATABASE_URL < strategies/utils/schema.sql
+  psql $DATABASE_URL < evaluation/schema_extension.sql
+  ```
+- **If `psql` is not installed** (e.g. `command not found: psql`), use the Python script (no extra tools needed):
+  ```bash
+  python scripts/run_schema.py
+  ```
+  This reads `DATABASE_URL` from your `.env` and runs both schema files. Requires the project venv and dependencies (`pip install -e .`).
 
 ### 4. Start Services
 
 ```bash
-# Using Docker Compose (recommended)
+# Using Docker Compose (recommended: Postgres + Redis + API)
 docker-compose up -d
 
-# Or start API manually
+# Or start only Postgres + Redis, then run the API locally
+docker-compose up -d postgres redis
+# Then in another terminal (with venv activated):
 uvicorn api.main:app --reload
 ```
 
-### 5. Ingest Documents (Coming Soon)
+### 5. Verify the API
 
-Document ingestion pipeline is under development. For now, you can manually insert documents:
+```bash
+# Health check (no API key required)
+curl http://localhost:8000/health
 
-```sql
--- Insert a document
-INSERT INTO documents (title, source, content, metadata)
-VALUES ('My Document', 'local/file.pdf', 'Document content...', '{}');
-
--- Use your preferred method to chunk and embed content
+# List strategies (returns registered strategies; may be empty until agents are wired)
+curl http://localhost:8000/strategies
 ```
+
+API docs: http://localhost:8000/docs
+
+### 6. Ingest Documents
+
+Ingest documents (Markdown, PDF, DOCX, audio) into PostgreSQL so strategies can retrieve them. The repo includes a **`documents/`** folder with example files (from all-rag-strategies); this is the default path.
+
+```bash
+# From repo root, with venv activated (default: ./documents)
+python -m strategies.ingestion.ingest
+
+# Or specify a folder
+python -m strategies.ingestion.ingest --documents /path/to/your/documents
+```
+
+Requires `DATABASE_URL` and `OPENAI_API_KEY` in `.env`. The pipeline uses Docling for conversion and chunking (same as all-rag-strategies), then generates embeddings (OpenAI text-embedding-3-small) and inserts into `documents` and `chunks`. See [docs/README_ingestion.md](docs/README_ingestion.md) for options (e.g. `--no-clean`, `--chunk-size`, `--max-tokens`, `--no-semantic`) and supported file types.
 
 ## API Usage
 
@@ -210,15 +235,18 @@ curl -X POST http://localhost:8000/execute \
 
 ### Chain Strategies
 
+Chains run strategies **sequentially** with the **same query**; each step runs retrieval from scratch and the chain returns the **last step’s** documents. Per-step config (`limit`, `initial_k`, `final_k`, `num_variations`) is supported. Recommended orderings: **recall then precision** (`multi_query` → `reranking`) or **fast then precise** (`standard` → `reranking`). See [strategies/examples/README.md](strategies/examples/README.md) for all combinations and fallback options.
+
 ```bash
 curl -X POST http://localhost:8000/chain \
   -H "Content-Type: application/json" \
   -d '{
     "steps": [
-      {"strategy": "multi_query", "config": {"num_variations": 3}},
-      {"strategy": "reranking", "config": {"final_k": 5}}
+      {"strategy": "multi_query", "config": {"limit": 10, "num_variations": 3}},
+      {"strategy": "reranking", "config": {"limit": 5, "initial_k": 20, "final_k": 5}}
     ],
-    "query": "AI ethics best practices"
+    "query": "AI ethics best practices",
+    "continue_on_error": false
   }'
 ```
 
@@ -247,25 +275,29 @@ curl http://localhost:8000/health
 
 ## Strategy Guide
 
+RAG-Advanced implements **all 7** strategies with full code in [all-rag-strategies](https://github.com/coleam00/ottomator-agents/tree/main/all-rag-strategies) plus **standard** (baseline). See [docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md](docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md) for mapping and why “standard” exists.
+
 | Strategy | Use Case | Latency | Cost | Precision |
 |----------|----------|---------|------|-----------|
-| standard | General queries | Fast | Low | Medium |
+| standard | General queries, baseline | Fast | Low | Medium |
 | reranking | Precision-critical | Medium | Medium | High |
-| multi_query | Ambiguous queries | Medium | Medium | Medium-High |
-| self_reflective | Complex research | Slow | High | High |
-| agentic | Flexible needs | Medium | Medium | High |
-| contextual_retrieval | Best accuracy | Slow | High | Highest |
+| multi_query | Ambiguous / broad queries | Medium | Medium | Medium-High |
+| query_expansion | Single expanded search (cheaper than multi_query) | Medium | Low-Med | Medium |
+| self_reflective | Complex research, self-correcting | Slow | High | High |
+| agentic | Chunks + full document for top result | Medium | Low | High |
+| contextual_retrieval | Use when ingestion used `--contextual` | Fast | Low | Medium-High |
+| context_aware_chunking | Use with Docling ingestion | Fast | Low | Medium |
 
 ### Recommended Chains
 
-**High Accuracy** (slow, expensive):
+**Recall then precision**:
 ```
-contextual_retrieval → multi_query → reranking
+multi_query → reranking
 ```
 
-**Balanced** (moderate):
+**Balanced**:
 ```
-query_expansion → standard → reranking
+query_expansion → reranking
 ```
 
 **Fast** (cost-effective):
@@ -273,7 +305,81 @@ query_expansion → standard → reranking
 standard
 ```
 
-## Evaluation Metrics
+**Self-correcting**:
+```
+self_reflective
+```
+
+## Evaluation
+
+Evaluation is implemented via **IR metrics** (single or batch) and **async benchmarks**. You need **ground truth**: for each query, the list of relevant document/chunk IDs that your retrieval should return.
+
+### Calculate IR metrics (single query)
+
+Send the **ordered list of retrieved document IDs** and the **ground truth relevant IDs**; optional `k_values` (default `[1, 3, 5, 10]`).
+
+```bash
+curl -X POST http://localhost:8000/metrics \
+  -H "Content-Type: application/json" \
+  -d '{
+    "retrieved_ids": ["chunk-1", "chunk-2", "chunk-3"],
+    "ground_truth_ids": ["chunk-1", "chunk-3"],
+    "k_values": [1, 3, 5, 10]
+  }'
+```
+
+Response includes `precision`, `recall`, `ndcg` (per k), and `mrr`.
+
+### Calculate IR metrics (batch)
+
+Same payload shape per query; returns **average metrics** and optionally per-query metrics.
+
+```bash
+curl -X POST "http://localhost:8000/metrics/batch?include_per_query=true" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "queries": [
+      {
+        "retrieved_ids": ["c1", "c2"],
+        "ground_truth_ids": ["c1", "c3"],
+        "k_values": [1, 3, 5, 10]
+      }
+    ]
+  }'
+```
+
+### Run a benchmark (async)
+
+Benchmarks run in the background. You get a **benchmark ID** immediately; poll status and fetch results when completed.
+
+1. **Start a benchmark** (strategies to compare, list of queries with `query_id`, `query`, and optional `ground_truth_ids`):
+
+```bash
+curl -X POST http://localhost:8000/benchmarks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "strategies": ["standard", "reranking", "multi_query"],
+    "queries": [
+      {
+        "query_id": "q1",
+        "query": "What is RAG?",
+        "ground_truth_ids": ["doc-1", "doc-2"]
+      }
+    ],
+    "iterations": 3,
+    "timeout_seconds": 30
+  }'
+```
+
+2. **Check status**: `GET /benchmarks/{benchmark_id}`  
+3. **Get results** (when status is `completed`): `GET /benchmarks/{benchmark_id}/results`  
+4. **Cancel** (optional): `DELETE /benchmarks/{benchmark_id}`  
+
+Benchmark results include per-strategy latency (e.g. p50/p95), cost, and rankings. Ground truth is used for IR metrics when provided in each query.
+
+For more detail (why evaluation is REST-only, task-master context), see [docs/README_evaluation.md](docs/README_evaluation.md).
+
+### Metric reference
 
 | Metric | Description | Good Score |
 |--------|-------------|------------|
@@ -314,8 +420,10 @@ RAG-Advanced/
 │   └── html_reports.py       # HTML report generation
 │
 ├── strategies/                # RAG strategies
-│   ├── agents/               # Strategy implementations
-│   ├── ingestion/            # Document processing (TBD)
+│   ├── agents/               # Strategy implementations (standard, reranking)
+│   ├── docs/                 # 11 strategy reference docs (from all-rag-strategies)
+│   ├── examples/             # 11 pseudocode examples (from all-rag-strategies)
+│   ├── ingestion/            # Document processing pipeline
 │   └── utils/
 │       ├── embedding_cache.py # LRU embedding cache
 │       ├── result_cache.py   # Query result TTL cache
@@ -379,6 +487,13 @@ docker-compose down
 ```
 
 ## Migration from all-rag-strategies
+
+Reference material from all-rag-strategies is available in this repo:
+
+- **Strategy docs** (concepts, pros/cons): `strategies/docs/` — 11 markdown files (01-reranking.md through 11-fine-tuned-embeddings.md).
+- **Pseudocode examples**: `strategies/examples/` — 11 Python scripts; reference only (not runnable as-is; see README for RAG-Advanced API equivalents).
+- **Folder/file comparison**: [docs/ALL_RAG_STRATEGIES_VS_RAG_ADVANCED_COMPARISON.md](docs/ALL_RAG_STRATEGIES_VS_RAG_ADVANCED_COMPARISON.md).
+- **Why 11 strategies and example documents weren't in task-master**: [docs/MIGRATION_AND_TASKMASTER_NOTES.md](docs/MIGRATION_AND_TASKMASTER_NOTES.md).
 
 If you're migrating from the original all-rag-strategies repository:
 

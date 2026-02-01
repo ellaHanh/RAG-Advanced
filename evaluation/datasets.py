@@ -490,6 +490,42 @@ class DatasetManager:
 
         logger.info(f"Saved dataset to {file_path}")
 
+    async def enrich_with_llm(
+        self,
+        dataset: Dataset,
+        candidate_provider: Any,
+        *,
+        only_missing: bool = True,
+        model: str = "gpt-4o-mini",
+        api_key: str | None = None,
+    ) -> Dataset:
+        """
+        Enrich dataset with LLM-generated ground truth for each query.
+
+        Uses evaluation.ground_truth_llm: for each query, candidate_provider(query)
+        returns candidate (doc_id, snippet) pairs; an LLM judges relevance and
+        fills relevant_doc_ids and relevance_scores compatible with DatasetQuery.
+
+        Args:
+            dataset: Dataset to enrich (queries may have empty ground truth).
+            candidate_provider: Async callable (query: str) -> list[(doc_id, snippet)].
+            only_missing: If True, only enrich queries with empty relevant_doc_ids.
+            model: OpenAI model for relevance judgment.
+            api_key: OpenAI API key (defaults to OPENAI_API_KEY).
+
+        Returns:
+            New Dataset with enriched ground truth.
+        """
+        from evaluation.ground_truth_llm import enrich_dataset_with_llm
+
+        return await enrich_dataset_with_llm(
+            dataset,
+            candidate_provider,
+            model=model,
+            api_key=api_key,
+            only_missing=only_missing,
+        )
+
     def split(
         self,
         dataset: Dataset,

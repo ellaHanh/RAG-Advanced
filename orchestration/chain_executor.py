@@ -318,11 +318,11 @@ class ChainExecutor:
         if context.intermediate_results:
             input_doc_count = context.intermediate_results[-1].get("document_count", 0)
 
-        # Execute strategy
-        strategy_config = StrategyConfig(
-            limit=step.config.limit if step.config else 5,
-            metadata={"chain_step": step_index, "step_name": step_name},
-        )
+        # Execute strategy (preserve step config; merge metadata)
+        base = step.config if step.config else StrategyConfig()
+        meta = dict(base.metadata) if base.metadata else {}
+        meta.update({"chain_step": step_index, "step_name": step_name})
+        strategy_config = base.model_copy(update={"metadata": meta})
 
         result = await self._executor.execute(
             strategy_name=step.strategy,

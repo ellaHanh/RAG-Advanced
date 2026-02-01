@@ -40,6 +40,8 @@ class ExecuteRequest(BaseModel):
         strategy: Name of the strategy to execute.
         query: Search query.
         limit: Maximum results to return.
+        initial_k: Candidates for reranking (reranking strategy; default 20).
+        final_k: Results after reranking (reranking strategy; default = limit).
         timeout_seconds: Execution timeout.
     """
 
@@ -48,6 +50,8 @@ class ExecuteRequest(BaseModel):
     strategy: str = Field(..., description="Strategy name")
     query: str = Field(..., min_length=1, description="Search query")
     limit: int = Field(default=5, ge=1, le=50, description="Max results")
+    initial_k: int | None = Field(default=None, ge=1, le=100, description="Reranking: candidate count")
+    final_k: int | None = Field(default=None, ge=1, le=50, description="Reranking: results after rerank")
     timeout_seconds: float = Field(default=30.0, ge=1.0, description="Timeout")
 
 
@@ -248,7 +252,11 @@ async def execute_strategy_endpoint(request: ExecuteRequest) -> ExecuteResponse:
         ExecuteResponse with results.
     """
     executor = StrategyExecutor()
-    config = StrategyConfig(limit=request.limit)
+    config = StrategyConfig(
+        limit=request.limit,
+        initial_k=request.initial_k if request.initial_k is not None else 20,
+        final_k=request.final_k if request.final_k is not None else request.limit,
+    )
 
     result = await executor.execute(
         strategy_name=request.strategy,
@@ -273,8 +281,12 @@ async def execute_chain_endpoint(request: ChainRequest) -> ChainResponse:
     # Convert dict steps to ChainStep objects
     steps = []
     for step_data in request.steps:
+        config = None
+        if "config" in step_data and isinstance(step_data["config"], dict):
+            config = StrategyConfig(**step_data["config"])
         step = ChainStep(
             strategy=step_data["strategy"],
+            config=config or StrategyConfig(),
             fallback_strategy=step_data.get("fallback_strategy"),
             continue_on_error=step_data.get("continue_on_error", False),
         )

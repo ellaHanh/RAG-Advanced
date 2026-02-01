@@ -49,12 +49,12 @@ Contains example datasets for testing:
 1. Prepare your queries
 2. Run retrieval across strategies
 3. Manually label relevance or use LLM-assisted annotation
-4. Validate with `evaluation.dataset_manager.validate_dataset()`
+4. Validate with the dataset manager in `evaluation.datasets`.
 
 ## Usage
 
 ```python
-from evaluation.dataset_manager import DatasetManager
+from evaluation.datasets import DatasetManager
 
 manager = DatasetManager()
 dataset = await manager.load("datasets/sample/basic_queries.json")

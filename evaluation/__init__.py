@@ -25,6 +25,11 @@ Exports:
         - DatasetSplit: Train/test split result
         - load_dataset: Convenience function to load dataset
 
+    Ground Truth (LLM-assisted):
+        - generate_ground_truth_for_query: LLM relevance judgment for a single query
+        - enrich_dataset_with_llm: Enrich dataset with LLM-generated ground truth
+        - CandidateDoc: Candidate document for relevance judgment
+
     Reports:
         - ReportGenerator: Generate markdown/HTML/JSON reports
         - ReportConfig: Configuration for report generation
@@ -65,6 +70,12 @@ from evaluation.datasets import (
     load_dataset,
 )
 
+from evaluation.ground_truth_llm import (
+    CandidateDoc,
+    enrich_dataset_with_llm,
+    generate_ground_truth_for_query,
+)
+
 from evaluation.reports import (
     ReportConfig,
     ReportGenerator,
@@ -100,6 +111,10 @@ __all__ = [
     "DatasetSplit",
     "create_dataset_from_queries",
     "load_dataset",
+    # Ground Truth (LLM)
+    "CandidateDoc",
+    "enrich_dataset_with_llm",
+    "generate_ground_truth_for_query",
     # Reports
     "ReportConfig",
     "ReportGenerator",
