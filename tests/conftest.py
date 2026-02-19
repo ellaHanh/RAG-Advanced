@@ -14,12 +14,21 @@ Fixtures:
 from __future__ import annotations
 
 import asyncio
+from pathlib import Path
 from collections.abc import AsyncGenerator, Generator
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import pytest_asyncio
+
+# Load .env from project root so integration tests see DATABASE_URL, EMBEDDING_BACKEND, etc.
+try:
+    from dotenv import load_dotenv
+    _root = Path(__file__).resolve().parent.parent
+    load_dotenv(_root / ".env")
+except ImportError:
+    pass
 
 
 # =============================================================================

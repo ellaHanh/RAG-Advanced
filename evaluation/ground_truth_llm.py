@@ -68,7 +68,7 @@ Return a JSON object with:
 - "relevant_ids": list of document ids that are relevant (at least partially)
 - "relevance_scores": optional object mapping document id to 0, 1, or 2 (default 1 if omitted for relevant_ids)
 
-Example: {"relevant_ids": ["doc1", "doc3"], "relevance_scores": {"doc1": 2, "doc3": 1}}
+Example: {{"relevant_ids": ["doc1", "doc3"], "relevance_scores": {{"doc1": 2, "doc3": 1}}}}
 """
 
 

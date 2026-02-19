@@ -64,6 +64,7 @@ async def _query_expansion_search_impl(
     embedding_str = "[" + ",".join(str(x) for x in embedding) + "]"
 
     async with pool.acquire() as conn:
+        await conn.execute("SET LOCAL ivfflat.probes = 10")
         rows = await conn.fetch(
             """
             SELECT id, document_id, content, metadata, title, source, similarity

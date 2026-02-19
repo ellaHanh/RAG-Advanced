@@ -8,12 +8,18 @@ RAG-Advanced exposes a REST API via FastAPI for strategy execution, chaining, co
 
 | Group | Endpoints |
 |-------|-----------|
-| **Strategies** | `GET /strategies`, `POST /execute`, `POST /chain`, `POST /compare` |
+| **Strategies** | `GET /strategies`, `POST /execute`, `POST /chain`, `POST /compare`, `POST /generate` (retrieval + generation) |
 | **Evaluation** | `POST /metrics`, `POST /metrics/batch` |
 | **Benchmarks** | `POST /benchmarks`, `GET /benchmarks/{benchmark_id}`, `GET /benchmarks/{benchmark_id}/results`, `DELETE /benchmarks/{benchmark_id}` |
 | **Health** | `GET /health`, `GET /` |
 
 Interactive documentation: **Swagger UI** at `http://localhost:8000/docs`, **ReDoc** at `http://localhost:8000/redoc`, **OpenAPI JSON** at `http://localhost:8000/openapi.json`.
+
+---
+
+## RAG pipeline: retrieval + generation
+
+The pipeline has three stages: **ingestion** (indexing documents), **retrieval** (strategy execution returning documents), and **generation** (turning query + documents into a natural-language answer). The API supports retrieval-only via `POST /execute` and `POST /chain`, and full RAG via **`POST /generate`**, which runs retrieval then a LangChain-based “stuff documents” chain (prompt template + LLM) to produce an answer. See [Codecademy: Build RAG pipelines](https://www.codecademy.com/article/build-rag-pipelines-in-ai-applications) and [ApX: Combining Retrieval and Generation](https://apxml.com/courses/getting-started-rag/chapter-5-building-basic-rag-pipeline/combining-retrieval-generation) for the augmented-prompt pattern, empty-context handling, and error-handling practices used here.
 
 ---
 
@@ -71,7 +77,7 @@ Execute a single RAG strategy.
 
 ### POST /chain
 
-Execute a chain of strategies sequentially. Each step receives the same query; the chain returns the last step’s documents.
+Execute a chain of strategies sequentially. **Each step’s output (documents) is passed as the next step’s input.** The chain returns the last step’s documents (e.g. retrieval then reranked subset). Sensible sequences: **standard → reranking**, **multi_query → reranking**, **query_expansion → reranking** (first step retrieves; second step reranks those documents without a second retrieval).
 
 **Request body:**
 
@@ -86,9 +92,9 @@ Execute a chain of strategies sequentially. Each step receives the same query; t
 }
 ```
 
-- `steps`: List of objects with `strategy` and optional `config` (limit, initial_k, final_k, num_variations), optional `fallback_strategy`, `continue_on_error`.
+- `steps`: List of objects with `strategy` and optional `config` (limit, initial_k, final_k, num_variations), optional `fallback_strategy`, `continue_on_error`. When the previous step produces documents, strategies that support it (e.g. reranking) use them as input instead of retrieving again.
 
-**Response:** `ChainResponse` with `query`, `success`, `steps`, `total_latency_ms`, `total_cost_usd`, `documents`, `error`.
+**Response:** `ChainResponse` with `query`, `success`, `steps`, `total_latency_ms`, `total_cost_usd`, `documents`, `error`. Use `include_step_documents: true` to include each step’s documents in `steps[]`.
 
 ---
 
@@ -107,6 +113,43 @@ Execute multiple strategies in parallel and compare results.
 ```
 
 **Response:** `CompareResponse` with `query`, `best_overall`, `rankings`, `results` (per-strategy `ExecuteResponse`), `total_cost_usd`.
+
+---
+
+## RAG generate (retrieval + generation)
+
+### POST /generate
+
+Run retrieval with a single strategy, then generate a natural-language answer from the retrieved documents using a LangChain stuff-documents chain (prompt template with context + question, then LLM). Returns the **answer** plus documents (sources), model, token counts, and cost. On **empty retrieval**: by default returns a fixed user-facing message; if `no_context_fallback` is true, calls the LLM with no context (fallback to standard LLM behavior). Retrieval and generation errors are separated: retrieval failures return a clear message and 502/503; generation failures return a distinct message and 502.
+
+**Request body:**
+
+```json
+{
+  "query": "What is retrieval-augmented generation?",
+  "strategy": "standard",
+  "limit": 5,
+  "model": "gpt-4o-mini",
+  "prompt_template": null,
+  "no_context_fallback": false,
+  "timeout_seconds": 30,
+  "initial_k": null,
+  "final_k": null
+}
+```
+
+- `query` (required): User question.
+- `strategy`: Retrieval strategy name (default `standard`).
+- `limit`: Max documents to retrieve (default 5).
+- `model`: Optional override for generation model (default from env `GENERATION_MODEL` or `gpt-4o-mini`).
+- `prompt_template`: Optional override for prompt (must include `{context}` and `{input}`).
+- `no_context_fallback`: If true and retrieval returns no documents, call LLM with no context instead of returning a fixed message.
+- `timeout_seconds`: Timeout for the retrieval step.
+- `initial_k`, `final_k`: Used by `reranking` when chosen as the retrieval strategy.
+
+**Response:** `GenerateResponse` with `answer`, `documents` (sources), `model`, `input_tokens`, `output_tokens`, `cost_usd`, `retrieval_latency_ms`, `generation_latency_ms`, `context_truncated` (true if context was truncated to fit the model window).
+
+**Environment:** `OPENAI_API_KEY` (required for generation). Optional: `GENERATION_MODEL`, `GENERATION_PROMPT_TEMPLATE`.
 
 ---
 

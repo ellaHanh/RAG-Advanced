@@ -30,9 +30,32 @@ def _get_reranker() -> Any:
         from sentence_transformers import CrossEncoder
 
         logger.info("Loading cross-encoder for re-ranking: %s", CROSS_ENCODER_MODEL)
-        _reranker = CrossEncoder(CROSS_ENCODER_MODEL)
+        # Avoid "meta tensor" load path in newer PyTorch/transformers (e.g. in Docker)
+        _reranker = CrossEncoder(
+            CROSS_ENCODER_MODEL,
+            model_kwargs={"low_cpu_mem_usage": False},
+        )
         logger.info("Cross-encoder loaded")
     return _reranker
+
+
+def _normalize_metadata(raw: Any) -> dict[str, Any]:
+    """Normalize metadata from DB or dict."""
+    if raw is None:
+        return {}
+    if isinstance(raw, dict):
+        return dict(raw)
+    if isinstance(raw, str):
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+
+def _clamp_similarity(s: float) -> float:
+    """Clamp similarity to [0, 1] for Document."""
+    return max(0.0, min(1.0, float(s)))
 
 
 async def _reranking_search_impl(
@@ -40,23 +63,52 @@ async def _reranking_search_impl(
     pool: Any,
     embed_query_fn: Callable[[str], Coroutine[Any, Any, list[float]]],
 ) -> list[Document]:
-    """Stage 1: vector search for initial_k candidates; Stage 2: cross-encoder rerank to final_k."""
+    """
+    Stage 1: vector search for initial_k candidates; Stage 2: cross-encoder rerank to final_k.
+    When ctx.input_documents is set (e.g. from previous chain step), skip Stage 1 and only rerank.
+    """
+    query = ctx.original_query if ctx.original_query is not None else ctx.query
+    final_k = ctx.config.final_k
+
+    # Rerank-only mode: use documents from previous step (no retrieval)
+    if ctx.input_documents:
+        candidates = ctx.input_documents
+        reranker = _get_reranker()
+        pairs = [[query, doc.content or ""] for doc in candidates]
+        scores = reranker.predict(pairs)
+        scored_docs = sorted(
+            zip(candidates, scores),
+            key=lambda x: x[1],
+            reverse=True,
+        )[:final_k]
+        return [
+            Document(
+                id=doc.id,
+                content=doc.content,
+                title=doc.title or "",
+                source=doc.source or "",
+                similarity=_clamp_similarity(score),
+                metadata=dict(doc.metadata) if doc.metadata else {},
+            )
+            for doc, score in scored_docs
+        ]
+
+    # Full mode: Stage 1 vector search + Stage 2 rerank
     if pool is None:
         raise StrategyExecutionError(
             "Database not configured. Set DATABASE_URL to use this strategy.",
             details={"strategy": "reranking"},
         )
-    query = ctx.query
     initial_k = ctx.config.initial_k
-    final_k = ctx.config.final_k
 
-    embedding = await embed_query_fn(query)
-    token_count = max(1, len(query) // 4)
+    embedding = await embed_query_fn(ctx.query)
+    token_count = max(1, len(ctx.query) // 4)
     ctx.add_embedding_cost(EMBEDDING_MODEL, token_count)
 
     embedding_str = "[" + ",".join(str(x) for x in embedding) + "]"
 
     async with pool.acquire() as conn:
+        await conn.execute("SET LOCAL ivfflat.probes = 10")
         rows = await conn.fetch(
             """
             SELECT id, document_id, content, metadata, title, source, similarity
@@ -78,22 +130,6 @@ async def _reranking_search_impl(
         key=lambda x: x[1],
         reverse=True,
     )[:final_k]
-
-    def _normalize_metadata(raw: Any) -> dict[str, Any]:
-        if raw is None:
-            return {}
-        if isinstance(raw, dict):
-            return dict(raw)
-        if isinstance(raw, str):
-            try:
-                return json.loads(raw)
-            except json.JSONDecodeError:
-                return {}
-        return {}
-
-    # Document.similarity must be in [0, 1]; cross-encoder scores can be any real number
-    def _clamp_similarity(s: float) -> float:
-        return max(0.0, min(1.0, float(s)))
 
     return [
         Document(

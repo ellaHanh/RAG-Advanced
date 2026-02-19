@@ -10,8 +10,8 @@ Usage:
     from evaluation.metrics import calculate_metrics, EvaluationMetrics
 
     metrics = calculate_metrics(
-        retrieved_ids=["doc1", "doc3", "doc5"],
-        ground_truth_ids=["doc1", "doc2", "doc3"],
+        retrieved_chunk_ids=["c1", "c3", "c5"],
+        ground_truth_chunk_ids=["c1", "c2", "c3"],
         k_values=[3, 5, 10],
     )
 
@@ -131,8 +131,8 @@ class MetricsBuilder:
 
 
 def _validate_inputs(
-    retrieved_ids: list[str],
-    ground_truth_ids: list[str],
+    retrieved_chunk_ids: list[str],
+    ground_truth_chunk_ids: list[str],
     relevance_scores: dict[str, int] | None,
     k_values: list[int],
 ) -> list[str]:
@@ -140,8 +140,8 @@ def _validate_inputs(
     Validate inputs and return list of warnings.
 
     Args:
-        retrieved_ids: List of retrieved document IDs.
-        ground_truth_ids: List of relevant document IDs.
+        retrieved_chunk_ids: List of retrieved chunk IDs (chunks.id) in ranked order.
+        ground_truth_chunk_ids: List of relevant chunk IDs (chunks.id).
         relevance_scores: Optional relevance scores (0, 1, or 2).
         k_values: K values for metrics calculation.
 
@@ -153,23 +153,27 @@ def _validate_inputs(
     """
     warnings = []
 
-    # Validate retrieved_ids
-    if retrieved_ids is None:
-        raise InvalidInputError("retrieved_ids", "Must not be None")
-    if not isinstance(retrieved_ids, list):
-        raise InvalidInputError("retrieved_ids", "Must be a list")
-    for i, doc_id in enumerate(retrieved_ids):
-        if not isinstance(doc_id, str):
-            raise InvalidInputError("retrieved_ids", f"Element {i} must be a string, got {type(doc_id)}")
+    # Validate retrieved_chunk_ids
+    if retrieved_chunk_ids is None:
+        raise InvalidInputError("retrieved_chunk_ids", "Must not be None")
+    if not isinstance(retrieved_chunk_ids, list):
+        raise InvalidInputError("retrieved_chunk_ids", "Must be a list")
+    for i, cid in enumerate(retrieved_chunk_ids):
+        if not isinstance(cid, str):
+            raise InvalidInputError(
+                "retrieved_chunk_ids", f"Element {i} must be a string, got {type(cid)}"
+            )
 
-    # Validate ground_truth_ids
-    if ground_truth_ids is None:
-        raise InvalidInputError("ground_truth_ids", "Must not be None")
-    if not isinstance(ground_truth_ids, list):
-        raise InvalidInputError("ground_truth_ids", "Must be a list")
-    for i, doc_id in enumerate(ground_truth_ids):
-        if not isinstance(doc_id, str):
-            raise InvalidInputError("ground_truth_ids", f"Element {i} must be a string, got {type(doc_id)}")
+    # Validate ground_truth_chunk_ids
+    if ground_truth_chunk_ids is None:
+        raise InvalidInputError("ground_truth_chunk_ids", "Must not be None")
+    if not isinstance(ground_truth_chunk_ids, list):
+        raise InvalidInputError("ground_truth_chunk_ids", "Must be a list")
+    for i, cid in enumerate(ground_truth_chunk_ids):
+        if not isinstance(cid, str):
+            raise InvalidInputError(
+                "ground_truth_chunk_ids", f"Element {i} must be a string, got {type(cid)}"
+            )
 
     # Validate k_values
     if not k_values:
@@ -192,20 +196,22 @@ def _validate_inputs(
                 )
 
     # Generate warnings for edge cases
-    if not retrieved_ids:
-        warnings.append("No retrieved documents provided")
+    if not retrieved_chunk_ids:
+        warnings.append("No retrieved chunk IDs provided")
 
-    if not ground_truth_ids:
-        warnings.append("No ground truth documents provided")
+    if not ground_truth_chunk_ids:
+        warnings.append("No ground truth chunk IDs provided")
 
     # Check for duplicates
-    if len(retrieved_ids) != len(set(retrieved_ids)):
-        warnings.append("Duplicate documents in retrieved_ids")
+    if len(retrieved_chunk_ids) != len(set(retrieved_chunk_ids)):
+        warnings.append("Duplicate chunk IDs in retrieved_chunk_ids")
 
     # Check k values against retrieved count
     for k in k_values:
-        if k > len(retrieved_ids):
-            warnings.append(f"k={k} exceeds retrieved document count ({len(retrieved_ids)})")
+        if k > len(retrieved_chunk_ids):
+            warnings.append(
+                f"k={k} exceeds retrieved chunk count ({len(retrieved_chunk_ids)})"
+            )
 
     return warnings
 
@@ -226,8 +232,8 @@ def _calculate_precision_at_k(
     Precision@k = |relevant ∩ retrieved@k| / k
 
     Args:
-        retrieved_ids: Retrieved document IDs in ranked order.
-        relevant_set: Set of relevant document IDs.
+        retrieved_ids: Retrieved chunk IDs (chunks.id) in ranked order.
+        relevant_set: Set of relevant chunk IDs.
         k: Number of top results to consider.
 
     Returns:
@@ -258,8 +264,8 @@ def _calculate_recall_at_k(
     Recall@k = |relevant ∩ retrieved@k| / |relevant|
 
     Args:
-        retrieved_ids: Retrieved document IDs in ranked order.
-        relevant_set: Set of relevant document IDs.
+        retrieved_ids: Retrieved chunk IDs (chunks.id) in ranked order.
+        relevant_set: Set of relevant chunk IDs.
         k: Number of top results to consider.
 
     Returns:
@@ -289,8 +295,8 @@ def _calculate_mrr(
     MRR = 1 / rank_of_first_relevant_doc
 
     Args:
-        retrieved_ids: Retrieved document IDs in ranked order.
-        relevant_set: Set of relevant document IDs.
+        retrieved_ids: Retrieved chunk IDs (chunks.id) in ranked order.
+        relevant_set: Set of relevant chunk IDs.
 
     Returns:
         MRR value between 0 and 1.
@@ -317,8 +323,8 @@ def _calculate_dcg_at_k(
     DCG@k = Σ (2^rel_i - 1) / log2(i + 1) for i in 1..k
 
     Args:
-        retrieved_ids: Retrieved document IDs in ranked order.
-        relevance_scores: Relevance scores for documents (0, 1, or 2).
+        retrieved_ids: Retrieved chunk IDs (chunks.id) in ranked order.
+        relevance_scores: Relevance scores per chunk ID (0, 1, or 2).
         k: Number of top results to consider.
 
     Returns:
@@ -347,8 +353,8 @@ def _calculate_ndcg_at_k(
     NDCG@k = DCG@k / IDCG@k
 
     Args:
-        retrieved_ids: Retrieved document IDs in ranked order.
-        relevance_scores: Relevance scores for documents (0, 1, or 2).
+        retrieved_ids: Retrieved chunk IDs (chunks.id) in ranked order.
+        relevance_scores: Relevance scores per chunk ID (0, 1, or 2).
         k: Number of top results to consider.
 
     Returns:
@@ -381,17 +387,17 @@ def _calculate_ndcg_at_k(
 
 
 def calculate_metrics(
-    retrieved_ids: list[str],
-    ground_truth_ids: list[str],
+    retrieved_chunk_ids: list[str],
+    ground_truth_chunk_ids: list[str],
     relevance_scores: dict[str, int] | None = None,
     k_values: list[int] | None = None,
 ) -> EvaluationMetrics:
     """
-    Calculate comprehensive IR metrics.
+    Calculate comprehensive IR metrics at chunk level.
 
     Args:
-        retrieved_ids: List of retrieved document IDs in ranked order.
-        ground_truth_ids: List of relevant document IDs.
+        retrieved_chunk_ids: List of retrieved chunk IDs (chunks.id) in ranked order.
+        ground_truth_chunk_ids: List of relevant chunk IDs (chunks.id).
         relevance_scores: Optional graded relevance (0=not, 1=partial, 2=highly).
                          If not provided, binary relevance is assumed.
         k_values: K values for metrics. Defaults to [3, 5, 10].
@@ -404,8 +410,8 @@ def calculate_metrics(
 
     Example:
         >>> metrics = calculate_metrics(
-        ...     retrieved_ids=["doc1", "doc3", "doc5", "doc2"],
-        ...     ground_truth_ids=["doc1", "doc2", "doc3"],
+        ...     retrieved_chunk_ids=["c1", "c3", "c5", "c2"],
+        ...     ground_truth_chunk_ids=["c1", "c2", "c3"],
         ...     k_values=[3, 5],
         ... )
         >>> print(f"Precision@3: {metrics.precision[3]:.2f}")
@@ -420,8 +426,8 @@ def calculate_metrics(
 
     # Validate inputs
     warnings = _validate_inputs(
-        retrieved_ids,
-        ground_truth_ids,
+        retrieved_chunk_ids,
+        ground_truth_chunk_ids,
         relevance_scores,
         k_values,
     )
@@ -429,13 +435,13 @@ def calculate_metrics(
     # Initialize builder
     builder = MetricsBuilder(
         k_values=k_values,
-        retrieved_count=len(retrieved_ids),
-        relevant_count=len(ground_truth_ids),
+        retrieved_count=len(retrieved_chunk_ids),
+        relevant_count=len(ground_truth_chunk_ids),
         warnings=warnings,
     )
 
     # Handle edge cases - still populate metrics with 0 values
-    if not retrieved_ids or not ground_truth_ids:
+    if not retrieved_chunk_ids or not ground_truth_chunk_ids:
         for k in k_values:
             builder.precision[k] = 0.0
             builder.recall[k] = 0.0
@@ -445,30 +451,36 @@ def calculate_metrics(
 
     # Create relevance scores if not provided (binary relevance)
     if relevance_scores is None:
-        relevance_scores = {doc_id: 1 for doc_id in ground_truth_ids}
+        relevance_scores = {cid: 1 for cid in ground_truth_chunk_ids}
     else:
-        # Ensure all ground truth docs have scores
-        for doc_id in ground_truth_ids:
-            if doc_id not in relevance_scores:
-                relevance_scores[doc_id] = 1
+        # Ensure all ground truth chunks have scores
+        for cid in ground_truth_chunk_ids:
+            if cid not in relevance_scores:
+                relevance_scores[cid] = 1
 
     # Create relevant set for quick lookup
-    relevant_set = set(ground_truth_ids)
+    relevant_set = set(ground_truth_chunk_ids)
 
     # Calculate metrics for each k
     for k in k_values:
-        builder.precision[k] = _calculate_precision_at_k(retrieved_ids, relevant_set, k)
-        builder.recall[k] = _calculate_recall_at_k(retrieved_ids, relevant_set, k)
-        builder.ndcg[k] = _calculate_ndcg_at_k(retrieved_ids, relevance_scores, k)
+        builder.precision[k] = _calculate_precision_at_k(
+            retrieved_chunk_ids, relevant_set, k
+        )
+        builder.recall[k] = _calculate_recall_at_k(
+            retrieved_chunk_ids, relevant_set, k
+        )
+        builder.ndcg[k] = _calculate_ndcg_at_k(
+            retrieved_chunk_ids, relevance_scores, k
+        )
 
     # Calculate MRR (not dependent on k)
-    builder.mrr = _calculate_mrr(retrieved_ids, relevant_set)
+    builder.mrr = _calculate_mrr(retrieved_chunk_ids, relevant_set)
 
     logger.debug(
         "Calculated metrics",
         extra={
-            "retrieved_count": len(retrieved_ids),
-            "relevant_count": len(ground_truth_ids),
+            "retrieved_count": len(retrieved_chunk_ids),
+            "relevant_count": len(ground_truth_chunk_ids),
             "k_values": k_values,
             "mrr": builder.mrr,
         },
@@ -490,7 +502,8 @@ def calculate_batch_metrics(
     Calculate metrics for multiple queries and aggregate results.
 
     Args:
-        queries: List of dicts with 'retrieved_ids' and 'ground_truth_ids'.
+        queries: List of dicts with 'retrieved_chunk_ids' and 'ground_truth_chunk_ids'
+                 (or legacy keys 'retrieved_ids' / 'ground_truth_ids').
         k_values: K values for metrics.
 
     Returns:
@@ -498,8 +511,8 @@ def calculate_batch_metrics(
 
     Example:
         >>> queries = [
-        ...     {"retrieved_ids": ["a", "b"], "ground_truth_ids": ["a"]},
-        ...     {"retrieved_ids": ["c", "d"], "ground_truth_ids": ["d"]},
+        ...     {"retrieved_chunk_ids": ["a", "b"], "ground_truth_chunk_ids": ["a"]},
+        ...     {"retrieved_chunk_ids": ["c", "d"], "ground_truth_chunk_ids": ["d"]},
         ... ]
         >>> results = calculate_batch_metrics(queries)
     """
@@ -515,8 +528,10 @@ def calculate_batch_metrics(
     for i, query in enumerate(queries):
         try:
             metrics = calculate_metrics(
-                retrieved_ids=query.get("retrieved_ids", []),
-                ground_truth_ids=query.get("ground_truth_ids", []),
+                retrieved_chunk_ids=query.get("retrieved_chunk_ids")
+                or query.get("retrieved_ids", []),
+                ground_truth_chunk_ids=query.get("ground_truth_chunk_ids")
+                or query.get("ground_truth_ids", []),
                 relevance_scores=query.get("relevance_scores"),
                 k_values=k_values,
             )

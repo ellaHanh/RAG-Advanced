@@ -52,12 +52,25 @@ class BenchmarkTriggerRequest(BaseModel):
 
     Attributes:
         strategies: List of strategies to benchmark.
-        queries: List of queries to test.
+        queries: List of queries to test (each with query_id, query, optional ground_truth_chunk_ids).
         iterations: Number of iterations per strategy.
         timeout_seconds: Timeout per query.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(
+        frozen=True,
+        json_schema_extra={
+            "example": {
+                "strategies": ["standard", "reranking"],
+                "queries": [
+                    {"query_id": "q1", "query": "What is RAG?"},
+                    {"query_id": "q2", "query": "How does hybrid search work?"},
+                ],
+                "iterations": 2,
+                "timeout_seconds": 30.0,
+            }
+        },
+    )
 
     strategies: list[str] = Field(..., min_length=1, description="Strategies to benchmark")
     queries: list[dict[str, Any]] = Field(..., min_length=1, description="Queries to test")
@@ -190,11 +203,11 @@ async def _run_benchmark(job: BenchmarkJob) -> None:
         _benchmark_store.update(job)
 
         runner = BenchmarkRunner()
-        result = await runner.run(job.queries, job.config)
+        report, _ = await runner.run(job.queries, job.config)
 
         job.status = BenchmarkStatus.COMPLETED
         job.completed_at = datetime.now(UTC)
-        job.result = result
+        job.result = report
         job.progress = 100
 
     except Exception as e:

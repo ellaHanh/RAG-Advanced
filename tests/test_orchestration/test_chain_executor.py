@@ -57,6 +57,20 @@ def registry() -> StrategyRegistry:
         ]
 
     async def rerank_strategy(ctx: ExecutionContext) -> list[Document]:
+        # When input_documents is passed (from previous step), use them; else return fixed list
+        if getattr(ctx, "input_documents", None) and ctx.input_documents:
+            # Refiner: return first doc from input as "reranked" (simulate rerank)
+            doc = ctx.input_documents[0]
+            return [
+                Document(
+                    id=doc.id,
+                    content=doc.content,
+                    title=doc.title or "",
+                    source=doc.source or "",
+                    similarity=0.95,
+                    metadata=dict(doc.metadata) if doc.metadata else {},
+                )
+            ]
         return [
             Document(
                 id="rerank1",
@@ -231,6 +245,27 @@ class TestBasicExecution:
 
         assert result.success is True
         assert result.step_count == 2
+
+    @pytest.mark.asyncio
+    async def test_chain_passes_documents_to_next_step(
+        self,
+        chain_executor: ChainExecutor,
+    ):
+        """Test that step output is passed as input to next step (real chaining)."""
+        steps = [
+            ChainStep(strategy="search"),
+            ChainStep(strategy="rerank"),
+        ]
+        result = await chain_executor.execute_chain(steps, "test query")
+
+        assert result.success is True
+        assert result.step_count == 2
+        # Rerank step receives search's docs and returns first one; final_documents should be that
+        final = result.final_documents
+        assert len(final) == 1
+        assert final[0].id == "search1"
+        assert "Search result 1" in final[0].content
+        assert final[0].similarity == 0.95
 
     @pytest.mark.asyncio
     async def test_chain_accumulates_cost(

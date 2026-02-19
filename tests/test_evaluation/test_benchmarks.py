@@ -54,12 +54,12 @@ def sample_queries() -> list[BenchmarkQuery]:
         BenchmarkQuery(
             query_id="q1",
             query="What is machine learning?",
-            ground_truth_ids=["doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1", "doc2"],
         ),
         BenchmarkQuery(
             query_id="q2",
             query="How does RAG work?",
-            ground_truth_ids=["doc3", "doc4", "doc5"],
+            ground_truth_chunk_ids=["doc3", "doc4", "doc5"],
         ),
     ]
 
@@ -71,7 +71,7 @@ def sample_results() -> list[StrategyResult]:
         StrategyResult(
             strategy_name="standard",
             query_id="q1",
-            retrieved_ids=["doc1", "doc3", "doc2"],
+            retrieved_chunk_ids=["doc1", "doc3", "doc2"],
             latency_ms=100,
             cost_usd=0.001,
             success=True,
@@ -79,7 +79,7 @@ def sample_results() -> list[StrategyResult]:
         StrategyResult(
             strategy_name="standard",
             query_id="q2",
-            retrieved_ids=["doc3", "doc5"],
+            retrieved_chunk_ids=["doc3", "doc5"],
             latency_ms=120,
             cost_usd=0.0012,
             success=True,
@@ -87,7 +87,7 @@ def sample_results() -> list[StrategyResult]:
         StrategyResult(
             strategy_name="standard",
             query_id="q1",
-            retrieved_ids=["doc1", "doc2"],
+            retrieved_chunk_ids=["doc1", "doc2"],
             latency_ms=110,
             cost_usd=0.001,
             success=True,
@@ -137,19 +137,19 @@ class TestBenchmarkQuery:
         query = BenchmarkQuery(
             query_id="q1",
             query="Test query",
-            ground_truth_ids=["doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1", "doc2"],
         )
 
         assert query.query_id == "q1"
         assert query.query == "Test query"
-        assert query.ground_truth_ids == ["doc1", "doc2"]
+        assert query.ground_truth_chunk_ids == ["doc1", "doc2"]
 
     def test_query_with_relevance_scores(self):
         """Test query with graded relevance."""
         query = BenchmarkQuery(
             query_id="q1",
             query="Test query",
-            ground_truth_ids=["doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1", "doc2"],
             relevance_scores={"doc1": 2, "doc2": 1},
         )
 
@@ -325,7 +325,7 @@ class TestBenchmarkRunner:
     ):
         """Test basic benchmark run."""
         runner = BenchmarkRunner()
-        report = await runner.run(sample_queries, sample_config)
+        report, _ = await runner.run(sample_queries, sample_config)
 
         assert isinstance(report, BenchmarkReport)
         assert report.total_queries == 2
@@ -346,14 +346,14 @@ class TestBenchmarkRunner:
             return StrategyResult(
                 strategy_name=strategy,
                 query_id=query_data["query_id"],
-                retrieved_ids=["doc1", "doc2"] if strategy == "standard" else ["doc3"],
+                retrieved_chunk_ids=["doc1", "doc2"] if strategy == "standard" else ["doc3"],
                 latency_ms=100 if strategy == "standard" else 200,
                 cost_usd=0.001,
                 success=True,
             )
 
         runner = BenchmarkRunner(executor=custom_executor)
-        report = await runner.run(sample_queries, sample_config)
+        report, _ = await runner.run(sample_queries, sample_config)
 
         # Standard should have lower latency
         assert report.statistics["standard"].latency_p50 < report.statistics["reranking"].latency_p50
@@ -365,12 +365,12 @@ class TestBenchmarkRunner:
             {
                 "query_id": "q1",
                 "query": "Test query",
-                "ground_truth_ids": ["doc1"],
+                "ground_truth_chunk_ids": ["doc1"],
             }
         ]
 
         runner = BenchmarkRunner()
-        report = await runner.run(queries, sample_config)
+        report, _ = await runner.run(queries, sample_config)
 
         assert report.total_queries == 1
 
@@ -382,7 +382,7 @@ class TestBenchmarkRunner:
     ):
         """Test report summary generation."""
         runner = BenchmarkRunner()
-        report = await runner.run(sample_queries, sample_config)
+        report, _ = await runner.run(sample_queries, sample_config)
 
         summary = report.summary()
 
@@ -399,7 +399,7 @@ class TestBenchmarkRunner:
     ):
         """Test report serialization."""
         runner = BenchmarkRunner()
-        report = await runner.run(sample_queries, sample_config)
+        report, _ = await runner.run(sample_queries, sample_config)
 
         data = report.to_dict()
 
@@ -432,7 +432,7 @@ class TestBenchmarkRunner:
         queries = [BenchmarkQuery(query_id="q1", query="Test")]
 
         runner = BenchmarkRunner(executor=slow_executor)
-        report = await runner.run(queries, config)
+        report, _ = await runner.run(queries, config)
 
         # Should have timeout result
         stats = report.statistics["slow"]
@@ -456,7 +456,7 @@ class TestBenchmarkRunner:
         queries = [BenchmarkQuery(query_id="q1", query="Test")]
 
         runner = BenchmarkRunner(executor=failing_executor)
-        report = await runner.run(queries, config)
+        report, _ = await runner.run(queries, config)
 
         stats = report.statistics["failing"]
         assert stats.success_rate == 0.0
@@ -470,7 +470,7 @@ class TestBenchmarkRunner:
         query = BenchmarkQuery(
             query_id="q1",
             query="Single test",
-            ground_truth_ids=["doc1"],
+            ground_truth_chunk_ids=["doc1"],
         )
 
         runner = BenchmarkRunner()
@@ -547,7 +547,7 @@ class TestConcurrencyControl:
         ]
 
         runner = BenchmarkRunner(executor=counting_executor)
-        await runner.run(queries, config)
+        _, _ = await runner.run(queries, config)
 
         # Max concurrent should not exceed configured value
         assert max_observed <= 2

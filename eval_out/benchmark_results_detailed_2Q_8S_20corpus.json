@@ -1,0 +1,556 @@
+[
+  {
+    "query_id": "1878",
+    "query": "Is there alternative polyadenylation during zebrafish development?",
+    "ground_truth_chunk_ids": [
+      "e3b884b9-ac28-4517-a588-453ca019fc5b"
+    ],
+    "results": {
+      "standard": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "f262b9ae-af2f-4156-b155-6219c3a56617",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff"
+        ],
+        "latency_ms": 71,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "multi_query": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "5169b3a6-6b17-4cc0-8b71-de0f441347f2",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "f262b9ae-af2f-4156-b155-6219c3a56617"
+        ],
+        "latency_ms": 2633,
+        "cost_usd": 0.000253,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "reranking": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2"
+        ],
+        "latency_ms": 1725,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "query_expansion": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "5169b3a6-6b17-4cc0-8b71-de0f441347f2",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc"
+        ],
+        "latency_ms": 1272,
+        "cost_usd": 0.000221,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "self_reflective": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "f262b9ae-af2f-4156-b155-6219c3a56617",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff"
+        ],
+        "latency_ms": 1241,
+        "cost_usd": 0.000553,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "agentic": {
+        "retrieved_chunk_ids": [
+          "87a1f746-8487-41da-a42d-3b2b1f7947cf",
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "f262b9ae-af2f-4156-b155-6219c3a56617",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff"
+        ],
+        "latency_ms": 86,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 0.6309297535714575,
+          "5": 0.6309297535714575,
+          "10": 0.6309297535714575
+        },
+        "mrr": 0.5
+      },
+      "contextual_retrieval": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "f262b9ae-af2f-4156-b155-6219c3a56617",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff"
+        ],
+        "latency_ms": 64,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "context_aware_chunking": {
+        "retrieved_chunk_ids": [
+          "e3b884b9-ac28-4517-a588-453ca019fc5b",
+          "95e3482e-9f99-439c-9cc5-8014b6de0418",
+          "ff41593b-57ec-433b-a4a4-c2c40670a8f1",
+          "30ecaeee-98a8-4ae5-9dbd-fc94590e73c4",
+          "3e6e1a15-eb0d-4653-8677-77bd0b4b0fdb",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "f262b9ae-af2f-4156-b155-6219c3a56617",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff"
+        ],
+        "latency_ms": 61,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      }
+    }
+  },
+  {
+    "query_id": "2779",
+    "query": "Are there microbes in human breast milk?",
+    "ground_truth_chunk_ids": [
+      "84774222-ec0e-48aa-8b3c-88aca37c8825"
+    ],
+    "results": {
+      "standard": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 56,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "multi_query": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 1883,
+        "cost_usd": 0.00021099999999999998,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "reranking": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "5169b3a6-6b17-4cc0-8b71-de0f441347f2"
+        ],
+        "latency_ms": 260,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "query_expansion": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 1076,
+        "cost_usd": 0.000156,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "self_reflective": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 528,
+        "cost_usd": 0.0006100000000000001,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "agentic": {
+        "retrieved_chunk_ids": [
+          "6029c4c2-4315-4f59-ae98-9dd36bdfb326",
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 67,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 0.6309297535714575,
+          "5": 0.6309297535714575,
+          "10": 0.6309297535714575
+        },
+        "mrr": 0.5
+      },
+      "contextual_retrieval": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 59,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      },
+      "context_aware_chunking": {
+        "retrieved_chunk_ids": [
+          "84774222-ec0e-48aa-8b3c-88aca37c8825",
+          "d6fe7aff-7bee-4b01-bd7b-2f2a3e16c7c2",
+          "c50d269d-c0cc-4582-9ea8-5abb05ccb097",
+          "57ec6e4c-22c8-4e1b-84c5-40a87c7703f3",
+          "840f397e-b8a0-486c-a590-20e0419f81c9",
+          "e5965947-93d6-4744-bdb1-176e6c6243ea",
+          "7a630c38-203d-4352-9058-f9ed398fbfdc",
+          "64b5727e-10f7-4080-a9f8-9c42d8befaff",
+          "75af8d96-2b49-4866-86aa-6586cd2b36c6",
+          "63e3fdc3-7514-4cff-87f6-f586bee71dd2"
+        ],
+        "latency_ms": 58,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.3333333333333333,
+          "5": 0.2,
+          "10": 0.1
+        },
+        "recall_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "ndcg_at_k": {
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "mrr": 1.0
+      }
+    }
+  }
+]

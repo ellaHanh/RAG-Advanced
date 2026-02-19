@@ -28,18 +28,22 @@ logger = logging.getLogger(__name__)
 
 class MetricsRequest(BaseModel):
     """
-    Request model for calculating IR metrics.
+    Request model for calculating IR metrics (chunk-level).
 
     Attributes:
-        retrieved_ids: List of retrieved document IDs (in ranked order).
-        ground_truth_ids: List of relevant document IDs.
+        retrieved_ids: List of retrieved chunk IDs (chunks.id) in ranked order.
+        ground_truth_ids: List of relevant chunk IDs (chunks.id).
         k_values: K values for precision/recall/ndcg (default: [1, 3, 5, 10]).
     """
 
     model_config = ConfigDict(frozen=True)
 
-    retrieved_ids: list[str] = Field(..., description="Retrieved document IDs")
-    ground_truth_ids: list[str] = Field(..., description="Ground truth relevant IDs")
+    retrieved_ids: list[str] = Field(
+        ..., description="Retrieved chunk IDs (chunks.id) in rank order"
+    )
+    ground_truth_ids: list[str] = Field(
+        ..., description="Ground truth relevant chunk IDs (chunks.id)"
+    )
     k_values: list[int] = Field(default=[1, 3, 5, 10], description="K values for metrics")
 
 
@@ -115,8 +119,8 @@ def calculate_metrics_endpoint(request: MetricsRequest) -> MetricsResponse:
         MetricsResponse with calculated metrics.
     """
     metrics = calculate_metrics(
-        retrieved_ids=request.retrieved_ids,
-        ground_truth_ids=request.ground_truth_ids,
+        retrieved_chunk_ids=request.retrieved_ids,
+        ground_truth_chunk_ids=request.ground_truth_ids,
         k_values=request.k_values,
     )
 
@@ -164,8 +168,8 @@ def calculate_batch_metrics_endpoint(
 
     for query in request.queries:
         metrics = calculate_metrics(
-            retrieved_ids=query.retrieved_ids,
-            ground_truth_ids=query.ground_truth_ids,
+            retrieved_chunk_ids=query.retrieved_ids,
+            ground_truth_chunk_ids=query.ground_truth_ids,
             k_values=query.k_values,
         )
         all_metrics.append(metrics)

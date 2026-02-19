@@ -66,9 +66,27 @@ For LLM-assisted ground truth generation, see `evaluation/ground_truth_llm.py` a
 
 ---
 
+## xlsx (gold and corpus)
+
+Evaluation can use **Excel (.xlsx) files** for gold (query + relevant IDs) and corpus (documents to search). Column names are configurable so different sources (e.g. BioASQ) can be used.
+
+- **Gold xlsx**: One row per query. Required columns (or mapped names): query id, query text, and a column containing the list of relevant document/passage IDs (string parsed as JSON, pipe-, or comma-separated).
+- **Corpus xlsx**: One row per document/passage. Required columns (or mapped): doc id, text (passage), and optionally title.
+
+**Default (BioASQ v1, first sheet):**
+
+- Gold: `id`, `question`, `relevant_passage_ids`.
+- Corpus: `doc_id`, `passage`, `title`.
+
+Use the **evaluation pipeline** to load both, ingest the corpus, and run benchmarks: see [README_evaluation_pipeline.md](README_evaluation_pipeline.md). Column mapping can be set via config file (`evaluation/config/bioasq_v1.json`) or CLI (`--gold-map`, `--corpus-map`). Loaders live in `evaluation/loaders/` (`xlsx_loader.py`, `xlsx_config.py`).
+
+---
+
 ## Sample datasets
 
-- **sample/basic_queries.json**: Example queries and ground truth in the expected format. Use as a template or for quick sanity checks.
+- **sample/basic_queries.json**: Example queries and ground truth in the expected format. **Origin**: Created for RAG-Advanced (not from all-rag-strategies; that repo has no evaluation datasets). The `relevant_doc_ids` in this file (e.g. `doc_ml_intro`, `doc_ml_basics`) are **placeholder IDs** — they do not refer to real documents in your database. See [datasets/sample/README.md](../datasets/sample/README.md) for how to use the sample and [datasets/sample/PLACEHOLDER_IDS.md](../datasets/sample/PLACEHOLDER_IDS.md) for a mapping of each placeholder ID to a short description. For real evaluation, replace placeholders with actual document or chunk IDs from your DB after ingestion.
+
+**Use in pipelines/tests:** This dataset is **not** used to build or test the evaluation or integration pipelines. The evaluation pipeline gets queries from the API request; tests use in-memory fixtures and temporary files, not `basic_queries.json`. The file is a format example and for manual/demo use only.
 
 ---
 

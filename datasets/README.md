@@ -34,15 +34,14 @@ Each dataset should be a JSON or JSONL file with the following structure:
 - **1**: Partially relevant
 - **2**: Highly relevant
 
-## Sample Datasets
+## Sample datasets
 
 ### sample/
 
 Contains example datasets for testing:
 
-- `basic_queries.json` - Simple factual queries
-- `complex_queries.json` - Multi-hop reasoning queries
-- `ambiguous_queries.json` - Queries with multiple interpretations
+- **basic_queries.json** — Simple factual queries. **Not from all-rag-strategies**; created for RAG-Advanced. The `relevant_doc_ids` (e.g. `doc_ml_intro`, `doc_ml_basics`) are **placeholder IDs** for schema demonstration; they do not point to real docs in your DB. To see what each ID represents, see [sample/PLACEHOLDER_IDS.md](sample/PLACEHOLDER_IDS.md). To run evaluation against your corpus, replace them with actual document or chunk IDs from your database. See [sample/README.md](sample/README.md) for details.
+- Other sample files (e.g. `complex_queries.json`, `ambiguous_queries.json`) may be added; use the same JSON format.
 
 ## Creating Your Own Dataset
 

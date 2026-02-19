@@ -17,7 +17,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from orchestration.chain_executor import ChainExecutor, ChainResult
+from orchestration.chain_executor import ChainExecutor, ChainResult, ChainStepResult
 from orchestration.comparison import ComparisonAggregator, ComparisonResult
 from orchestration.executor import ParallelExecutor, StrategyExecutor
 from orchestration.models import ChainStep, Document, ExecutionResult, StrategyConfig
@@ -45,7 +45,17 @@ class ExecuteRequest(BaseModel):
         timeout_seconds: Execution timeout.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(
+        frozen=True,
+        json_schema_extra={
+            "example": {
+                "strategy": "standard",
+                "query": "What is retrieval-augmented generation?",
+                "limit": 5,
+                "timeout_seconds": 30.0,
+            }
+        },
+    )
 
     strategy: str = Field(..., description="Strategy name")
     query: str = Field(..., min_length=1, description="Search query")
@@ -97,13 +107,31 @@ class ChainRequest(BaseModel):
         steps: List of chain steps.
         query: Search query.
         continue_on_error: Whether to continue on step failure.
+        include_step_documents: If true, include retrieved documents per step in the response.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(
+        frozen=True,
+        json_schema_extra={
+            "example": {
+                "steps": [
+                    {"strategy": "multi_query", "config": {"limit": 20}},
+                    {"strategy": "reranking", "config": {"limit": 5, "initial_k": 20, "final_k": 5}},
+                ],
+                "query": "What is RAG and how does it improve LLM answers?",
+                "continue_on_error": False,
+                "include_step_documents": True,
+            }
+        },
+    )
 
     steps: list[dict[str, Any]] = Field(..., min_length=1, description="Chain steps")
     query: str = Field(..., min_length=1, description="Search query")
     continue_on_error: bool = Field(default=False, description="Continue on error")
+    include_step_documents: bool = Field(
+        default=False,
+        description="Include per-step retrieved documents for step-by-step visibility",
+    )
 
 
 class ChainStepResponse(BaseModel):
@@ -115,6 +143,10 @@ class ChainStepResponse(BaseModel):
     strategy_name: str
     document_count: int
     duration_ms: int
+    documents: list[DocumentResponse] | None = Field(
+        default=None,
+        description="Retrieved documents for this step (when include_step_documents=true)",
+    )
 
 
 class ChainResponse(BaseModel):
@@ -151,7 +183,16 @@ class CompareRequest(BaseModel):
         timeout_seconds: Timeout per strategy.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(
+        frozen=True,
+        json_schema_extra={
+            "example": {
+                "strategies": ["standard", "reranking", "multi_query"],
+                "query": "How does hybrid search combine keyword and semantic retrieval?",
+                "timeout_seconds": 30.0,
+            }
+        },
+    )
 
     strategies: list[str] = Field(..., min_length=2, description="Strategies to compare")
     query: str = Field(..., min_length=1, description="Search query")
@@ -295,18 +336,23 @@ async def execute_chain_endpoint(request: ChainRequest) -> ChainResponse:
     executor = ChainExecutor()
     result = await executor.execute_chain(steps, request.query)
 
+    def step_to_response(s: ChainStepResult) -> ChainStepResponse:
+        return ChainStepResponse(
+            step_name=s.step_name,
+            strategy_name=s.strategy_name,
+            document_count=s.output_document_count,
+            duration_ms=s.duration_ms,
+            documents=(
+                [_document_to_response(d) for d in s.result.documents]
+                if request.include_step_documents
+                else None
+            ),
+        )
+
     return ChainResponse(
         query=result.query,
         success=result.success,
-        steps=[
-            ChainStepResponse(
-                step_name=s.step_name,
-                strategy_name=s.strategy_name,
-                document_count=s.output_document_count,
-                duration_ms=s.duration_ms,
-            )
-            for s in result.steps
-        ],
+        steps=[step_to_response(s) for s in result.steps],
         total_latency_ms=result.total_latency_ms,
         total_cost_usd=result.total_cost_usd,
         documents=[_document_to_response(d) for d in result.final_documents],

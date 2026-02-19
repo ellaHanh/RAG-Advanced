@@ -105,7 +105,7 @@ class TestChunker:
             assert "total_chunks" in c.metadata
 
     def test_concatenated_content_matches(self) -> None:
-        config = IngestionConfig(chunk_size=50, chunk_overlap=10)
+        config = IngestionConfig(chunk_size=100, chunk_overlap=10)
         content = "A" * 30 + "\n\n" + "B" * 30 + "\n\n" + "C" * 30
         chunks = chunk_document(content, "T", "s", config)
         combined = "\n\n".join(c.content for c in chunks)

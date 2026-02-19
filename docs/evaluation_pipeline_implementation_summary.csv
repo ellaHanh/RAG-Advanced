@@ -1,0 +1,12 @@
+path,description
+pyproject.toml,Added pandas>=2.0.0 and openpyxl>=3.1.0 for xlsx loading
+evaluation/loaders/__init__.py,Package init; exports load_gold_dataset_from_xlsx, load_corpus_xlsx, config models, BioASQ v1 defaults
+evaluation/loaders/xlsx_config.py,Pydantic XlsxGoldConfig and XlsxCorpusConfig; BIOASQ_V1_GOLD_CONFIG and BIOASQ_V1_CORPUS_CONFIG
+evaluation/loaders/xlsx_loader.py,load_gold_dataset_from_xlsx (with list_format parsing), load_corpus_xlsx; uses pandas/openpyxl
+evaluation/config/bioasq_v1.json,Sample JSON config for gold/corpus column mapping (first sheet, BioASQ columns)
+evaluation/corpus_ingest.py,Write corpus to temp dir as .txt, run_ingestion, get_doc_id_to_chunk_ids; ingest_corpus_and_get_chunk_map
+scripts/run_evaluation_pipeline.py,CLI: --gold/--corpus, --config/--gold-map/--corpus-map, ingest then BenchmarkRunner with API executor; save report and optional JSON
+tests/test_evaluation/test_loaders_xlsx.py,Unit tests for gold and corpus xlsx loaders (temp xlsx via pandas)
+docs/README_evaluation_pipeline.md,Usage, column mapping, options, outputs, requirements
+docs/README_datasets.md,Added section "xlsx (gold and corpus)" and link to evaluation pipeline
+docs/evaluation_pipeline_implementation_summary.csv,This file: paths and short descriptions

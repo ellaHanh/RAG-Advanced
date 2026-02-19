@@ -14,7 +14,7 @@ The `scripts/` folder contains runnable utilities that do not require the full A
 2. Loads `.env` from the repo root if `python-dotenv` is available.
 3. Reads `DATABASE_URL` from the environment.
 4. Runs, in order:
-   - `strategies/utils/schema.sql` (base schema: pgvector, documents, chunks, `match_chunks` function).
+   - Base schema: `strategies/utils/schema.sql` (1536-dim for OpenAI), or **`strategies/utils/schema_1024.sql`** when **`EMBEDDING_BACKEND=bge-m3`** (BGE-M3 local embedder).
    - `evaluation/schema_extension.sql` (evaluation-related extensions, if any).
 
 SQL is split into statements while respecting `$$...$$` dollar-quoted strings so that semicolons inside function bodies do not break parsing.

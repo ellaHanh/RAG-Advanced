@@ -38,6 +38,10 @@ dependencies = [
     # Embeddings & LLM
     "openai>=1.60.0",
     "anthropic>=0.42.0",
+    # RAG generation (LangChain); chains live in langchain-classic for LangChain 1.x
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-classic>=1.0.0",
     
     # IR Metrics
     "ir-measures>=0.3.7",
@@ -54,6 +58,9 @@ dependencies = [
     "aiofiles>=24.1.0",
     "numpy>=2.0.0",
     "structlog>=24.4.0",
+    # Evaluation pipeline (xlsx loading)
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
 ]
 
 [project.optional-dependencies]
@@ -88,7 +95,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["api*", "orchestration*", "evaluation*", "strategies*", "config*"]
+include = ["api*", "orchestration*", "evaluation*", "generation*", "strategies*", "config*"]
 
 [tool.black]
 line-length = 100
@@ -136,7 +143,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["api", "orchestration", "evaluation", "strategies"]
+known-first-party = ["api", "orchestration", "evaluation", "generation", "strategies"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -155,9 +162,14 @@ markers = [
     "e2e: End-to-end tests",
     "slow: Slow running tests",
 ]
+filterwarnings = [
+    "ignore:builtin type SwigPyPacked has no __module__:DeprecationWarning",
+    "ignore:builtin type SwigPyObject has no __module__:DeprecationWarning",
+    "ignore:Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater:UserWarning",
+]
 
 [tool.coverage.run]
-source = ["api", "orchestration", "evaluation", "strategies"]
+source = ["api", "orchestration", "evaluation", "generation", "strategies"]
 branch = true
 omit = [
     "*/tests/*",

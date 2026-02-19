@@ -64,6 +64,7 @@ async def _self_reflective_search_impl(
     embedding_str = "[" + ",".join(str(x) for x in embedding) + "]"
 
     async with pool.acquire() as conn:
+        await conn.execute("SET LOCAL ivfflat.probes = 10")
         rows = await conn.fetch(
             """
             SELECT id, document_id, content, metadata, title, source, similarity
@@ -130,6 +131,7 @@ Respond with only the improved query, nothing else."""
             refined_emb_str = "[" + ",".join(str(x) for x in refined_embedding) + "]"
 
             async with pool.acquire() as conn2:
+                await conn2.execute("SET LOCAL ivfflat.probes = 10")
                 rows = await conn2.fetch(
                     """
                     SELECT id, document_id, content, metadata, title, source, similarity

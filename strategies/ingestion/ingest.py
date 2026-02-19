@@ -118,7 +118,11 @@ async def ingest_one(
     try:
         content, docling_doc = read_document(file_path)
         title = extract_title(content, file_path)
-        source = os.path.relpath(file_path, documents_dir)
+        # Resolve both paths so relpath is stable (e.g. /var vs /private/var on macOS)
+        source = os.path.relpath(
+            str(Path(file_path).resolve()),
+            str(Path(documents_dir).resolve()),
+        )
         doc_metadata: dict = {
             "file_path": file_path,
             "ingestion_date": datetime.now().isoformat(),

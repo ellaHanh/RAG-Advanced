@@ -96,12 +96,18 @@ class ExecutionContext:
         config: Strategy configuration.
         cost_tracker: Cost tracker instance.
         metadata: Additional execution metadata.
+        input_documents: When set (e.g. in a chain), strategies that support it use
+            these as input instead of retrieving (e.g. reranking rerank-only mode).
+        original_query: When set (e.g. in a chain), used for scoring (e.g. rerank
+            with original user query).
     """
 
     query: str
     config: StrategyConfig
     cost_tracker: CostTracker
     metadata: dict[str, Any] = field(default_factory=dict)
+    input_documents: list[Document] | None = None
+    original_query: str | None = None
 
     def add_embedding_cost(
         self,
@@ -168,6 +174,8 @@ class StrategyExecutor:
         config: StrategyConfig | None = None,
         timeout: float | None = None,
         metadata: dict[str, Any] | None = None,
+        input_documents: list[Document] | None = None,
+        original_query: str | None = None,
     ) -> ExecutionResult:
         """
         Execute a single strategy.
@@ -178,6 +186,8 @@ class StrategyExecutor:
             config: Optional strategy configuration.
             timeout: Optional timeout override.
             metadata: Optional execution metadata.
+            input_documents: Optional documents from previous chain step (for refiners).
+            original_query: Optional original user query (e.g. for reranking in chain).
 
         Returns:
             ExecutionResult with documents and metrics.
@@ -203,6 +213,8 @@ class StrategyExecutor:
             config=config,
             cost_tracker=cost_tracker,
             metadata=metadata or {},
+            input_documents=input_documents,
+            original_query=original_query,
         )
 
         # Execute with timing and error handling

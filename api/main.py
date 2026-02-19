@@ -52,6 +52,11 @@ from api.routes.evaluation import (
     calculate_batch_metrics_endpoint,
     calculate_metrics_endpoint,
 )
+from api.routes.generate import (
+    GenerateRequest,
+    GenerateResponse,
+    generate_endpoint,
+)
 from api.routes.strategies import (
     ChainRequest,
     ChainResponse,
@@ -72,7 +77,7 @@ from orchestration.errors import (
     StrategyNotFoundError,
 )
 from strategies.agents import register_all_strategies
-from strategies.utils.embedder import embed_query as embed_query_fn
+from strategies.utils.embedder import embed_query as embed_query_fn, warmup_embedder
 
 
 # =============================================================================
@@ -191,6 +196,9 @@ async def lifespan(app: FastAPI):
 
     # Always register strategies (they will error clearly if DB not configured)
     register_all_strategies(app_state.db_pool, embed_query_fn)
+
+    # Pre-load embedding model so first request doesn't timeout (bge-m3 is ~2.2 GB)
+    await warmup_embedder()
 
     logger.info("RAG-Advanced API started successfully")
 
@@ -465,6 +473,30 @@ async def execute_chain(request: ChainRequest) -> ChainResponse:
 async def compare_strategies(request: CompareRequest) -> CompareResponse:
     """Compare multiple strategies."""
     return await compare_strategies_endpoint(request)
+
+
+@app.post(
+    "/generate",
+    response_model=GenerateResponse,
+    tags=["Strategies"],
+    summary="RAG generate (retrieval + generation)",
+    description=(
+        "Run retrieval with a single strategy, then generate a natural-language answer "
+        "from the retrieved documents using a LangChain stuff-documents chain. "
+        "Returns answer, documents (sources), model, token counts, and cost. "
+        "On empty retrieval: returns a fixed message or calls LLM with no context if "
+        "no_context_fallback is true."
+    ),
+)
+async def generate(request: GenerateRequest) -> GenerateResponse:
+    """Run retrieval then generation; return answer and metadata or raise on error."""
+    response, error_message, status_code = await generate_endpoint(
+        request,
+        pricing_provider=app_state.pricing_provider,
+    )
+    if response is not None:
+        return response
+    raise HTTPException(status_code=status_code, detail=error_message or "An error occurred.")
 
 
 # =============================================================================

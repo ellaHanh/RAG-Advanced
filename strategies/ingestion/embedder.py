@@ -21,7 +21,7 @@ async def embed_chunks(chunks: list[DocumentChunk], batch_size: int = 100) -> li
         batch_size: Max texts per OpenAI API call.
 
     Returns:
-        The same chunks with embedding field set (1536 dims).
+        The same chunks with embedding field set (dims depend on EMBEDDING_BACKEND: 1536 for openai, 1024 for bge-m3).
     """
     if not chunks:
         return chunks

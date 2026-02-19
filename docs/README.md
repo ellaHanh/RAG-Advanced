@@ -15,8 +15,11 @@ This folder contains project documentation. Main guides use the **README_** pref
 | [README_orchestration.md](README_orchestration.md) | Orchestration layer: registry, executor, chain, comparison, cost, pricing. |
 | [README_scripts.md](README_scripts.md) | Scripts: `run_schema.py` and usage. |
 | [README_tests.md](README_tests.md) | Test layout and how to run tests. |
+| [README_development_workflow.md](README_development_workflow.md) | Docker, tests, and Python process for development (reference). |
 | [README_documents.md](README_documents.md) | Default documents folder for ingestion. |
 | [README_datasets.md](README_datasets.md) | Evaluation datasets folder and format. |
+| [README_evaluation_pipeline.md](README_evaluation_pipeline.md) | Evaluation pipeline: gold/corpus xlsx, ingest, benchmark, report. |
+| [README_embeddings_and_local_dev.md](README_embeddings_and_local_dev.md) | Embeddings (OpenAI vs BGE-M3), pgvector, local dev with CPU. |
 | [README_config.md](README_config.md) | Config folder: pricing and static config. |
 
 ---

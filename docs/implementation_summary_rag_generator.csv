@@ -1,0 +1,11 @@
+component,path,description
+dependencies,pyproject.toml,Added langchain>=0.3.0 and langchain-openai>=0.2.0; included generation* in setuptools packages and coverage
+generation package,generation/__init__.py,Exports generate_answer, GenerationResult, DEFAULT_MODEL, DEFAULT_PROMPT_TEMPLATE
+generation chain,generation/chain.py,Builds LangChain stuff-documents chain (ChatPromptTemplate + create_stuff_documents_chain + ChatOpenAI); generate_answer() with token/cost tracking and optional context truncation; empty-context fallback
+API route,api/routes/generate.py,POST /generate handler: runs retrieval via execute_strategy_endpoint then generate_answer(); request/response models (GenerateRequest, GenerateResponse); separate retrieval vs generation error messages (502/503)
+app wiring,api/main.py,Registered POST /generate endpoint; imports GenerateRequest, GenerateResponse, generate_endpoint; raises HTTPException on error
+config,pricing.json,No change; gpt-4o-mini already present for generation cost
+documentation,docs/README_API.md,Added RAG pipeline section (retrieval + generation), POST /generate request/response, references to Codecademy and ApX
+documentation,docs/README_generation.md,Module overview, design, usage, configuration, inputs/outputs
+unit tests,tests/test_generation/test_chain.py,generate_answer with mocked _build_chain: answer/tokens/cost, prompt template applied, empty documents and empty_context_fallback
+integration tests,tests/test_api/test_routes/test_generate.py,POST /generate with mocked generate_endpoint: success response shape and error status (502)

@@ -311,11 +311,9 @@ class ChainExecutor:
         step_index: int,
         step_name: str,
     ) -> ChainStepResult:
-        """Execute a single chain step."""
-        # Note: ChainContext stores summaries, not full documents
-        # Full document passing between steps requires custom implementation
-        input_doc_count = 0
-        if context.intermediate_results:
+        """Execute a single chain step; pass previous step's documents and original query."""
+        input_doc_count = len(context.input_documents) if context.input_documents else 0
+        if input_doc_count == 0 and context.intermediate_results:
             input_doc_count = context.intermediate_results[-1].get("document_count", 0)
 
         # Execute strategy (preserve step config; merge metadata)
@@ -324,12 +322,15 @@ class ChainExecutor:
         meta.update({"chain_step": step_index, "step_name": step_name})
         strategy_config = base.model_copy(update={"metadata": meta})
 
+        input_docs = list(context.input_documents) if context.input_documents else None
         result = await self._executor.execute(
             strategy_name=step.strategy,
             query=context.query,
             config=strategy_config,
             timeout=self._config.default_timeout_seconds,
             metadata={"step": step_name},
+            input_documents=input_docs,
+            original_query=context.original_query,
         )
 
         return ChainStepResult(

@@ -54,9 +54,10 @@ async def _multi_query_search_impl(
     embedding_strs = ["[" + ",".join(str(x) for x in emb) + "]" for emb in embeddings]
     per_query_limit = max(limit, 10)
 
-    async with pool.acquire() as conn:
-        tasks = [
-            conn.fetch(
+    async def fetch_one(emb_str: str) -> list[Any]:
+        async with pool.acquire() as conn:
+            await conn.execute("SET LOCAL ivfflat.probes = 10")
+            return await conn.fetch(
                 """
                 SELECT id, document_id, content, metadata, title, source, similarity
                 FROM match_chunks($1::vector, $2)
@@ -64,9 +65,8 @@ async def _multi_query_search_impl(
                 emb_str,
                 per_query_limit,
             )
-            for emb_str in embedding_strs
-        ]
-        rows_list = await asyncio.gather(*tasks)
+
+    rows_list = await asyncio.gather(*[fetch_one(emb_str) for emb_str in embedding_strs])
 
     # Deduplicate by chunk id, keep highest similarity
     seen: dict[Any, dict[str, Any]] = {}

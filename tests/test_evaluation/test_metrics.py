@@ -32,8 +32,8 @@ from orchestration.errors import InvalidInputError
 def perfect_retrieval():
     """Perfect retrieval: all retrieved docs are relevant."""
     return {
-        "retrieved_ids": ["doc1", "doc2", "doc3"],
-        "ground_truth_ids": ["doc1", "doc2", "doc3"],
+        "retrieved_chunk_ids": ["doc1", "doc2", "doc3"],
+        "ground_truth_chunk_ids": ["doc1", "doc2", "doc3"],
     }
 
 
@@ -41,8 +41,8 @@ def perfect_retrieval():
 def partial_retrieval():
     """Partial retrieval: some retrieved docs are relevant."""
     return {
-        "retrieved_ids": ["doc1", "doc3", "doc5", "doc2", "doc6"],
-        "ground_truth_ids": ["doc1", "doc2", "doc3", "doc4"],
+        "retrieved_chunk_ids": ["doc1", "doc3", "doc5", "doc2", "doc6"],
+        "ground_truth_chunk_ids": ["doc1", "doc2", "doc3", "doc4"],
     }
 
 
@@ -50,8 +50,8 @@ def partial_retrieval():
 def no_relevant_retrieval():
     """No relevant docs retrieved."""
     return {
-        "retrieved_ids": ["doc5", "doc6", "doc7"],
-        "ground_truth_ids": ["doc1", "doc2", "doc3"],
+        "retrieved_chunk_ids": ["doc5", "doc6", "doc7"],
+        "ground_truth_chunk_ids": ["doc1", "doc2", "doc3"],
     }
 
 
@@ -59,8 +59,8 @@ def no_relevant_retrieval():
 def graded_relevance():
     """Retrieval with graded relevance scores."""
     return {
-        "retrieved_ids": ["doc1", "doc3", "doc5", "doc2"],
-        "ground_truth_ids": ["doc1", "doc2", "doc3"],
+        "retrieved_chunk_ids": ["doc1", "doc3", "doc5", "doc2"],
+        "ground_truth_chunk_ids": ["doc1", "doc2", "doc3"],
         "relevance_scores": {
             "doc1": 2,  # Highly relevant
             "doc2": 1,  # Partially relevant
@@ -110,8 +110,8 @@ class TestPrecisionAtK:
     def test_precision_k_greater_than_retrieved(self):
         """Test precision when k > number of retrieved docs."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1", "doc2"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[5],
         )
 
@@ -161,8 +161,8 @@ class TestRecallAtK:
     def test_recall_with_single_relevant(self):
         """Test recall with single relevant document."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc2", "doc1", "doc3"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc2", "doc1", "doc3"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[1, 2, 3],
         )
 
@@ -182,8 +182,8 @@ class TestMRR:
     def test_mrr_first_position(self):
         """Test MRR when first relevant doc is at position 1."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1", "doc2", "doc3"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc1", "doc2", "doc3"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[3],
         )
 
@@ -192,8 +192,8 @@ class TestMRR:
     def test_mrr_second_position(self):
         """Test MRR when first relevant doc is at position 2."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc2", "doc1", "doc3"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc2", "doc1", "doc3"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[3],
         )
 
@@ -202,8 +202,8 @@ class TestMRR:
     def test_mrr_third_position(self):
         """Test MRR when first relevant doc is at position 3."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc4", "doc5", "doc1"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc4", "doc5", "doc1"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[3],
         )
 
@@ -221,8 +221,8 @@ class TestMRR:
     def test_mrr_multiple_relevant(self):
         """Test MRR considers only first relevant doc."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc3", "doc1", "doc2"],
-            ground_truth_ids=["doc1", "doc2"],  # Both relevant
+            retrieved_chunk_ids=["doc3", "doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1", "doc2"],  # Both relevant
             k_values=[3],
         )
 
@@ -258,8 +258,8 @@ class TestNDCGAtK:
     def test_ndcg_binary_relevance(self):
         """Test NDCG with binary (0/1) relevance."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1", "doc2", "doc3"],
-            ground_truth_ids=["doc1", "doc3"],  # Binary: doc1 and doc3 are relevant
+            retrieved_chunk_ids=["doc1", "doc2", "doc3"],
+            ground_truth_chunk_ids=["doc1", "doc3"],  # Binary: doc1 and doc3 are relevant
             k_values=[3],
         )
 
@@ -291,8 +291,8 @@ class TestEdgeCases:
     def test_empty_retrieved(self):
         """Test with empty retrieved list."""
         metrics = calculate_metrics(
-            retrieved_ids=[],
-            ground_truth_ids=["doc1", "doc2"],
+            retrieved_chunk_ids=[],
+            ground_truth_chunk_ids=["doc1", "doc2"],
             k_values=[3],
         )
 
@@ -300,25 +300,25 @@ class TestEdgeCases:
         assert metrics.recall[3] == 0.0
         assert metrics.mrr == 0.0
         assert metrics.has_warnings
-        assert "No retrieved documents" in metrics.warnings[0]
+        assert "No retrieved chunk IDs" in metrics.warnings[0]
 
     def test_empty_ground_truth(self):
         """Test with empty ground truth list."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1", "doc2"],
-            ground_truth_ids=[],
+            retrieved_chunk_ids=["doc1", "doc2"],
+            ground_truth_chunk_ids=[],
             k_values=[3],
         )
 
         assert metrics.recall[3] == 0.0
         assert metrics.has_warnings
-        assert "No ground truth" in metrics.warnings[0]
+        assert "No ground truth chunk IDs" in metrics.warnings[0]
 
     def test_both_empty(self):
         """Test with both lists empty."""
         metrics = calculate_metrics(
-            retrieved_ids=[],
-            ground_truth_ids=[],
+            retrieved_chunk_ids=[],
+            ground_truth_chunk_ids=[],
             k_values=[3],
         )
 
@@ -329,8 +329,8 @@ class TestEdgeCases:
     def test_duplicate_retrieved_warning(self):
         """Test warning for duplicate documents."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1", "doc1", "doc2"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc1", "doc1", "doc2"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[3],
         )
 
@@ -340,8 +340,8 @@ class TestEdgeCases:
     def test_k_greater_than_retrieved(self):
         """Test k value greater than retrieved count."""
         metrics = calculate_metrics(
-            retrieved_ids=["doc1"],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=["doc1"],
+            ground_truth_chunk_ids=["doc1"],
             k_values=[10],
         )
 
@@ -379,28 +379,28 @@ class TestInputValidation:
         """Test error for None retrieved_ids."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=None,  # type: ignore
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids=None,  # type: ignore
+                ground_truth_chunk_ids=["doc1"],
             )
 
-        assert "retrieved_ids" in str(exc_info.value)
+        assert "retrieved_chunk_ids" in str(exc_info.value)
 
     def test_none_ground_truth_ids(self):
         """Test error for None ground_truth_ids."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=["doc1"],
-                ground_truth_ids=None,  # type: ignore
+                retrieved_chunk_ids=["doc1"],
+                ground_truth_chunk_ids=None,  # type: ignore
             )
 
-        assert "ground_truth_ids" in str(exc_info.value)
+        assert "ground_truth_chunk_ids" in str(exc_info.value)
 
     def test_non_list_retrieved_ids(self):
         """Test error for non-list retrieved_ids."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids="doc1",  # type: ignore
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids="doc1",  # type: ignore
+                ground_truth_chunk_ids=["doc1"],
             )
 
         assert "Must be a list" in str(exc_info.value)
@@ -409,8 +409,8 @@ class TestInputValidation:
         """Test error for non-string elements."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=[1, 2, 3],  # type: ignore
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids=[1, 2, 3],  # type: ignore
+                ground_truth_chunk_ids=["doc1"],
             )
 
         assert "must be a string" in str(exc_info.value)
@@ -419,8 +419,8 @@ class TestInputValidation:
         """Test error for empty k_values."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=["doc1"],
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids=["doc1"],
+                ground_truth_chunk_ids=["doc1"],
                 k_values=[],
             )
 
@@ -430,8 +430,8 @@ class TestInputValidation:
         """Test error for invalid k values."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=["doc1"],
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids=["doc1"],
+                ground_truth_chunk_ids=["doc1"],
                 k_values=[0, -1],
             )
 
@@ -441,8 +441,8 @@ class TestInputValidation:
         """Test error for invalid relevance scores."""
         with pytest.raises(InvalidInputError) as exc_info:
             calculate_metrics(
-                retrieved_ids=["doc1"],
-                ground_truth_ids=["doc1"],
+                retrieved_chunk_ids=["doc1"],
+                ground_truth_chunk_ids=["doc1"],
                 relevance_scores={"doc1": 5},  # Invalid score
             )
 
@@ -472,8 +472,8 @@ class TestEvaluationMetrics:
     def test_has_warnings_true(self):
         """Test has_warnings property when warnings exist."""
         metrics = calculate_metrics(
-            retrieved_ids=[],
-            ground_truth_ids=["doc1"],
+            retrieved_chunk_ids=[],
+            ground_truth_chunk_ids=["doc1"],
         )
 
         assert metrics.has_warnings is True
@@ -506,13 +506,13 @@ class TestBatchMetrics:
         queries = [
             {
                 "query_id": "q1",
-                "retrieved_ids": ["a", "b", "c"],
-                "ground_truth_ids": ["a", "c"],
+                "retrieved_chunk_ids": ["a", "b", "c"],
+                "ground_truth_chunk_ids": ["a", "c"],
             },
             {
                 "query_id": "q2",
-                "retrieved_ids": ["d", "e", "f"],
-                "ground_truth_ids": ["d"],
+                "retrieved_chunk_ids": ["d", "e", "f"],
+                "ground_truth_chunk_ids": ["d"],
             },
         ]
 
@@ -528,13 +528,13 @@ class TestBatchMetrics:
         queries = [
             {
                 "query_id": "q1",
-                "retrieved_ids": ["a", "b"],
-                "ground_truth_ids": ["a"],
+                "retrieved_chunk_ids": ["a", "b"],
+                "ground_truth_chunk_ids": ["a"],
             },
             {
                 "query_id": "q2",
-                "retrieved_ids": None,  # Invalid
-                "ground_truth_ids": ["a"],
+                "retrieved_chunk_ids": "not_a_list",  # Invalid type → raises
+                "ground_truth_chunk_ids": ["a"],
             },
         ]
 
@@ -547,12 +547,12 @@ class TestBatchMetrics:
         """Test that batch metrics averages correctly."""
         queries = [
             {
-                "retrieved_ids": ["a"],
-                "ground_truth_ids": ["a"],  # Precision=1
+                "retrieved_chunk_ids": ["a"],
+                "ground_truth_chunk_ids": ["a"],  # Precision=1
             },
             {
-                "retrieved_ids": ["b"],
-                "ground_truth_ids": ["a"],  # Precision=0
+                "retrieved_chunk_ids": ["b"],
+                "ground_truth_chunk_ids": ["a"],  # Precision=0
             },
         ]
 

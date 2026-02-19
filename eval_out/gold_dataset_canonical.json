@@ -1,0 +1,1529 @@
+{
+  "name": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13",
+  "description": "Gold dataset loaded from evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx",
+  "queries": [
+    {
+      "query_id": "1878",
+      "query": "Is there alternative polyadenylation during zebrafish development?",
+      "relevant_doc_ids": [
+        "22722342"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2779",
+      "query": "Are there microbes in human breast milk?",
+      "relevant_doc_ids": [
+        "27940404"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2671",
+      "query": "Is a mutation of the  ZIKV's membrane protein prM responsible for the microcephaly in new-born infants?",
+      "relevant_doc_ids": [
+        "28971967"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2308",
+      "query": "Is there an RNAi drug being developed to treat amyloidosis?",
+      "relevant_doc_ids": [
+        "28893208"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2559",
+      "query": "Are there ways of joint Bayesian inference of risk variants?",
+      "relevant_doc_ids": [
+        "27407109"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "231",
+      "query": "Do orphan and gene related CpG islands follow power-law-like distributions?",
+      "relevant_doc_ids": [
+        "25242375"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3326",
+      "query": "Is there a role for MRPL53 in cancer?",
+      "relevant_doc_ids": [
+        "29053389"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3799",
+      "query": "Can SMAD6 variants cause craniosynostosis?",
+      "relevant_doc_ids": [
+        "32499606"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3706",
+      "query": "Do genes with monoallelic expression contribute proportionally to genetic diversity in humans?",
+      "relevant_doc_ids": [
+        "26808112"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3865",
+      "query": "Is Eflornithine and Sulindac are effective for prevention of progression in Familial Adenomatous Polyposis?",
+      "relevant_doc_ids": [
+        "32905675"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "166",
+      "query": "Are there any statistical methods for normalizing and identifying differential regions in histone modification ChIP-seq data?",
+      "relevant_doc_ids": [
+        "22870189"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4157",
+      "query": "Is metoprolol metabolized by CYP2D6?",
+      "relevant_doc_ids": [
+        "14732961"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2802",
+      "query": "Does gepotidacin activate bacterial topoisomerase?",
+      "relevant_doc_ids": [
+        "26586303"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2787",
+      "query": "Is cohesin linked to myeloid differentiation?",
+      "relevant_doc_ids": [
+        "30127433"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1134",
+      "query": "Are Drosophila ultraconserved elements candidate ncRNAs?",
+      "relevant_doc_ids": [
+        "25618141"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3366",
+      "query": "Should Pentoxifylline be used for treatment of amyotrophic lateral sclerosis?",
+      "relevant_doc_ids": [
+        "16401852"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3434",
+      "query": "Can CMB305 be used against sarcomas?",
+      "relevant_doc_ids": [
+        "29280411"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4708",
+      "query": "Can whole genome sequencing be used for diagnosis of mitochondrial disease?",
+      "relevant_doc_ids": [
+        "34732400"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4570",
+      "query": "Is AGO2 related to cytokinesis?",
+      "relevant_doc_ids": [
+        "34117353"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1899",
+      "query": "Have the promoter regions of the genes implicated in Rett Syndrome been characterized with CAGE?",
+      "relevant_doc_ids": [
+        "25539566"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3027",
+      "query": "Can mogamulizumab be used for the treatment of cutaneous T-cell lymphoma?",
+      "relevant_doc_ids": [
+        "29298770"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3323",
+      "query": "Is BNN20 involved in Parkinson's disease?",
+      "relevant_doc_ids": [
+        "28461162"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4694",
+      "query": "Are there any R packages that help with visualizing data on spirals?",
+      "relevant_doc_ids": [
+        "34849585"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3572",
+      "query": "Does the Mcm2-Ctf4-Polα axis play a role in transfer of histones to leading strand DNA at the replication forks?",
+      "relevant_doc_ids": [
+        "30244834"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2487",
+      "query": "Is there any role of Dlx1 and Dlx2 transcription factors in cortical interneurons?",
+      "relevant_doc_ids": [
+        "29028947"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3875",
+      "query": "Is MK-1602 a CGRP antagonist?",
+      "relevant_doc_ids": [
+        "27269043"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2259",
+      "query": "Does TUC.338 inhibit colorectal cancer?",
+      "relevant_doc_ids": [
+        "27914101"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4299",
+      "query": "Does αCGRP have amyloidogenic properties?",
+      "relevant_doc_ids": [
+        "29501724"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3810",
+      "query": "Can AGY be used as antidiuretic replacement therapy?",
+      "relevant_doc_ids": [
+        "28035551"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1187",
+      "query": "Is there any link between conserved noncoding elements and alternative splicing in vertebrates?",
+      "relevant_doc_ids": [
+        "24681619"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2250",
+      "query": "What is metaSPAdes?",
+      "relevant_doc_ids": [
+        "29036597",
+        "28298430",
+        "28948103"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4072",
+      "query": "What is the aim of the TRAP method?",
+      "relevant_doc_ids": [
+        "31354448",
+        "28648677",
+        "32478741"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "684",
+      "query": "Describe what is the advantage of using a stain free protein gel in a Western Blot experiment?",
+      "relevant_doc_ids": [
+        "24429481",
+        "23085117",
+        "23712695"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2105",
+      "query": "Does the word ovine refers to goats?",
+      "relevant_doc_ids": [
+        "25755186",
+        "23903827",
+        "11578130"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4196",
+      "query": "Which human tissue synthesize CRP?",
+      "relevant_doc_ids": [
+        "31840602",
+        "31758923"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4639",
+      "query": "Name scRNA-seq workflows which harness graph attention networks",
+      "relevant_doc_ids": [
+        "34864884",
+        "34512734"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4414",
+      "query": "Which drugs are in the Segluromet combination pill?",
+      "relevant_doc_ids": [
+        "30938372",
+        "30724637",
+        "29476348"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3588",
+      "query": "What is detected by the UV-damaged DNA-binding protein (UV-DDB) complex?",
+      "relevant_doc_ids": [
+        "12034848",
+        "12812979",
+        "16473935"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1721",
+      "query": "Which protein phosphatases have been found to dephosphorylate phospholamban?",
+      "relevant_doc_ids": [
+        "9350040",
+        "1849481"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3298",
+      "query": "What is the target of the drug remdesivir?",
+      "relevant_doc_ids": [
+        "30275474",
+        "29511076"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3223",
+      "query": "Name three binding partners of cofilin 2.",
+      "relevant_doc_ids": [
+        "19752190",
+        "25373779",
+        "28886070"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1541",
+      "query": "What is GDF10?",
+      "relevant_doc_ids": [
+        "8679252",
+        "8670277",
+        "24963847"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1034",
+      "query": "Which heat shock protein is found to be upregulated during Hsp90 inhibition?",
+      "relevant_doc_ids": [
+        "20015528",
+        "23023377",
+        "24100469"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "406",
+      "query": "Can botulism poisoning of a pregnant woman harm her fetus?",
+      "relevant_doc_ids": [
+        "23735780",
+        "24235190"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4166",
+      "query": "Which are the lactate isomers?",
+      "relevant_doc_ids": [
+        "27119568",
+        "29501496",
+        "32365804"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1884",
+      "query": "List RNA modifications databases",
+      "relevant_doc_ids": [
+        "26464443",
+        "23118484",
+        "27016142"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2272",
+      "query": "What is the origin of XUT transcripts in yeast?",
+      "relevant_doc_ids": [
+        "21697827",
+        "29114019",
+        "26805575"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2599",
+      "query": "A bite from the Lone Star Tick Amblyomma americanum, can cause the victim to become allergic to red meat, yes or no?",
+      "relevant_doc_ids": [
+        "24690977",
+        "28319627"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2437",
+      "query": "Which clinical trials for psoriasis involved tofacitinib? (November 2017)",
+      "relevant_doc_ids": [
+        "27271195",
+        "28396102",
+        "27600367"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4019",
+      "query": "Inhaled Molgramostim can be used for treatment of which disease?",
+      "relevant_doc_ids": [
+        "29719809",
+        "32897035"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2702",
+      "query": "Which human gene encode for DNA polymerase θ?",
+      "relevant_doc_ids": [
+        "27264557",
+        "28668117"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2120",
+      "query": "What is the results of inactivated ANGPLT3?",
+      "relevant_doc_ids": [
+        "24798233",
+        "22062970"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3165",
+      "query": "What is the mode of action for Tocilizumab?",
+      "relevant_doc_ids": [
+        "22101760",
+        "27790001",
+        "24729685"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1441",
+      "query": "Give an overview of visualizing genomes with oligopaint FISH probes.",
+      "relevant_doc_ids": [
+        "24510436",
+        "23236188"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1697",
+      "query": "Which mitochondrial genes are regulated by thyroid hormone?",
+      "relevant_doc_ids": [
+        "1331777",
+        "12225634",
+        "7763274"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1120",
+      "query": "Which computational frameworks are available for predicting enhancers?",
+      "relevant_doc_ids": [
+        "23382538",
+        "25378307"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1777",
+      "query": "Which gene-defect causes the Vel-blood type?",
+      "relevant_doc_ids": [
+        "26732700",
+        "23505126"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4325",
+      "query": "What is a circRNA?",
+      "relevant_doc_ids": [
+        "33112505",
+        "32889059",
+        "32667692"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "232",
+      "query": "What is the proportion of non canonical splice sites in the human genome?",
+      "relevant_doc_ids": [
+        "11125105",
+        "11058137"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2710",
+      "query": "Cytochrome p450 CYP3A is induced by rifampicin  and compounds used to treat what virus?",
+      "relevant_doc_ids": [
+        "16432264",
+        "20834094"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3485",
+      "query": "What is the protein product of the gene GBA2?",
+      "relevant_doc_ids": [
+        "29524657",
+        "30308956",
+        "29234271"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4305",
+      "query": "Which factors are inhibited by Abelacimab?",
+      "relevant_doc_ids": [
+        "34297496",
+        "34714969"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4382",
+      "query": "What are the effects of ibrutinib on CART cell production?",
+      "relevant_doc_ids": [
+        "32683672",
+        "32055000"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3421",
+      "query": "What is the target of the drug Olmesartan?",
+      "relevant_doc_ids": [
+        "29414040",
+        "29872491",
+        "30217371"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2584",
+      "query": "What is liquid liquid phase transition?",
+      "relevant_doc_ids": [
+        "27725777",
+        "28980860",
+        "25436423"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "763",
+      "query": "Which genes are regulated by TRalpha2  in the heart?",
+      "relevant_doc_ids": [
+        "18031713",
+        "15831522",
+        "11731613"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3808",
+      "query": "What can be isolated from Pleurotus mutilus?",
+      "relevant_doc_ids": [
+        "28407921",
+        "32041931",
+        "27742734"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "237",
+      "query": "Synostosis of which cranial structures are characteristic to the Mercedes Benz syndrome?",
+      "relevant_doc_ids": [
+        "19396832",
+        "9780908",
+        "20048621"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3010",
+      "query": "In clinical trials, the H3 R antagonist CEP-26401 has a positive effect on cognition, yes or no?",
+      "relevant_doc_ids": [
+        "18469850",
+        "22001260",
+        "27222271"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1990",
+      "query": "How are looped genes identified in yest?",
+      "relevant_doc_ids": [
+        "19602510",
+        "24124207"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3619",
+      "query": "Which drugs are included in PolyIran?",
+      "relevant_doc_ids": [
+        "26265520",
+        "25230980",
+        "28882196"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "13",
+      "query": "Which are the major characteristics of cellular senescence?",
+      "relevant_doc_ids": [
+        "18976161",
+        "9624027",
+        "8824885"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2189",
+      "query": "What is the phenotype of people carrying mutations in the gene PRDM12?",
+      "relevant_doc_ids": [
+        "26005867",
+        "26549885",
+        "25891934"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "927",
+      "query": "Which are the Chompret criteria for Li-Fraumeni syndrome?",
+      "relevant_doc_ids": [
+        "19204208",
+        "22170717"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2864",
+      "query": "What are the effects of STEF depletion?",
+      "relevant_doc_ids": [
+        "29072354",
+        "21460187",
+        "29844364"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1963",
+      "query": "Which protein complexes recognize centromeric (CEN) DNA in yeast?",
+      "relevant_doc_ids": [
+        "3464952",
+        "23620291",
+        "22693454"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4135",
+      "query": "What is the mechanism of action of vosoritide?",
+      "relevant_doc_ids": [
+        "31269546",
+        "31235532"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "541",
+      "query": "List available databases containing information about conserved noncoding elements.",
+      "relevant_doc_ids": [
+        "18279518",
+        "18045502"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3394",
+      "query": "Is eculizumab effective for Guillain-Barré syndrome?",
+      "relevant_doc_ids": [
+        "31171755",
+        "27801990",
+        "29685815"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3568",
+      "query": "Which cells are affected in radiation-induced leukemias?",
+      "relevant_doc_ids": [
+        "9209408",
+        "17179481"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "102",
+      "query": "Which drugs are utilized to treat amiodarone-induced thyroitoxicosis?",
+      "relevant_doc_ids": [
+        "2781955",
+        "12727944",
+        "9217642",
+        "11901034",
+        "16910349",
+        "19675515",
+        "7946779",
+        "16544025",
+        "21135419"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2939",
+      "query": "Which drugs are included in the Orkambi pill?",
+      "relevant_doc_ids": [
+        "29903751",
+        "27990075",
+        "29146575",
+        "28667089",
+        "28891346",
+        "28611092",
+        "26417173",
+        "28769592",
+        "29351449",
+        "27792891",
+        "27804127"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "348",
+      "query": "What is the rate of survival after commotio cordis?",
+      "relevant_doc_ids": [
+        "23107651",
+        "11879111",
+        "11555799",
+        "20086611",
+        "21763255",
+        "23015869"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2143",
+      "query": "What is the indication for Mirabegron?",
+      "relevant_doc_ids": [
+        "20878594",
+        "24127366",
+        "26663687",
+        "26422675",
+        "23850394",
+        "24078498",
+        "22981677",
+        "24610862",
+        "23182126",
+        "24602031",
+        "26665779",
+        "23089348",
+        "26501573",
+        "26493129",
+        "23757386",
+        "22384458",
+        "23063375",
+        "25791612",
+        "26908514",
+        "25521658",
+        "27124860",
+        "24458878"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1749",
+      "query": "Which are the side effects during tacrine administration in patients with Alzheimer's Disease?",
+      "relevant_doc_ids": [
+        "22034058",
+        "17636619",
+        "8119309",
+        "7579023",
+        "2107926",
+        "9209244",
+        "25858345",
+        "7510447",
+        "7868848",
+        "8237620",
+        "7737527",
+        "9408186",
+        "19370562",
+        "10325444",
+        "8139084",
+        "7919566",
+        "12939598",
+        "22192081",
+        "10796507",
+        "1406817",
+        "8312036",
+        "9050085",
+        "19270633",
+        "9808364",
+        "17883890",
+        "9226744"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "931",
+      "query": "Why graphics processing units (GPU) are more suitable for biological tasks than central processing units (CPU)?",
+      "relevant_doc_ids": [
+        "20589122",
+        "22149859",
+        "23281733",
+        "21357575",
+        "20715052",
+        "22537298",
+        "18070356",
+        "20357844",
+        "23391255",
+        "22759575",
+        "18061402"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "373",
+      "query": "Which transcription factors are involved in E-cadherin repression during EMT?",
+      "relevant_doc_ids": [
+        "17615296",
+        "22406531",
+        "22562246",
+        "22266854",
+        "19581928",
+        "22833386",
+        "24297167",
+        "15674322",
+        "22727060",
+        "19295128",
+        "18286686",
+        "20735391"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "872",
+      "query": "Which translocation is harbored in the Askin tumor cells?",
+      "relevant_doc_ids": [
+        "9213191",
+        "2162733",
+        "7571088",
+        "17009618",
+        "1333942",
+        "23674776",
+        "7591257",
+        "3004699"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2837",
+      "query": "What is the mechanism of action of Emicizumab?",
+      "relevant_doc_ids": [
+        "27384849",
+        "29357074",
+        "30278802",
+        "30444568",
+        "30344994",
+        "29769259",
+        "30125997",
+        "30462521",
+        "29042366",
+        "29296836",
+        "30264916",
+        "29888855",
+        "29645406",
+        "28691557",
+        "29214439",
+        "27405674",
+        "27223146",
+        "28451690",
+        "30431213",
+        "29734520"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2436",
+      "query": "Is CREB a key memory protein?",
+      "relevant_doc_ids": [
+        "28752224",
+        "28292834",
+        "25031400",
+        "28069295",
+        "28017136",
+        "28424976"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3592",
+      "query": "Which receptor is inhibited by Teprotumumab?",
+      "relevant_doc_ids": [
+        "29744034",
+        "27346786",
+        "24878056",
+        "28467880",
+        "30215690",
+        "26287404",
+        "25105999",
+        "28427155",
+        "29847668",
+        "29273685",
+        "26087256",
+        "30575804"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "3016",
+      "query": "What is a prolactinoma and where in the body would they be found?",
+      "relevant_doc_ids": [
+        "10686432",
+        "29177641",
+        "29074127",
+        "28954263"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1892",
+      "query": "Which disease is treated with taliglucerase alfa?",
+      "relevant_doc_ids": [
+        "23980545",
+        "23046562",
+        "23199589",
+        "27102949",
+        "27174694",
+        "27499018",
+        "24950666",
+        "21235447",
+        "27839981",
+        "25453586",
+        "27559188",
+        "22916340",
+        "26053270",
+        "22654679",
+        "25812601",
+        "24630271",
+        "21900191"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2084",
+      "query": "Which is the main abnormality that arises with Sox9 locus duplication?",
+      "relevant_doc_ids": [
+        "25010117",
+        "18056774",
+        "25077096",
+        "22678921",
+        "10588843",
+        "24040047",
+        "18391513",
+        "11420125"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "637",
+      "query": "List the components of a Replisome Progression Complex (RPC).",
+      "relevant_doc_ids": [
+        "19661920",
+        "16483939",
+        "22918584",
+        "19622120",
+        "21505101",
+        "16930479",
+        "19910927",
+        "19913425",
+        "23499444",
+        "21701592",
+        "16531994",
+        "19496828"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "4504",
+      "query": "Which proteins does p110α interact with?",
+      "relevant_doc_ids": [
+        "34884613",
+        "24229705",
+        "24367658",
+        "30683915",
+        "24229709",
+        "26122737",
+        "23086038",
+        "25003191"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "1973",
+      "query": "Which are the main brain dysfunctions caused by hyperbilirubinemia?",
+      "relevant_doc_ids": [
+        "8340096",
+        "11726727",
+        "22966025",
+        "27393040",
+        "25534357",
+        "26480925",
+        "27746217",
+        "17342778",
+        "23086523",
+        "23375301",
+        "25524299",
+        "14684236",
+        "20971088",
+        "16361175",
+        "25793115",
+        "8631524",
+        "24309481",
+        "21163242",
+        "18821100",
+        "3174510",
+        "21575408",
+        "23283699",
+        "19754366"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "2343",
+      "query": "List main clinical features of the POEMS syndrome.",
+      "relevant_doc_ids": [
+        "19863172",
+        "17895817",
+        "25341835",
+        "27338259",
+        "28856089",
+        "2227242",
+        "26130736",
+        "8699962",
+        "19546057",
+        "7699917",
+        "27208909",
+        "25984208",
+        "21221584",
+        "21035860",
+        "24268501",
+        "2029023",
+        "29157614",
+        "29157615",
+        "29157616",
+        "22724593",
+        "10978936",
+        "10378364",
+        "17940990"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "988",
+      "query": "In which genomic regions are Alu enriched?",
+      "relevant_doc_ids": [
+        "12777511",
+        "23420552",
+        "11884141",
+        "6165649",
+        "2716062",
+        "12832639"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    },
+    {
+      "query_id": "469",
+      "query": "What is the treatment of neuropathic pain in children?",
+      "relevant_doc_ids": [
+        "22401313",
+        "11902308",
+        "15265351",
+        "18363625",
+        "7561230",
+        "22735246",
+        "12712053",
+        "21332246",
+        "18820538",
+        "22147611"
+      ],
+      "relevance_scores": null,
+      "category": null,
+      "metadata": {
+        "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
+      }
+    }
+  ],
+  "metadata": {
+    "path": "datasets/evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx",
+    "config": {
+      "sheet_index": 0,
+      "query_id_column": "id",
+      "query_column": "question",
+      "relevant_doc_ids_column": "relevant_passage_ids",
+      "list_format": "json"
+    }
+  }
+}

@@ -19,14 +19,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install UV for faster dependency resolution
 RUN pip install --no-cache-dir uv
 
-# Copy dependency files
+# Copy full project so editable install sees all packages (api, orchestration, generation, etc.)
 COPY pyproject.toml ./
+COPY api ./api
+COPY orchestration ./orchestration
+COPY evaluation ./evaluation
+COPY generation ./generation
+COPY strategies ./strategies
+COPY config ./config
 
 # Create virtual environment and install dependencies
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install dependencies using UV (faster than pip)
+# Install project and dependencies using UV
 RUN uv pip install --no-cache -e .
 
 # -----------------------------------------------------------------------------

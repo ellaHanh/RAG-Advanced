@@ -257,7 +257,12 @@ class ExecutionResult(BaseModel):
 
     @property
     def document_ids(self) -> list[str]:
-        """Get list of document IDs from results."""
+        """Get list of IDs from result documents.
+
+        In RAG-Advanced retrieval, strategies return chunks; each Document.id
+        is the chunk primary key (chunks.id). So document_ids are chunk IDs
+        when used for evaluation. See docs/README_terminology.md.
+        """
         return [doc.id for doc in self.documents]
 
     @property
@@ -282,6 +287,7 @@ class ChainContext:
     Attributes:
         query: Current query (may be modified by strategies).
         original_query: The original unmodified query.
+        input_documents: Documents from the previous step (for the next step to consume).
         intermediate_results: Results from each completed step.
         metadata: Additional context metadata.
         total_cost: Accumulated cost across all steps.
@@ -292,6 +298,7 @@ class ChainContext:
 
     query: str
     original_query: str
+    input_documents: tuple[Document, ...] = field(default_factory=tuple)
     intermediate_results: tuple[MappingProxyType[str, Any], ...] = field(default_factory=tuple)
     metadata: MappingProxyType[str, Any] = field(
         default_factory=lambda: MappingProxyType({})
@@ -347,6 +354,7 @@ class ChainContext:
         return ChainContext(
             query=self.query,
             original_query=self.original_query,
+            input_documents=tuple(result.documents),
             intermediate_results=self.intermediate_results + (step_data,),
             metadata=self.metadata,
             total_cost=self.total_cost + result.cost_usd,
@@ -368,6 +376,7 @@ class ChainContext:
         return ChainContext(
             query=new_query,
             original_query=self.original_query,
+            input_documents=self.input_documents,
             intermediate_results=self.intermediate_results,
             metadata=self.metadata,
             total_cost=self.total_cost,
@@ -389,6 +398,7 @@ class ChainContext:
         return ChainContext(
             query=self.query,
             original_query=self.original_query,
+            input_documents=self.input_documents,
             intermediate_results=self.intermediate_results,
             metadata=self.metadata,
             total_cost=self.total_cost,
@@ -413,6 +423,7 @@ class ChainContext:
         return ChainContext(
             query=self.query,
             original_query=self.original_query,
+            input_documents=self.input_documents,
             intermediate_results=self.intermediate_results,
             metadata=MappingProxyType(new_metadata),
             total_cost=self.total_cost,

@@ -169,6 +169,9 @@ secrets.json
 *.sql.bak
 *.dump
 
+# Datasets
+datasets/
+
 # Log files
 logs/
 *.log

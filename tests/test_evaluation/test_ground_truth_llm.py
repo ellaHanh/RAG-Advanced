@@ -76,7 +76,7 @@ class TestGenerateGroundTruthForQuery:
             relevant_ids=["doc1", "doc3"],
             relevance_scores={"doc1": 2, "doc3": 1},
         )
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client
@@ -97,7 +97,7 @@ class TestGenerateGroundTruthForQuery:
     ):
         """Test candidates as list of (id, snippet) tuples."""
         response = mock_openai_response(relevant_ids=["a"])
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client
@@ -116,7 +116,7 @@ class TestGenerateGroundTruthForQuery:
     ):
         """Test candidates as list of CandidateDoc."""
         response = mock_openai_response(relevant_ids=["doc1"])
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client
@@ -147,7 +147,7 @@ class TestGenerateGroundTruthForQuery:
         sample_candidates,
     ):
         """Test that missing API key raises ValueError."""
-        with patch.dict("os.environ", {}, clear=False):
+        with patch.dict("os.environ", {"OPENAI_API_KEY": ""}, clear=False):
             with pytest.raises(ValueError, match="OPENAI_API_KEY"):
                 await generate_ground_truth_for_query(
                     query="test",
@@ -162,7 +162,7 @@ class TestGenerateGroundTruthForQuery:
         """Test that relevant_ids without scores get default score 1."""
         response = mock_openai_response(relevant_ids=["doc1", "doc2"])
         # No relevance_scores in response
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client
@@ -205,7 +205,7 @@ class TestEnrichDatasetWithLlm:
         async def provider(query: str):
             return [("d1", "RAG is retrieval-augmented generation.")]
 
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client
@@ -295,7 +295,7 @@ class TestDatasetManagerEnrichWithLlm:
         async def provider(query: str):
             return [("d1", "snippet")]
 
-        with patch("evaluation.ground_truth_llm.AsyncOpenAI") as mock_client_class:
+        with patch("openai.AsyncOpenAI") as mock_client_class:
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=response)
             mock_client_class.return_value = mock_client

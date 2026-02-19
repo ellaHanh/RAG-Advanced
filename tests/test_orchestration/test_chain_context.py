@@ -90,6 +90,7 @@ class TestChainContextCreation:
         assert ctx.total_latency_ms == 0
         assert len(ctx.intermediate_results) == 0
         assert len(ctx.error_log) == 0
+        assert ctx.input_documents == ()
 
     def test_create_with_metadata(self):
         """Test context creation with metadata."""
@@ -270,6 +271,18 @@ class TestWithStepResult:
 
         assert new_ctx.query == sample_context.query
         assert new_ctx.original_query == sample_context.original_query
+
+    def test_sets_input_documents_for_next_step(
+        self,
+        sample_context: ChainContext,
+        sample_result: ExecutionResult,
+    ):
+        """Test that with_step_result sets input_documents to the step's documents."""
+        new_ctx = sample_context.with_step_result(sample_result)
+
+        assert len(new_ctx.input_documents) == 2
+        assert new_ctx.input_documents[0].id == sample_result.documents[0].id
+        assert new_ctx.input_documents[1].content == sample_result.documents[1].content
 
     def test_preserves_metadata(
         self,

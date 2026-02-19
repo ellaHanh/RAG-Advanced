@@ -31,7 +31,11 @@ except ImportError:
     pass
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-SCHEMA_BASE = REPO_ROOT / "strategies" / "utils" / "schema.sql"
+# Use 1024-dim schema when EMBEDDING_BACKEND=bge-m3 (BGE-M3 local embedder)
+if (os.getenv("EMBEDDING_BACKEND") or "").strip().lower() == "bge-m3":
+    SCHEMA_BASE = REPO_ROOT / "strategies" / "utils" / "schema_1024.sql"
+else:
+    SCHEMA_BASE = REPO_ROOT / "strategies" / "utils" / "schema.sql"
 SCHEMA_EXT = REPO_ROOT / "evaluation" / "schema_extension.sql"
 
 

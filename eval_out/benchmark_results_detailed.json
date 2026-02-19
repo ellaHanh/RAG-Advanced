@@ -1,0 +1,68 @@
+[
+  {
+    "query_id": "1878",
+    "query": "Is there alternative polyadenylation during zebrafish development?",
+    "ground_truth_chunk_ids": [
+      "2d1f7dcd-50c6-44e3-8328-8936e41d36f9"
+    ],
+    "results": {
+      "standard": {
+        "retrieved_chunk_ids": [],
+        "latency_ms": 76,
+        "cost_usd": 1.6e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "recall_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "ndcg_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "mrr": 0.0
+      }
+    }
+  },
+  {
+    "query_id": "2779",
+    "query": "Are there microbes in human breast milk?",
+    "ground_truth_chunk_ids": [
+      "e63ff0b9-64ba-4163-a03e-d6d3b830c527"
+    ],
+    "results": {
+      "standard": {
+        "retrieved_chunk_ids": [
+          "ac427a34-ffc1-4442-841b-0c37da82e08d"
+        ],
+        "latency_ms": 58,
+        "cost_usd": 1e-05,
+        "success": true,
+        "error": null,
+        "precision_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "recall_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "ndcg_at_k": {
+          "3": 0.0,
+          "5": 0.0,
+          "10": 0.0
+        },
+        "mrr": 0.0
+      }
+    }
+  }
+]

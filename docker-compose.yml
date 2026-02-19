@@ -1,6 +1,17 @@
 # =============================================================================
 # RAG-Advanced Docker Compose Configuration
 # =============================================================================
+# Prerequisites: Copy example.env to .env and set OPENAI_API_KEY (and optionally
+# ANTHROPIC_API_KEY, EMBEDDING_BACKEND). The api service reads .env via env_file.
+#
+# Embedding backend: Default is OpenAI (1536-dim). Postgres is initialized with
+# schema.sql (1536-dim). To use BGE-M3 (1024-dim), both must match:
+#   1. Set EMBEDDING_BACKEND=bge-m3 in .env
+#   2. Use 1024-dim schema at init. Options:
+#      - Fresh stack with override: docker-compose -f docker-compose.yml -f docker-compose.bge-m3.yml up -d
+#        (use a new volume or remove postgres_data first)
+#      - Or after postgres is up, run from host: EMBEDDING_BACKEND=bge-m3 DATABASE_URL=... python scripts/run_schema.py
+#        on an empty DB (e.g. new database or recreated volume).
 
 services:
   # ---------------------------------------------------------------------------
@@ -56,12 +67,15 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rag_advanced
       REDIS_URL: redis://redis:6379/0
-      # Override these in production with .env file
       OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-your-key}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-sk-ant-your-key}
+      # EMBEDDING_BACKEND: from env_file (.env). Do not override here so .env is used.
+      # For BGE-M3 (1024-dim) set EMBEDDING_BACKEND=bge-m3 in .env; use docker-compose.bge-m3.yml for Postgres.
       API_DEBUG: "false"
       LOG_LEVEL: INFO
     depends_on:

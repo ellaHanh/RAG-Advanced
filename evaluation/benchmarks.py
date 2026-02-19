@@ -12,7 +12,7 @@ Usage:
         strategies=["standard", "reranking", "multi_query"],
         iterations=3,
     )
-    report = await runner.run(queries, config)
+    report, _ = await runner.run(queries, config)
 
     print(report.summary())
     print(report.rankings)
@@ -80,7 +80,7 @@ class BenchmarkQuery(BaseModel):
     Attributes:
         query_id: Unique identifier for the query.
         query: The query text.
-        ground_truth_ids: List of relevant document IDs.
+        ground_truth_chunk_ids: List of relevant chunk IDs (chunks.id) for metrics.
         relevance_scores: Optional graded relevance scores.
     """
 
@@ -88,7 +88,10 @@ class BenchmarkQuery(BaseModel):
 
     query_id: str = Field(..., description="Query identifier")
     query: str = Field(..., description="Query text")
-    ground_truth_ids: list[str] = Field(default_factory=list, description="Relevant doc IDs")
+    ground_truth_chunk_ids: list[str] = Field(
+        default_factory=list,
+        description="Relevant chunk IDs (chunks.id) for Precision/Recall/NDCG/MRR",
+    )
     relevance_scores: dict[str, int] | None = Field(default=None, description="Graded relevance")
 
 
@@ -105,7 +108,7 @@ class StrategyResult:
     Attributes:
         strategy_name: Name of the executed strategy.
         query_id: Query that was executed.
-        retrieved_ids: List of retrieved document IDs.
+        retrieved_chunk_ids: List of retrieved chunk IDs (chunks.id) in rank order.
         latency_ms: Execution time in milliseconds.
         cost_usd: Estimated cost in USD.
         success: Whether execution succeeded.
@@ -114,7 +117,7 @@ class StrategyResult:
 
     strategy_name: str
     query_id: str
-    retrieved_ids: list[str] = field(default_factory=list)
+    retrieved_chunk_ids: list[str] = field(default_factory=list)
     latency_ms: int = 0
     cost_usd: float = 0.0
     success: bool = True
@@ -431,7 +434,7 @@ class BenchmarkRunner:
     Example:
         >>> runner = BenchmarkRunner()
         >>> config = BenchmarkConfig(strategies=["standard", "reranking"])
-        >>> report = await runner.run(queries, config)
+        >>> report, _ = await runner.run(queries, config)
     """
 
     def __init__(
@@ -464,7 +467,7 @@ class BenchmarkRunner:
         return StrategyResult(
             strategy_name=strategy_name,
             query_id=query_data.get("query_id", "unknown"),
-            retrieved_ids=query_data.get("mock_retrieved", []),
+            retrieved_chunk_ids=query_data.get("mock_retrieved", []),
             latency_ms=int(50 + hash(strategy_name) % 100),
             cost_usd=0.001 * (1 + hash(strategy_name) % 3),
             success=True,
@@ -474,7 +477,7 @@ class BenchmarkRunner:
         self,
         queries: list[BenchmarkQuery] | list[dict[str, Any]],
         config: BenchmarkConfig,
-    ) -> BenchmarkReport:
+    ) -> tuple[BenchmarkReport, list[dict[str, Any]]]:
         """
         Run the benchmark.
 
@@ -483,7 +486,11 @@ class BenchmarkRunner:
             config: Benchmark configuration.
 
         Returns:
-            BenchmarkReport with all results and statistics.
+            Tuple of (BenchmarkReport, detailed_results). detailed_results is a list
+            of dicts, one per query, with query_id, query, ground_truth_chunk_ids, and
+            per-strategy retrieved_chunk_ids, latency_ms, cost_usd, success, error, and
+            IR metrics (precision_at_k, recall_at_k, ndcg_at_k, mrr) from the first
+            non-warmup iteration.
         """
         start_time = time.time()
         started_at = datetime.now(UTC)
@@ -532,10 +539,10 @@ class BenchmarkRunner:
                             all_results[strategy].append(result)
 
                             # Calculate metrics if we have ground truth
-                            if result.success and query.ground_truth_ids:
+                            if result.success and query.ground_truth_chunk_ids:
                                 metrics = calculate_metrics(
-                                    retrieved_ids=result.retrieved_ids,
-                                    ground_truth_ids=query.ground_truth_ids,
+                                    retrieved_chunk_ids=result.retrieved_chunk_ids,
+                                    ground_truth_chunk_ids=query.ground_truth_chunk_ids,
                                     relevance_scores=query.relevance_scores,
                                     k_values=config.k_values,
                                 )
@@ -581,7 +588,7 @@ class BenchmarkRunner:
         duration = time.time() - start_time
         completed_at = datetime.now(UTC)
 
-        return BenchmarkReport(
+        report = BenchmarkReport(
             config=config,
             statistics=statistics,
             rankings=rankings,
@@ -591,6 +598,45 @@ class BenchmarkRunner:
             total_queries=len(benchmark_queries),
             total_executions=total_executions,
         )
+
+        # Build detailed results: one dict per query (first non-warmup iteration)
+        first_iteration_offset = config.warmup_iterations * len(benchmark_queries)
+        detailed: list[dict[str, Any]] = []
+        for i, query in enumerate(benchmark_queries):
+            row: dict[str, Any] = {
+                "query_id": query.query_id,
+                "query": query.query,
+                "ground_truth_chunk_ids": query.ground_truth_chunk_ids,
+                "results": {},
+            }
+            for strategy in config.strategies:
+                res_idx = first_iteration_offset + i
+                if res_idx < len(all_results[strategy]):
+                    result = all_results[strategy][res_idx]
+                    metrics = (
+                        all_metrics[strategy][res_idx]
+                        if res_idx < len(all_metrics[strategy])
+                        else None
+                    )
+                else:
+                    result = None
+                    metrics = None
+                sr: dict[str, Any] = {}
+                if result is not None:
+                    sr["retrieved_chunk_ids"] = result.retrieved_chunk_ids
+                    sr["latency_ms"] = result.latency_ms
+                    sr["cost_usd"] = result.cost_usd
+                    sr["success"] = result.success
+                    sr["error"] = result.error
+                if metrics is not None:
+                    sr["precision_at_k"] = metrics.precision
+                    sr["recall_at_k"] = metrics.recall
+                    sr["ndcg_at_k"] = metrics.ndcg
+                    sr["mrr"] = metrics.mrr
+                row["results"][strategy] = sr
+            detailed.append(row)
+
+        return (report, detailed)
 
     async def _execute_with_timeout(
         self,
@@ -621,7 +667,7 @@ class BenchmarkRunner:
                         {
                             "query_id": query.query_id,
                             "query": query.query,
-                            "ground_truth_ids": query.ground_truth_ids,
+                            "ground_truth_chunk_ids": query.ground_truth_chunk_ids,
                         },
                     ),
                     timeout=timeout,
