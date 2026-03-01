@@ -4,7 +4,7 @@ These scripts are copied from [all-rag-strategies/examples](https://github.com/c
 
 ## RAG-Advanced equivalents
 
-All **7** strategies with “Code Example” in [all-rag-strategies README](https://github.com/coleam00/ottomator-agents/blob/main/all-rag-strategies/README.md) are implemented in RAG-Advanced, plus **standard** (baseline). See [docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md](../../docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md) for why we had 2 of 7 initially and where “standard” came from.
+RAG-Advanced has **8 runnable strategies** (7 from all-rag-strategies + **standard** baseline). See [docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md](../../docs/ALL_RAG_STRATEGIES_7_VS_RAG_ADVANCED.md) for mapping.
 
 | Example | RAG-Advanced status | How to run equivalent |
 |---------|---------------------|------------------------|
@@ -54,13 +54,7 @@ POST /execute
 
 Chains run strategies **sequentially**. Each step receives the **same query**; the next step does **not** receive the previous step’s documents (each step runs retrieval from scratch). The chain returns the **last step’s** documents and aggregates latency/cost.
 
-- **All combinations** of the eight strategies are valid in a chain (each step runs with the same query; result is the last step’s documents).
-- **Recommended** orderings:
-  - **Recall then precision**: `[multi_query, reranking]` or `[query_expansion, reranking]`.
-  - **Fast then precise**: `[standard, reranking]`.
-  - **Self-correcting**: `[self_reflective]` or `[self_reflective, reranking]`.
-  - **Full context then chunks**: `[agentic]` (single strategy; returns full doc + chunks).
-  - **contextual_retrieval** / **context_aware_chunking**: use when ingestion was done with `--contextual` or Docling; chain like standard.
+- **All combinations** of the eight strategies are valid (same query per step; result = last step’s documents). **Recommended chains**: see [root README — Strategy Guide](../../README.md#-strategy-guide) and [Chain Strategies](../../README.md#chain-strategies).
 
 Per-step config (e.g. `limit`, `initial_k`, `final_k`, `num_variations`) can be set in the chain request; each step’s config is passed through to that strategy.
 
@@ -78,140 +72,24 @@ POST /chain
 }
 ```
 
-Fallback: you can set `fallback_strategy` on a step so that if the primary strategy fails, the fallback runs (e.g. `"strategy": "multi_query", "fallback_strategy": "standard"`).
+Fallback: set `fallback_strategy` on a step (e.g. `"strategy": "multi_query", "fallback_strategy": "standard"`) to run the fallback if the primary fails.
 
-## Framework Overview (all-rag-strategies original)
+---
 
-- **Pydantic AI**: Python agent framework with `@agent.tool` decorators for function calling
-- **PG Vector**: PostgreSQL extension for vector similarity search with `<=>` operator
-- All examples are under 50 lines and show the core concept in action
+## Reference: script → strategy (all-rag-strategies)
 
-## Scripts
+The `.py` files in this folder are **conceptual pseudocode** (Pydantic AI + pgvector; placeholders like `get_embedding`, `cross_encoder_score`). They are not runnable in RAG-Advanced. For strategy concepts and when to use each, see [strategies/docs/](../docs/README.md).
 
-### 01_query_expansion.py
-**Strategy**: Generate multiple query variations to improve recall
-- Shows: Expanding a single query into 3+ variations
-- Tool: `expand_query()` and `search_knowledge_base()`
-- Key: Searches with multiple perspectives and deduplicates results
-
-### 02_reranking.py
-**Strategy**: Two-stage retrieval with cross-encoder refinement
-- Shows: Fast vector search (20 candidates) → accurate re-ranking (top 5)
-- Tool: `search_with_reranking()`
-- Key: Balance between retrieval speed and precision
-
-### 03_agentic_rag.py
-**Strategy**: Agent autonomously chooses tools (vector, SQL, web)
-- Shows: Multiple tools for different data types
-- Tools: `vector_search()`, `sql_query()`, `web_search()`
-- Key: Agent decides which tool(s) to use based on query
-
-### 04_multi_query_rag.py
-**Strategy**: Parallel searches with reformulated queries
-- Shows: Multiple query perspectives executed in parallel
-- Tool: `multi_query_search()`
-- Key: Unique union of all results from different query angles
-
-### 05_context_aware_chunking.py
-**Strategy**: Semantic chunking based on embedding similarity
-- Shows: `semantic_chunk()` function that groups similar sentences
-- Key: Chunk boundaries determined by semantic similarity, not fixed size
-- Ingestion: Compares consecutive sentence embeddings
-
-### 06_late_chunking.py
-**Strategy**: Embed full document before chunking (Jina AI approach)
-- Shows: `late_chunk()` processes entire document through transformer first
-- Key: Token-level embeddings capture full context, then pooled per chunk
-- Ingestion: `transformer_embed()` → chunk boundaries → mean pooling
-
-### 07_hierarchical_rag.py
-**Strategy**: Parent-child relationships with metadata
-- Shows: Two tables (`parent_chunks`, `child_chunks`) with foreign keys
-- Tool: `search_knowledge_base()` searches children, returns parents
-- Key: Small chunks for matching, large parents for context
-
-### 08_contextual_retrieval.py
-**Strategy**: Add document context to chunks (Anthropic method)
-- Shows: `add_context_to_chunk()` prepends LLM-generated context
-- Key: Each chunk gets document-level context before embedding
-- Ingestion: Original chunk → contextualized → embedded
-
-### 09_self_reflective_rag.py
-**Strategy**: Iterative refinement with self-assessment
-- Shows: `search_and_grade()`, `refine_query()`, `answer_with_verification()`
-- Tools: Grade relevance, refine queries, verify answers
-- Key: Multiple LLM calls for reflection and improvement
-
-### 10_knowledge_graphs.py
-**Strategy**: Combine vector search with graph relationships
-- Shows: Two tables (`entities`, `relationships`) forming a graph
-- Tool: `search_knowledge_graph()` does hybrid vector + graph traversal
-- Ingestion: Extract entities and relationships, store in graph structure
-
-### 11_fine_tuned_embeddings.py
-**Strategy**: Custom embedding model trained on domain data
-- Shows: `fine_tune_model()` trains on query-document pairs
-- Key: Domain-specific embeddings (medical, legal, financial)
-- Ingestion: Uses fine-tuned model instead of generic embeddings
-
-## Common Patterns
-
-All scripts follow this structure:
-```python
-from pydantic_ai import Agent
-import psycopg2
-from pgvector.psycopg2 import register_vector
-
-# Initialize agent
-agent = Agent('openai:gpt-4o', system_prompt='...')
-
-# Database connection
-conn = psycopg2.connect("dbname=rag_db")
-register_vector(conn)
-
-# Ingestion function (strategy-specific)
-def ingest_document(text: str):
-    # ... chunking logic varies by strategy
-    pass
-
-# Agent tools (strategy-specific)
-@agent.tool
-def search_knowledge_base(query: str) -> str:
-    # ... search logic varies by strategy
-    pass
-
-# Run agent
-result = agent.run_sync("query")
-print(result.data)
-```
-
-## Notes
-
-- Functions like `get_embedding()`, `llm_generate()`, etc. are placeholders for clarity
-- Database schemas are simplified; production would need proper table creation
-- Each example focuses on demonstrating the core RAG strategy concept
-- All scripts use pgvector's `<=>` operator for cosine distance similarity search
-
-## Database Schema Examples
-
-**Basic chunks table**:
-```sql
-CREATE TABLE chunks (
-    id SERIAL PRIMARY KEY,
-    content TEXT,
-    embedding vector(768)
-);
-CREATE INDEX ON chunks USING ivfflat (embedding vector_cosine_ops);
-```
-
-**Hierarchical (parent-child)**:
-```sql
-CREATE TABLE parent_chunks (id INT PRIMARY KEY, content TEXT);
-CREATE TABLE child_chunks (id SERIAL PRIMARY KEY, content TEXT, embedding vector(768), parent_id INT);
-```
-
-**Knowledge graph**:
-```sql
-CREATE TABLE entities (name TEXT PRIMARY KEY, embedding vector(768));
-CREATE TABLE relationships (source TEXT, relation TEXT, target TEXT);
-```
+| Script | Strategy concept |
+|--------|-------------------|
+| 01_reranking.py | Two-stage retrieval, cross-encoder |
+| 02_agentic_rag.py | Agent tools (vector, SQL, web) |
+| 03_knowledge_graphs.py | Vector + graph |
+| 04_contextual_retrieval.py | Document context on chunks |
+| 05_query_expansion.py | Query variations, single search |
+| 06_multi_query_rag.py | Parallel reformulated queries |
+| 07_context_aware_chunking.py | Semantic chunk boundaries |
+| 08_late_chunking.py | Embed full doc then chunk (Jina) |
+| 09_hierarchical_rag.py | Parent-child chunks |
+| 10_self_reflective_rag.py | Grade → refine → search again |
+| 11_fine_tuned_embeddings.py | Domain-specific embeddings |

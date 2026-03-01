@@ -1,21 +1,24 @@
 """
 RAG-Advanced Evaluation API Routes.
 
-POST endpoints for calculating IR metrics and batch evaluation.
+POST endpoints for calculating IR metrics, batch evaluation, and RAG generation (RAGAS).
 
 Routes:
     POST /metrics - Calculate IR metrics for a single query
-    POST /batch-metrics - Calculate metrics for multiple queries
+    POST /metrics/batch - Calculate metrics for multiple queries
+    POST /evaluate/generation - RAGAS generation evaluation (faithfulness, answer_relevancy, etc.)
 """
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from evaluation.metrics import calculate_metrics, calculate_batch_metrics, EvaluationMetrics
+from evaluation.ragas_eval import evaluate_generation
 
 
 logger = logging.getLogger(__name__)
@@ -100,6 +103,66 @@ class BatchMetricsResponse(BaseModel):
     per_query_metrics: list[MetricsResponse] | None = Field(
         default=None,
         description="Per-query metrics (optional)",
+    )
+
+
+class GenerationSample(BaseModel):
+    """Single sample for RAGAS generation evaluation."""
+
+    model_config = ConfigDict(frozen=True)
+
+    question: str = Field(..., description="User question")
+    contexts: list[str] = Field(..., description="Retrieved context strings")
+    answer: str = Field(..., description="Model-generated answer")
+    ground_truth: str = Field(..., description="Gold/reference answer")
+
+
+class GenerationEvalRequest(BaseModel):
+    """Request for RAGAS generation evaluation."""
+
+    model_config = ConfigDict(
+        frozen=True,
+        json_schema_extra={
+            "example": {
+                "samples": [
+                    {
+                        "question": "What is RAG?",
+                        "contexts": ["RAG combines retrieval and generation."],
+                        "answer": "RAG is retrieval-augmented generation.",
+                        "ground_truth": "RAG augments LLMs with retrieved knowledge.",
+                    },
+                ],
+            },
+        },
+    )
+
+    samples: list[GenerationSample] = Field(
+        ...,
+        min_length=1,
+        description="Samples with question, contexts, answer, ground_truth",
+    )
+
+
+class GenerationEvalResponse(BaseModel):
+    """Response from RAGAS generation evaluation."""
+
+    model_config = ConfigDict(frozen=True)
+
+    scores: dict[str, float] = Field(
+        default_factory=dict,
+        description="Metric name -> overall score (e.g. faithfulness, answer_relevancy)",
+    )
+    per_sample: list[dict[str, Any]] | None = Field(
+        default=None,
+        description="Per-sample scores when available",
+    )
+    ragas_llm_usage: dict[str, Any] | None = Field(
+        default=None,
+        description="RAGAS LLM token/cost usage when available",
+    )
+    ragas_embedding_usage: dict[str, Any] | None = Field(
+        default=None,
+        description="RAGAS embedding request/token usage when available",
     )
 
 
@@ -213,6 +276,39 @@ def calculate_batch_metrics_endpoint(
             relevant_count=total_relevant // len(request.queries),
         ),
         per_query_metrics=per_query_results if include_per_query else None,
+    )
+
+
+# =============================================================================
+# Generation Evaluation (RAGAS)
+# =============================================================================
+
+
+def evaluate_generation_endpoint(request: GenerationEvalRequest) -> GenerationEvalResponse:
+    """
+    Run RAGAS generation evaluation on the provided samples.
+
+    Args:
+        request: Samples with question, contexts, answer, ground_truth.
+
+    Returns:
+        GenerationEvalResponse with scores and optional per_sample.
+    """
+    samples = [
+        {
+            "question": s.question,
+            "contexts": s.contexts,
+            "answer": s.answer,
+            "ground_truth": s.ground_truth,
+        }
+        for s in request.samples
+    ]
+    result = evaluate_generation(samples, show_progress=False)
+    return GenerationEvalResponse(
+        scores=result.scores,
+        per_sample=result.per_sample,
+        ragas_llm_usage=result.llm_usage,
+        ragas_embedding_usage=result.embedding_usage,
     )
 
 

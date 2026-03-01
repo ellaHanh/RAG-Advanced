@@ -82,6 +82,9 @@ class BenchmarkQuery(BaseModel):
         query: The query text.
         ground_truth_chunk_ids: List of relevant chunk IDs (chunks.id) for metrics.
         relevance_scores: Optional graded relevance scores.
+        ground_truth_answer: Gold answer text for RAG generation eval.
+        gold_decision: Gold decision (Yes/No) for binary questions.
+        gold_explanation: Gold explanation for binary questions.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -93,6 +96,18 @@ class BenchmarkQuery(BaseModel):
         description="Relevant chunk IDs (chunks.id) for Precision/Recall/NDCG/MRR",
     )
     relevance_scores: dict[str, int] | None = Field(default=None, description="Graded relevance")
+    ground_truth_answer: str | None = Field(
+        default=None,
+        description="Gold answer for RAG generation eval",
+    )
+    gold_decision: str | None = Field(
+        default=None,
+        description="Gold decision (Yes/No) for binary questions",
+    )
+    gold_explanation: str | None = Field(
+        default=None,
+        description="Gold explanation for binary questions",
+    )
 
 
 # =============================================================================
@@ -109,6 +124,7 @@ class StrategyResult:
         strategy_name: Name of the executed strategy.
         query_id: Query that was executed.
         retrieved_chunk_ids: List of retrieved chunk IDs (chunks.id) in rank order.
+        retrieved_contexts: Optional list of chunk content strings for generation eval.
         latency_ms: Execution time in milliseconds.
         cost_usd: Estimated cost in USD.
         success: Whether execution succeeded.
@@ -118,6 +134,7 @@ class StrategyResult:
     strategy_name: str
     query_id: str
     retrieved_chunk_ids: list[str] = field(default_factory=list)
+    retrieved_contexts: list[str] | None = None
     latency_ms: int = 0
     cost_usd: float = 0.0
     success: bool = True
@@ -628,6 +645,8 @@ class BenchmarkRunner:
                     sr["cost_usd"] = result.cost_usd
                     sr["success"] = result.success
                     sr["error"] = result.error
+                    if result.retrieved_contexts is not None:
+                        sr["retrieved_contexts"] = result.retrieved_contexts
                 if metrics is not None:
                     sr["precision_at_k"] = metrics.precision
                     sr["recall_at_k"] = metrics.recall

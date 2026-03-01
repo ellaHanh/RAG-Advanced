@@ -54,4 +54,4 @@ This document explains why the **11 RAG strategies** and **example documents** f
 
 The task-master tasks were scoped to **orchestration, evaluation, and API**. The 11 strategies and example documents are adopted from all-rag-strategies **alongside** that scope to maximize alignment and to give RAG-Advanced a clear path to full strategy coverage and self-contained ingestion.
 
-**Evaluation**: Evaluation (IR metrics and benchmarks) was in the PRD and is implemented. How to run it (curl examples, benchmark flow) is documented in the main [README.md](../README.md#evaluation) and in [docs/README_evaluation.md](README_evaluation.md). There is no separate CLI for evaluation; it is exposed only via the REST API.
+**Evaluation**: Evaluation (IR metrics and benchmarks) was in the PRD and is implemented. How to run it (curl examples, benchmark flow) is documented in the main [README.md](../README.md#evaluation) and in [evaluation/README.md](../evaluation/README.md). There is no separate CLI for evaluation; it is exposed only via the REST API.

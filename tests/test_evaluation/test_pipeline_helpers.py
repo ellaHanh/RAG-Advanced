@@ -99,7 +99,7 @@ def test_load_pipeline_config_json() -> None:
         json.dump(config_data, f)
         path = Path(f.name)
     try:
-        gold_cfg, corpus_cfg = mod._load_pipeline_config(path)
+        gold_cfg, corpus_cfg, _ = mod._load_pipeline_config(path)
         assert gold_cfg is not None
         assert gold_cfg.query_id_column == "id"
         assert gold_cfg.query_column == "question"
@@ -119,7 +119,7 @@ def test_load_pipeline_config_json_bioasq_v1_file() -> None:
     if not config_path.exists():
         pytest.skip("bioasq_v1.json not found")
     mod = _load_pipeline_module()
-    gold_cfg, corpus_cfg = mod._load_pipeline_config(config_path)
+    gold_cfg, corpus_cfg, _ = mod._load_pipeline_config(config_path)
     assert gold_cfg is not None
     assert gold_cfg.query_id_column == "id"
     assert gold_cfg.relevant_doc_ids_column == "relevant_passage_ids"
@@ -139,8 +139,26 @@ def test_load_pipeline_config_empty_json() -> None:
         f.write("{}")
         path = Path(f.name)
     try:
-        gold_cfg, corpus_cfg = mod._load_pipeline_config(path)
+        gold_cfg, corpus_cfg, ingestion_overrides = mod._load_pipeline_config(path)
         assert gold_cfg is None
         assert corpus_cfg is None
+        assert ingestion_overrides is None
     finally:
         path.unlink(missing_ok=True)
+
+
+# =============================================================================
+# Semantic-chunking option (--semantic-chunking -> IngestionConfig)
+# =============================================================================
+
+
+def test_semantic_chunking_option_builds_config_with_use_semantic_true() -> None:
+    """When --semantic-chunking is passed, pipeline builds IngestionConfig with use_semantic_chunking=True."""
+    from strategies.ingestion.models import IngestionConfig
+
+    mod = _load_pipeline_module()
+    base = mod.PIPELINE_DEFAULT_INGESTION.model_dump()
+    assert base["use_semantic_chunking"] is False
+    base["use_semantic_chunking"] = True
+    cfg = IngestionConfig(**base)
+    assert cfg.use_semantic_chunking is True

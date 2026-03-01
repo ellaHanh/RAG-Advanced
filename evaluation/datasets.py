@@ -63,6 +63,18 @@ class DatasetQuery(BaseModel):
     )
     category: str | None = Field(default=None, description="Query category")
     metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    answer: str | None = Field(
+        default=None,
+        description="Gold answer for generation eval (from gold Excel answer column)",
+    )
+    gold_decision: str | None = Field(
+        default=None,
+        description="Gold decision Yes/No for binary questions",
+    )
+    gold_explanation: str | None = Field(
+        default=None,
+        description="Gold explanation for binary questions",
+    )
 
     @field_validator("relevance_scores")
     @classmethod
@@ -86,6 +98,9 @@ class DatasetQuery(BaseModel):
             "relevance_scores": self.relevance_scores,
             "category": self.category,
             "metadata": self.metadata,
+            "answer": self.answer,
+            "gold_decision": self.gold_decision,
+            "gold_explanation": self.gold_explanation,
         }
 
 

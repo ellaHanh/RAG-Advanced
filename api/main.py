@@ -47,10 +47,13 @@ from api.routes.benchmarks import (
 from api.routes.evaluation import (
     BatchMetricsRequest,
     BatchMetricsResponse,
+    GenerationEvalRequest,
+    GenerationEvalResponse,
     MetricsRequest,
     MetricsResponse,
     calculate_batch_metrics_endpoint,
     calculate_metrics_endpoint,
+    evaluate_generation_endpoint,
 )
 from api.routes.generate import (
     GenerateRequest,
@@ -526,6 +529,20 @@ async def calculate_metrics(request: MetricsRequest) -> MetricsResponse:
 async def calculate_batch_metrics(request: BatchMetricsRequest) -> BatchMetricsResponse:
     """Calculate batch IR metrics."""
     return calculate_batch_metrics_endpoint(request)
+
+
+@app.post(
+    "/evaluate/generation",
+    response_model=GenerationEvalResponse,
+    summary="RAGAS generation evaluation",
+    description=(
+        "Evaluate RAG generation with RAGAS metrics (faithfulness, answer_relevancy, "
+        "context_precision). Provide samples with question, contexts, answer, ground_truth."
+    ),
+)
+async def evaluate_generation_route(request: GenerationEvalRequest) -> GenerationEvalResponse:
+    """Run RAGAS generation evaluation (runs in thread to avoid blocking)."""
+    return await asyncio.to_thread(evaluate_generation_endpoint, request)
 
 
 # =============================================================================

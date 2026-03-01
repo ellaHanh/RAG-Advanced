@@ -2,10 +2,10 @@
 
 ## Overview
 
-- **Benchmark ID**: `bef33e5a-fe8d-444d-a2b5-7b1235aa0354`
+- **Benchmark ID**: `18761b07-b9fe-45b3-bf12-12e789ab1dd7`
 - **Total Queries**: 2
 - **Total Executions**: 2
-- **Duration**: 0.13s
+- **Duration**: 0.14s
 - **Strategies**: standard
 - **Iterations**: 1
 
@@ -15,31 +15,31 @@
 
 | Strategy | P@3 | P@5 | P@10 |
 | --- | ---: | ---: | ---: |
-| standard | 0.000 | 0.000 | 0.000 |
+| standard | 0.333 | 0.200 | 0.100 |
 
 ### Recall@k
 
 | Strategy | R@3 | R@5 | R@10 |
 | --- | ---: | ---: | ---: |
-| standard | 0.000 | 0.000 | 0.000 |
+| standard | 1.000 | 1.000 | 1.000 |
 
 ### NDCG@k
 
 | Strategy | NDCG@3 | NDCG@5 | NDCG@10 |
 | --- | ---: | ---: | ---: |
-| standard | 0.000 | 0.000 | 0.000 |
+| standard | 1.000 | 1.000 | 1.000 |
 
 ### Mean Reciprocal Rank (MRR)
 
 | Strategy | MRR |
 | --- | ---: |
-| standard | 0.000 |
+| standard | 1.000 |
 
 ## Latency Statistics
 
 | Strategy | P50 (ms) | P95 (ms) | P99 (ms) | Mean (ms) | Std Dev |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| standard | 67 | 75 | 76 | 67 | 12.7 |
+| standard | 71 | 79 | 80 | 71 | 12.7 |
 
 ## Cost Analysis
 
@@ -71,4 +71,4 @@
 - **cost**: standard
 
 ---
-*Report generated on 2026-02-18 23:43:08*
+*Report generated on 2026-02-24 15:27:20*

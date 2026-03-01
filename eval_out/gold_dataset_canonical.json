@@ -12,7 +12,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. There is extensive alternative polyadenylation during zebrafish development.",
+      "gold_decision": "Yes",
+      "gold_explanation": "There is extensive alternative polyadenylation during zebrafish development."
     },
     {
       "query_id": "2779",
@@ -24,7 +27,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, human milk is a rich source of diverse bacteria.",
+      "gold_decision": "Yes",
+      "gold_explanation": "human milk is a rich source of diverse bacteria."
     },
     {
       "query_id": "2671",
@@ -36,7 +42,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, a single mutation in the prM protein of Zika virus contributes to fetal microcephaly.",
+      "gold_decision": "Yes",
+      "gold_explanation": "a single mutation in the prM protein of Zika virus contributes to fetal microcephaly."
     },
     {
       "query_id": "2308",
@@ -48,7 +57,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, patisiran is an investigational RNA interference (RNAi) therapeutic in development for the treatment of hereditary ATTR (hATTR) amyloidosis.",
+      "gold_decision": "Yes",
+      "gold_explanation": "patisiran is an investigational RNA interference (RNAi) therapeutic in development for the treatment of hereditary ATTR (hATTR) amyloidosis."
     },
     {
       "query_id": "2559",
@@ -60,7 +72,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. RiVIERA (Risk Variant Inference using Epigenomic Reference Annotations) is a Bayesian model for inference of driver variants from summary statistics across multiple traits using hundreds of epigenomic annotations.",
+      "gold_decision": "Yes",
+      "gold_explanation": "RiVIERA (Risk Variant Inference using Epigenomic Reference Annotations) is a Bayesian model for inference of driver variants from summary statistics across multiple traits using hundreds of epigenomic annotations."
     },
     {
       "query_id": "231",
@@ -72,7 +87,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Orphan and gene related CpG Islands follow power-law-like distributions in several genomes. The observed distributional pattern is independent of the analogous pattern that protein coding segments were reported to follow.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Orphan and gene related CpG Islands follow power-law-like distributions in several genomes. The observed distributional pattern is independent of the analogous pattern that protein coding segments were reported to follow."
     },
     {
       "query_id": "3326",
@@ -84,7 +102,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No. MRPL53 is a new candidate gene for orofacial clefting identified using an eQTL approach.",
+      "gold_decision": "No",
+      "gold_explanation": "MRPL53 is a new candidate gene for orofacial clefting identified using an eQTL approach."
     },
     {
       "query_id": "3799",
@@ -96,7 +117,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, SMAD6 variants can cause craniosynostosis.",
+      "gold_decision": "Yes",
+      "gold_explanation": "SMAD6 variants can cause craniosynostosis."
     },
     {
       "query_id": "3706",
@@ -108,7 +132,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No, genes with monoallelic expression contribute disproportionately to genetic diversity in humans.",
+      "gold_decision": "No",
+      "gold_explanation": "genes with monoallelic expression contribute disproportionately to genetic diversity in humans."
     },
     {
       "query_id": "3865",
@@ -120,7 +147,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No. In a clinical trial, the incidence of progression in Familial Adenomatous Polyposis was not significantly lower with the combination of eflornithine and sulindac than with either drug alone.",
+      "gold_decision": "No",
+      "gold_explanation": "In a clinical trial, the incidence of progression in Familial Adenomatous Polyposis was not significantly lower with the combination of eflornithine and sulindac than with either drug alone."
     },
     {
       "query_id": "166",
@@ -132,7 +162,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. ChIPnorm is a two-stage statistical method to normalize ChIP-seq data, and to find differential regions in the genome, given two libraries of histone modifications of different cell types.",
+      "gold_decision": "Yes",
+      "gold_explanation": "ChIPnorm is a two-stage statistical method to normalize ChIP-seq data, and to find differential regions in the genome, given two libraries of histone modifications of different cell types."
     },
     {
       "query_id": "4157",
@@ -144,7 +177,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, metoprolol is metabolized by CYP2D6.",
+      "gold_decision": "Yes",
+      "gold_explanation": "metoprolol is metabolized by CYP2D6."
     },
     {
       "query_id": "2802",
@@ -156,7 +192,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No, gepotidacin is a bacterial topoisomerase inhibitor.",
+      "gold_decision": "No",
+      "gold_explanation": "gepotidacin is a bacterial topoisomerase inhibitor."
     },
     {
       "query_id": "2787",
@@ -168,7 +207,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. There has been a link found between cohesin and myeloid differentiation which may help explain the prevalence of cohesin mutations in human acute myeloid leukemia.",
+      "gold_decision": "Yes",
+      "gold_explanation": "There has been a link found between cohesin and myeloid differentiation which may help explain the prevalence of cohesin mutations in human acute myeloid leukemia."
     },
     {
       "query_id": "1134",
@@ -180,7 +222,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Highly constrained intergenic Drosophila ultraconserved elements are candidate ncRNAs.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Highly constrained intergenic Drosophila ultraconserved elements are candidate ncRNAs."
     },
     {
       "query_id": "3366",
@@ -192,7 +237,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No. Pentoxifylline is not beneficial in amyotrophic lateral sclerosis and should be avoided in patients treated with riluzole.",
+      "gold_decision": "No",
+      "gold_explanation": "Pentoxifylline is not beneficial in amyotrophic lateral sclerosis and should be avoided in patients treated with riluzole."
     },
     {
       "query_id": "3434",
@@ -204,7 +252,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, the CMB205 vaccine is aimed at synovial sarcoma and myxoid/round cell liposarcoma patients.",
+      "gold_decision": "Yes",
+      "gold_explanation": "the CMB205 vaccine is aimed at synovial sarcoma and myxoid/round cell liposarcoma patients."
     },
     {
       "query_id": "4708",
@@ -216,7 +267,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Whole genome sequencing is a useful diagnostic test in patients with suspected mitochondrial disorders, yielding a diagnosis in a further 31% after exclusion of common causes. Most diagnoses were non-mitochondrial disorders and included developmental disorders with intellectual disability, epileptic encephalopathies, other metabolic disorders, cardiomyopathies, and leukodystrophies. These would have been missed if a targeted approach was taken, and some have specific treatments.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Whole genome sequencing is a useful diagnostic test in patients with suspected mitochondrial disorders, yielding a diagnosis in a further 31% after exclusion of common causes. Most diagnoses were non-mitochondrial disorders and included developmental disorders with intellectual disability, epileptic encephalopathies, other metabolic disorders, cardiomyopathies, and leukodystrophies. These would have been missed if a targeted approach was taken, and some have specific treatments."
     },
     {
       "query_id": "4570",
@@ -228,7 +282,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. AGO2 localizes to cytokinetic protrusions in a p38-dependent manner and is needed for accurate cell division.",
+      "gold_decision": "Yes",
+      "gold_explanation": "AGO2 localizes to cytokinetic protrusions in a p38-dependent manner and is needed for accurate cell division."
     },
     {
       "query_id": "1899",
@@ -240,7 +297,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Promoter regions of the genes implicated in Rett Syndrome have been characterized using CAGE.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Promoter regions of the genes implicated in Rett Syndrome have been characterized using CAGE."
     },
     {
       "query_id": "3027",
@@ -252,7 +312,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, mogamulizumab can be used for the treatment of cutaneous T-cell lymphoma.",
+      "gold_decision": "Yes",
+      "gold_explanation": "mogamulizumab can be used for the treatment of cutaneous T-cell lymphoma."
     },
     {
       "query_id": "3323",
@@ -264,7 +327,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Neurotrophic factors are among the most promising treatments aiming at slowing or stopping and even reversing Parkinson's disease (PD). BNN-20 has been suggested as an important neuroprotective agent acting through the TrkB neurotrophin receptor pathway, mimicking the action of the endogenous neurotrophin BDNF. Thus BNN-20 could be proposed for treatment of PD.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Neurotrophic factors are among the most promising treatments aiming at slowing or stopping and even reversing Parkinson's disease (PD). BNN-20 has been suggested as an important neuroprotective agent acting through the TrkB neurotrophin receptor pathway, mimicking the action of the endogenous neurotrophin BDNF. Thus BNN-20 could be proposed for treatment of PD."
     },
     {
       "query_id": "4694",
@@ -276,7 +342,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Spiralize is an R package for visualizing data on spirals.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Spiralize is an R package for visualizing data on spirals."
     },
     {
       "query_id": "3572",
@@ -288,7 +357,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No, the Mcm2-Ctf4-Pola axis facilitates parental histone H3-H4 transfer to lagging strands.",
+      "gold_decision": "No",
+      "gold_explanation": "the Mcm2-Ctf4-Pola axis facilitates parental histone H3-H4 transfer to lagging strands."
     },
     {
       "query_id": "2487",
@@ -300,7 +372,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. DLX2 directly drives Gad1, Gad2, and Vgat expression, and mutants have reduced mIPSC amplitude. In addition, the mutants formed fewer GABAergic synapses on excitatory neurons and have reduced mIPSC frequency. Furthermore, Dlx1/2 CKO have hypoplastic dendrites, fewer excitatory synapses, and reduced excitatory input.",
+      "gold_decision": "Yes",
+      "gold_explanation": "DLX2 directly drives Gad1, Gad2, and Vgat expression, and mutants have reduced mIPSC amplitude. In addition, the mutants formed fewer GABAergic synapses on excitatory neurons and have reduced mIPSC frequency. Furthermore, Dlx1/2 CKO have hypoplastic dendrites, fewer excitatory synapses, and reduced excitatory input."
     },
     {
       "query_id": "3875",
@@ -312,7 +387,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes, MK-1602 is a CGRP antagonist.",
+      "gold_decision": "Yes",
+      "gold_explanation": "MK-1602 is a CGRP antagonist."
     },
     {
       "query_id": "2259",
@@ -324,7 +402,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No. TUC.338 is significantly up-regulated in colorectal cancers (CRC) tissue and CRC cell lines, and the up-regulated TUC.338 is associated with lymph node metastasis. TUC.338 acts as a novel oncogene by targeting the TIMP-1 gene thus promoting colorectal cancer cell migration and invasion.",
+      "gold_decision": "No",
+      "gold_explanation": "TUC.338 is significantly up-regulated in colorectal cancers (CRC) tissue and CRC cell lines, and the up-regulated TUC.338 is associated with lymph node metastasis. TUC.338 acts as a novel oncogene by targeting the TIMP-1 gene thus promoting colorectal cancer cell migration and invasion."
     },
     {
       "query_id": "4299",
@@ -336,7 +417,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. αCGRP, a 37-residue-long peptide hormone, is a novel amyloidogenic member of the CGRP family",
+      "gold_decision": "Yes",
+      "gold_explanation": "αCGRP, a 37-residue-long peptide hormone, is a novel amyloidogenic member of the CGRP family"
     },
     {
       "query_id": "3810",
@@ -348,7 +432,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "No, AGY is an oral egg yolk anti-gliadin antibody used to neutralize gluten. It is used in patients with celiac disease.",
+      "gold_decision": "No",
+      "gold_explanation": "AGY is an oral egg yolk anti-gliadin antibody used to neutralize gluten. It is used in patients with celiac disease."
     },
     {
       "query_id": "1187",
@@ -360,7 +447,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Yes. Some of the most highly conserved sequences occur in genes encoding RNA binding proteins, particularly the RNA splicing-associated SR genes.",
+      "gold_decision": "Yes",
+      "gold_explanation": "Some of the most highly conserved sequences occur in genes encoding RNA binding proteins, particularly the RNA splicing-associated SR genes."
     },
     {
       "query_id": "2250",
@@ -374,7 +464,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "MetaSPAdes is a new versatile metagenomic assembler.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4072",
@@ -388,7 +481,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The translating ribosome affinity purification (TRAP) method is used to obtain obtain translatome data.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "684",
@@ -402,7 +498,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Stain-Free technology can be used as a normalization tool in Western blot analysis.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2105",
@@ -416,7 +515,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Ovine refers to sheep.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4196",
@@ -429,7 +531,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "CRP is predominantly produced in the liver in a native pentameric form (nCRP).",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4639",
@@ -442,7 +547,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "SCDRHA and CellVGAE",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4414",
@@ -456,7 +564,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Segluromet includes combinations of ertugliflozin and metformin. It has recently been approved by the US FDA as an adjunct to diet and exercise to improve glycaemic control in adults with T2DM.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3588",
@@ -470,7 +581,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Upon UV irradiation of primate cells,  UV-DDB associates tightly with chromatin and is involved in global genomic nucleotide excision repair (NER) in mammalian cells.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1721",
@@ -483,7 +597,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The protein phosphatases which dephosphorylate native, sarcoplasmic reticulum (SR)-associated phospholamban were studied in cardiac muscle extracts and in a Triton fraction prepared by detergent extraction of myofibrils, the latter fraction containing 70-80% of the SR-associated proteins present in the tissue. At physiological concentrations of free Mg2+ (1 mM), protein phosphatase 1 (PP1) accounted for approximately 70% of the total phospholamban phosphatase activity in these fractions towards either Ser-16 (the residue labelled by cAMP-dependent protein kinase, PK-A) or Thr-17 (the residue phosphorylated by an SR-associated Ca2+/calmodulin-dependent protein kinase). Protein phosphatase 2A (PP2A) and protein phosphatase 2C (PP2C) accounted for the remainder of the activity.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3298",
@@ -496,7 +613,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "remdesivir is a polymerase inhibitor",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3223",
@@ -510,7 +630,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Cofilin 2 can bind miR-201a, the protein 14-3-3, and ATP/ADP-Pi-actin filaments.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1541",
@@ -524,7 +647,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The growth/differentiation factor-10 (GDF-10) is a new member of the transforming growth factor-beta (TGF-beta) superfamily. It is highly related to bone morphogenetic protein-3 (BMP-3) and often referred to as BMP3b. The nucleotide sequence of GDF-10 encodes a predicted protein of 476 amino acids with a molecular weight of approximately 52,000. The GDF-10 polypeptide contains a potential signal sequence for secretion, a putative RXXR proteolytic processing site, and a carboxy-terminal domain with considerable homology to other known members of the TGF-beta superfamily. GDF10 is found primarily in murine uterus, adipose tissue, and brain and to a lesser extent in liver and spleen. In addition, GDF-10 mRNA was present in both neonatal and adult bone samples, with higher levels being detected in calvaria than in long bone. These results suggest that GDF10 may play multiple roles in regulating cell differentiation events, including those involved in skeletal morphogenesis. Gdf10 was mapped to the proximal region of mouse chromosome 14 close to a region known to contain a spontaneous recessive mutation that is associated with a craniofacial defect.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1034",
@@ -538,7 +664,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "HSP90 inhibition was found to be associated with induction of HSP70 expression.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "406",
@@ -551,7 +680,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Botulinum toxin, which causes botulism, is not expected to be present in systemic circulation following proper intramuscular or intradermal injection. Moreover, botulinum toxin has a high molecular weight, and does not appear to cross the placenta. Based on the study cases reported in the literature, botulism poisoning during pregnancy does not appear to increase the risk of adverse outcome in the fetus.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4166",
@@ -565,7 +697,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Lactate contains a chiral carbon and thus has two optical isomers-d-lactate and l-lactate.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1884",
@@ -579,7 +714,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "RMBase and MODOMICS",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2272",
@@ -593,7 +731,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "XUTs are a class of Xrn1-sensitive antisense regulatory non-coding RNA in yeast",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2599",
@@ -606,7 +747,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Conditions such as Southern tick-associated rash illness and anaphylaxis to red meat following tick bites have been attributed to the lone star tick, Ambyomma ameriacanum.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2437",
@@ -620,7 +764,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Four phase 3 clinical trials have been performed to assess tofacitinib in psoriasis patients: OPT Retreatment, OPT Pivotal 1, OPT Pivotal 2, OPT Compare",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4019",
@@ -633,7 +780,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Inhaled Molgramostim was shown to be effective for Autoimmune Pulmonary Alveolar Proteinosis.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2702",
@@ -646,7 +796,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "DNA polymerase theta (pol θ) is an evolutionarily conserved protein encoded by the POLQ gene in mammalian genomes",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2120",
@@ -659,7 +812,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Complete ANGPTL3 deficiency caused by loss-of-function mutations of ANGPTL3 is associated with a recessive hypolipidemia",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3165",
@@ -673,7 +829,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Tocilizumab (TCZ) is a recombinant humanized monoclonal antibody against the IL-6 receptor and has been approved in many countries, including the United States, for the treatment of moderate to severe RA in patients who have not adequately responded to one or more disease-modifying antirheumatic drugs",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1441",
@@ -686,7 +845,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Oligopaint probes are fluorescently labeled, single-stranded DNA oligonucleotides that can be used to visualize genomic regions ranging in size from tens of kilobases to many megabases. Coupled with fluorescence in situ hybridization (FISH) and a bioinformatic platform, this technology could be extended to any organism whose genome has been sequenced. The oligonucleotide probes are renewable, highly efficient, and able to robustly label chromosomes in cell culture, fixed tissues, and metaphase spreads. The method gives researchers precise control over the sequences they target and allows for single and multicolor imaging of chromosomal regions. It is anticipated that this technology will lead to an enhanced ability to visualize interphase and metaphase chromosomes.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1697",
@@ -700,7 +862,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "subunit 6 of ATP synthase, ATPase-6, mitochondrial II and III subunits of cytochrome-c oxidase, NADH dehydrogenase subunit 3",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1120",
@@ -713,7 +878,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "DEEP integrates three components with diverse characteristics that streamline the analysis of enhancer's properties in a great variety of cellular conditions. DEEP uses features derived from histone modification marks or attributes coming from sequence characteristics. Experimental results indicate that DEEP performs better than four state-of-the-art methods on the ENCODE data. The PRISM (predicting regulatory information from single motifs) approach obtains 2543 TF function predictions in a large variety of contexts, at a false discovery rate of 16%. The predictions are highly enriched for validated TF roles, and 45 of 67 (67%) tested binding site regions in five different contexts act as enhancers in functionally matched cells.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1777",
@@ -726,7 +894,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "A cohort of 70 Vel- individuals was found to be uniformly homozygous for a 17 nucleotide deletion in the coding sequence of SMIM",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4325",
@@ -740,7 +911,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Circular RNAs (circRNAs) are a new class of non-coding RNA with a stable structure formed by special loop splicing.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "232",
@@ -753,7 +927,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Between 1% and 2% of human splice sites do not contain the canonical GT-AG dinucleotides",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2710",
@@ -766,7 +943,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Etravirine is an effective and well-tolerated recently approved non-nucleoside reverse transcriptase inhibitor (NNRTI) for HIV type-1-infected patients with previous antiretroviral treatment experience.  Etravirine is a weak inducer of cytochrome P450 (CYP)3A",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3485",
@@ -780,7 +960,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The GBA2 gene encodes the non-lysosomal glucosylceramidase (NLGase), an enzyme that catalyzes the conversion of glucosylceramide (GlcCer) to ceramide and glucose.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4305",
@@ -793,7 +976,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Abelacimab is a novel dual inhibitor of Factor XI and Factor XIa.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4382",
@@ -806,7 +992,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "CART cell generation in the presence of ibrutinib resulted in increased cell viability and expansion of CLL patient-derived CART cells. Furthermore, ibrutinib enriched CART cells with less-differentiated naïve-like phenotype and decreased expression of exhaustion markers including PD-1, TIM-3 and LAG-3. In addition, ibrutinib increased the cytokine release capacity of CLL patient-derived CART cells. In summary, BTK/ITK inhibition with ibrutinib during CART cell culture can improve yield and function of CLL patient-derived CART cell products.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3421",
@@ -820,7 +1009,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Olmesartan (OL) is the pharmacologically active metabolite of Olmesartan medoxomil (OM), an FDA-approved angiotensin II receptor antagonist for administrating cardiovascular diseases",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2584",
@@ -834,7 +1026,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The influence of membrane-free microcompartments resulting from crowding-induced liquid/liquid phase separation (LLPS) on the dynamic spatial organization of FtsZ, the main component of the bacterial division machinery, has been studied using several LLPS systems.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "763",
@@ -848,7 +1043,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "ARB1, ARB2, TAK1, p38, TRalpha1",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3808",
@@ -862,7 +1060,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Pleuromutilins are antibiotics,  isolated from the fungus,  Pleurotus mutilus, that selectively inhibit bacterial translation and are semisynthetic derivatives of the naturally occurring tricyclic diterpenoid pleuromutilins.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "237",
@@ -876,7 +1077,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Synostosis of sagittal and lambdoid structures are characteristic to the Mercedes Benz syndrome.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3010",
@@ -890,7 +1094,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The H3 R antagonist CEP-26401 had an effect on cognition.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1990",
@@ -903,7 +1110,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Gene-loop formation is dependent on regulatory proteins localized at the 5' and 3' ends of genes, such as TFIIB",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3619",
@@ -917,7 +1127,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "PolyIran polypill is composed of acetylsalicylic acid, hydrochlorothiazide, enalapril, and atorvastatin, whose efficacy in the treatment and prevention of cardiovascular disease has been documented in clinical trials.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "13",
@@ -931,7 +1144,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The defining characteristics of cellular senescence are altered morphology, arrested cell-cycle progression, development of aberrant gene expression with proinflammatory behavior, and telomere shortening.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2189",
@@ -945,7 +1161,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "New therapeutic options have recently been derived from studies of individuals with congenital insensitivity to pain (CIP). Here we identified 10 different homozygous mutations in PRDM12 (encoding PRDI-BF1 and RIZ homology domain-containing protein 12) in subjects with CIP from 11 families.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "927",
@@ -958,7 +1177,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "1) According to the Chompret criteria for LFS, any patient with adrenocortical cancer (ACC), irrespective of age and family history, is at high risk for a TP53 germline mutation.\n2) All families with a p53 mutation must have at least one family member with a sarcoma, breast, brain, or adrenocortical carcinoma (ACC).",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2864",
@@ -972,7 +1194,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The mechanisms regulating the actin cap are currently poorly understood. STEF/TIAM2, a Rac1 selective guanine nucleotide exchange factor, localises at the nuclear envelope, co-localising with the key perinuclear proteins Nesprin-2G and Non-muscle myosin IIB (NMMIIB), where it regulates perinuclear Rac1 activity. STEF depletion reduces apical perinuclear actin cables (a phenotype rescued by targeting active Rac1 to the nuclear envelope), decreases nuclear stiffness and reduces expression of TAZ-regulated genes, indicating an alteration in mechanosensing pathways as a consequence of disruption of the actin cap.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1963",
@@ -986,7 +1211,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The Schizosaccharomyces pombe centromere-linked genes, LYS1 and CYH1 on chromosome I and TPS13 and RAN1 on chromosome II, have been isolated. In budding yeast, as well as in other eukaryotes, the Cse4 histone variant (known in vertebrates as CENP-A) is believed to substitute for histone H3 at the centromeric nucleosome.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4135",
@@ -999,7 +1227,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Vosoritide is a biologic analogue of C-type natriuretic peptide, a potent stimulator of endochondral ossification.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "541",
@@ -1012,7 +1243,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Ancora and TFCONES.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3394",
@@ -1026,7 +1260,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "In a clinical trial eculizumab did not achieve primary outcome for Guillain-Barre syndrome. However, because this was a small study without statistical comparison with the placebo group, the efficacy and safety of eculizumab could be investigated in larger, randomised controlled trials.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3568",
@@ -1039,7 +1276,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Hemopoietic stem cells, the possible target cells for radiation-induced leukemias.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "102",
@@ -1059,7 +1299,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Amiodarone-induced thyrotoxicosis treatment includes anti-thyroid drugs and steroid therapy\nRadio Iodine Treatment (RIT) may be a safe and useful method of AIT therapy in patients with low RAIU, in whom other treatment methods are contraindicated.\nLithium is a useful and safe medication for treatment of iodine-induced thyrotoxicosis caused by amiodarone.\nThyrodectomy may be necessary in presence of unresponsiveness to standard medical treatments",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2939",
@@ -1081,7 +1324,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Orkambi pill includes lumacaftor combined with ivacaftor. It is approved for treatment of cystic fibrosis with F508del-CFTR mutation.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "348",
@@ -1098,7 +1344,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Survival rates for commotio cordis are low, even when resuscitation is performed. Survival rates vary between 10% and 28%.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2143",
@@ -1131,7 +1380,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Mirabegron, the first 尾3-adrenoceptor agonist in clinical practice, is approved for treatment of overactive bladder (OAB) syndrome symptoms.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1749",
@@ -1168,7 +1420,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The side effects during tacrine administration in patients with Alzheimer's Disease are:\n1) Hepatotoxicity\n2) Gastrointestinal (diarrhea, anorexia, dyspepsia, abdominal pain, nausea, vomiting)\n3) Mitochondrial impairement",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "931",
@@ -1190,7 +1445,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Traditional central processing unist (CPUs) are reaching their limit in processing power and are not designed primarily for multithreaded applications. Graphics processing units (GPUs) on the other hand are affordable, scalable computer powerhouses that, thanks to the ever increasing demand for higher quality graphics, have yet to reach their limit. Typically high-end CPUs have 8-16 cores, whereas GPUs can have more than 2,500 cores. GPUs are also, by design, highly parallel, multicore and multithreaded, able of handling thousands of threads doing the same calculation on different subsets of a large data set. This ability is what makes them perfectly suited for biological analysis tasks. Lately this potential has been realized by many bioinformatics researches and a huge variety of tools and algorithms have been ported to GPUs, or designed from the ground up to maximize the usage \nof available cores.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "373",
@@ -1213,7 +1471,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Downregulation of E-cadherin is a crucial event for epithelial to mesenchymal transition (EMT) in embryonic development and cancer progression. Overexpression of Snail1 (Snail), Snail2 (Slug), Zeb1, Twist, SIP1 and DeltaEF1 have been found to mediate E-cadherin repression, induce the mesenchymal markers vimentin and fibronectin, and finally promote the migratory and invasive capabilities in cancer cells.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "872",
@@ -1232,7 +1493,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The Askin tumor is a primitive malignant small-cell tumor of the chest wall mostly seen among children and adolescents. It is closely related to Ewing's sarcoma of the same location, with both tumors harboring reciprocal translocation t(11;22) (q24;q12).",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2837",
@@ -1263,7 +1527,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Emicizumab (Hemlibra®) is a bispecific humanized monoclonal antibody that restores the function of missing activated FVIII by bridging activated FIX and FX to facilitate effective haemostasis in patients with haemophilia A.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2436",
@@ -1280,7 +1547,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The creb protein is associated with memory",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3592",
@@ -1303,7 +1573,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Teprotumumab is a monoclonal inhibitory antibody targeting IGF-1 receptor.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "3016",
@@ -1318,7 +1591,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Prolactinomas are the most common functional tumors of the pituitary gland.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1892",
@@ -1346,7 +1622,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Taliglucerase alfa, the first available plant cell-expressed recombinant therapeutic protein, is an enzyme replacement therapy approved for Gaucher disease.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2084",
@@ -1365,7 +1644,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "The 46,XX testicular disorder of sex development (DSD), also known as 46,XX male syndrome, is a rare form of DSD and clinical phenotype shows complete sex reversal from female to male. A complex network of genes determines sex in mammals. Differentiation of testicular tissue in 46,XX individuals is seen either in XX males, the majority of them with SRY gene, or in individuals, usually SRY(-), with ovotesticular disorder of sex development (OT-DSD). SOX9 is one of the genes that play critical roles in male sexual differentiation.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "637",
@@ -1388,7 +1670,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "RPC components include the essential initiation and elongation factor, Cdc45, the checkpoint mediator Mrc1, the Tof1-Csm3 complex that allows replication forks to pause at protein-DNA barriers, the histone chaperone FACT (facilitates chromatin transcription) and Ctf4, which helps to establish sister chromatid cohesion. RPCs also interact with Mcm10 and topoisomerase I.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "4504",
@@ -1407,7 +1692,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "p110α interacts with p85α and RAS proteins.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "1973",
@@ -1441,7 +1729,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "Bilirubin-induced neurologic dysfunction (BIND) and classical kernicterus are the main dysfunctions of hyperbilirubinemia, whenever bilirubin levels exceed the capacity of the brain defensive mechanisms in preventing its entrance and cytotoxicity. Bilirubin accumulation may lead to deficits in auditory, cognitive, and motor processing, due to neuronal cell death, reduced myelination and glial activation.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "2343",
@@ -1475,7 +1766,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "POEMS is an acronym for the main clinical features of the syndrome, namely, Polyneuropathy, Organomegaly, Endocrinopathy, M protein, and Skin abnormalities. Other features include papilledema, extravascular volume overload, sclerotic bone lesions, thrombocytosis, and Castleman disease. It is a multisystemc disorder with a good long-term prognosis.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "988",
@@ -1492,7 +1786,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "There are regions such as the four homeobox gene clusters, which are nearly devoid of these repeats that contrast with repeat dense regions in other transcriptionally active regions of the genome. Alu elements are more clustered in genes which are involved in metabolism, transport, and signaling processes. In contrast, they are significantly fewer in genes coding for information pathway components as well as structural proteins.\nThis bias in Alu distribution is independent of the effect of Alu density of the flanking genomic region and is also not affected by the GC content of the gene and its upstream and downstream regions.",
+      "gold_decision": null,
+      "gold_explanation": null
     },
     {
       "query_id": "469",
@@ -1513,7 +1810,10 @@
       "category": null,
       "metadata": {
         "source": "evaluation_gold_doc_bioasq_sampled_100_title_v1_2026Feb13.xlsx"
-      }
+      },
+      "answer": "It is unclear if any treatment is registered for pediatric use. The reported treatments are:\nOxcarbazepine \nOpioids alone, in rotations  or with Analgesics (e.g. Ketamine and Lidocaine infusion)\nOpioids and Benzodiazepines\nPregabalin -  is one of the first drugs registered for the treatment of neuropathic pain. It is unclear if Pregabalin is registered for the treatment of neuropathic pain in children specifically but it is being used in practice.\nTricyclic Antidepressants\nLidocaine 5% patches for chronic localized neuropathic pain",
+      "gold_decision": null,
+      "gold_explanation": null
     }
   ],
   "metadata": {
@@ -1523,7 +1823,10 @@
       "query_id_column": "id",
       "query_column": "question",
       "relevant_doc_ids_column": "relevant_passage_ids",
-      "list_format": "json"
+      "list_format": "json",
+      "answer_column": "answer",
+      "gold_decision_column": "gold_decision",
+      "gold_explanation_column": "gold_explanation"
     }
   }
 }

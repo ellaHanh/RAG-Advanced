@@ -23,6 +23,8 @@ class XlsxGoldConfig(BaseModel):
 
     Maps xlsx column names to canonical fields: query_id, query, relevant_doc_ids.
     relevant_doc_ids column may contain a string list (e.g. JSON or delimiter-separated).
+    Optional columns for RAG generation eval: answer (gold answer), gold_decision,
+    gold_explanation (binary questions only).
     """
 
     model_config = ConfigDict(frozen=True)
@@ -37,6 +39,18 @@ class XlsxGoldConfig(BaseModel):
     list_format: Literal["json", "pipe_separated", "comma_separated"] = Field(
         default="json",
         description="How relevant_doc_ids string is parsed into a list",
+    )
+    answer_column: str | None = Field(
+        default=None,
+        description="Xlsx column for gold answer (required for generation eval)",
+    )
+    gold_decision_column: str | None = Field(
+        default=None,
+        description="Xlsx column for gold_decision (Yes/No for binary questions)",
+    )
+    gold_explanation_column: str | None = Field(
+        default=None,
+        description="Xlsx column for gold_explanation (binary questions)",
     )
 
 

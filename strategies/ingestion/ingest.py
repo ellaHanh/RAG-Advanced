@@ -21,7 +21,11 @@ import asyncpg
 from dotenv import load_dotenv
 
 from strategies.ingestion.chunker import chunk_document
-from strategies.ingestion.document_reader import extract_title, read_document
+from strategies.ingestion.document_reader import (
+    extract_title,
+    read_document,
+    text_to_docling_document,
+)
 from strategies.ingestion.embedder import embed_chunks
 from strategies.ingestion.models import DocumentChunk, IngestionConfig, IngestionResult
 
@@ -117,6 +121,13 @@ async def ingest_one(
     start = datetime.now()
     try:
         content, docling_doc = read_document(file_path)
+        if config.use_semantic_chunking and docling_doc is None:
+            docling_doc = text_to_docling_document(content)
+            if docling_doc is None:
+                logger.debug(
+                    "text_to_docling_document returned None for %s; using simple chunking",
+                    os.path.basename(file_path),
+                )
         title = extract_title(content, file_path)
         # Resolve both paths so relpath is stable (e.g. /var vs /private/var on macOS)
         source = os.path.relpath(

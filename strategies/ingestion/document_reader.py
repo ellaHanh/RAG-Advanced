@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import os
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -119,6 +120,61 @@ def _transcribe_audio(file_path: str) -> str:
     except Exception as e:
         logger.error("Failed to transcribe %s with Whisper ASR: %s", file_path, e)
         return f"[Error: Could not transcribe {os.path.basename(file_path)}]"
+
+
+def text_to_docling_document(content: str) -> Any:
+    """
+    Convert plain text to a DoclingDocument so HybridChunker can be used for .txt files.
+
+    Writes content as minimal HTML (paragraphs wrapped in <p>) to a temp file,
+    runs DocumentConverter, and returns result.document. Returns None on empty
+    content or conversion failure.
+
+    Args:
+        content: Plain text or markdown string.
+
+    Returns:
+        DoclingDocument instance, or None if conversion fails or content is empty.
+    """
+    if not (content or "").strip():
+        return None
+    try:
+        from docling.document_converter import DocumentConverter
+    except ImportError:
+        logger.warning("Docling not available; cannot create DoclingDocument from text")
+        return None
+    # Minimal HTML: preserve paragraphs so Docling has structure for chunking
+    paragraphs = (content or "").strip().split("\n\n")
+    body_parts = ["<p>" + _escape_html(p.strip()).replace("\n", " ") + "</p>" for p in paragraphs if p.strip()]
+    if not body_parts:
+        return None
+    html = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body>\n" + "\n".join(body_parts) + "\n</body></html>"
+    try:
+        fd, path = tempfile.mkstemp(suffix=".html", prefix="docling_text_")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(html)
+            converter = DocumentConverter()
+            result = converter.convert(path)
+            return result.document
+        finally:
+            try:
+                os.unlink(path)
+            except OSError:
+                pass
+    except Exception as e:
+        logger.warning("Failed to convert text to DoclingDocument: %s", e)
+        return None
+
+
+def _escape_html(text: str) -> str:
+    """Escape HTML special characters."""
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
 
 
 def extract_title(content: str, file_path: str) -> str:

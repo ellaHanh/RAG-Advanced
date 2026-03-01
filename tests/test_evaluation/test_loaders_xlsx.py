@@ -110,6 +110,45 @@ def test_load_gold_dataset_from_xlsx_file_not_found() -> None:
         load_gold_dataset_from_xlsx("/nonexistent/gold.xlsx")
 
 
+def test_load_gold_dataset_from_xlsx_with_answer_columns(gold_xlsx_path: Path) -> None:
+    """Gold loader with answer_column and optional gold_decision/gold_explanation fills DatasetQuery."""
+    config = XlsxGoldConfig(
+        sheet_index=0,
+        query_id_column="id",
+        query_column="question",
+        relevant_doc_ids_column="relevant_passage_ids",
+        list_format="json",
+        answer_column="answer",
+    )
+    dataset = load_gold_dataset_from_xlsx(gold_xlsx_path, config=config)
+    assert len(dataset.queries) == 2
+    assert dataset.queries[0].answer == "High blood pressure"
+    assert dataset.queries[1].answer == "Insulin resistance"
+    assert dataset.queries[0].gold_decision is None
+    assert dataset.queries[0].gold_explanation is None
+
+
+def test_load_gold_dataset_from_xlsx_answer_column_missing_raises() -> None:
+    """Gold loader raises when answer_column is set but column missing in xlsx."""
+    df = pd.DataFrame(
+        [{"id": "q1", "question": "Q?", "relevant_passage_ids": "[]"}]
+    )  # no "answer" column
+    with tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False) as f:
+        df.to_excel(f.name, index=False, engine="openpyxl")
+        path = Path(f.name)
+    try:
+        config = XlsxGoldConfig(
+            query_id_column="id",
+            query_column="question",
+            relevant_doc_ids_column="relevant_passage_ids",
+            answer_column="answer",
+        )
+        with pytest.raises(ValueError, match="missing column"):
+            load_gold_dataset_from_xlsx(path, config=config)
+    finally:
+        path.unlink(missing_ok=True)
+
+
 # =============================================================================
 # Corpus loader
 # =============================================================================

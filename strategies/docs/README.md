@@ -20,7 +20,7 @@ These markdown files are copied from [all-rag-strategies/docs](https://github.co
 
 ## RAG-Advanced implementation status
 
-- **Implemented and registered**: `standard`, `reranking` (see `strategies/agents/`).
-- **Planned**: Other strategies can be added incrementally; the orchestration layer (registry, chain, compare, evaluation) is strategy-agnostic.
+- **Implemented and registered (8 runnable):** `standard`, `reranking`, `multi_query`, `query_expansion`, `self_reflective`, `agentic`, `contextual_retrieval`, `context_aware_chunking` (see `strategies/agents/`).
+- **Concept docs only (not yet implemented):** knowledge-graphs, late-chunking, hierarchical-rag, fine-tuned-embeddings. Orchestration (registry, chain, compare, evaluation) is strategy-agnostic.
 
-See [docs/README_ingestion.md](../../docs/README_ingestion.md) for ingestion and [README](../../README.md) for API usage.
+See [../ingestion/README.md](../ingestion/README.md) for ingestion and [../../README.md](../../README.md) for API usage.

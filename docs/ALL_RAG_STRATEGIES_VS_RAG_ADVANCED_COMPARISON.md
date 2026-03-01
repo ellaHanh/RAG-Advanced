@@ -32,7 +32,7 @@ This document compares [all-rag-strategies](https://github.com/coleam00/ottomato
 | `implementation/docker-compose.yml` | `docker-compose.yml` | **Partial** | RAG-Advanced composes API, Postgres, Redis; may differ in services. |
 | `implementation/Dockerfile` | `Dockerfile` | **Partial** | Both containerize app; RAG-Advanced image runs API. |
 | `implementation/documents/` (PDF, DOCX, MD, MP3) | `documents/` | **Migrated** | Contents copied; default ingestion folder in RAG-Advanced. |
-| `implementation/IMPLEMENTATION_GUIDE.md` | `docs/README_ingestion.md`, `docs/QUICKSTART_FINDINGS.md` | **Partial** | Setup/ingestion guidance in RAG-Advanced docs instead of single guide. |
+| `implementation/IMPLEMENTATION_GUIDE.md` | `strategies/ingestion/README.md`, `docs/README_development.md` | **Partial** | Setup/ingestion guidance in RAG-Advanced docs instead of single guide. |
 | `implementation/ingestion/__init__.py` | `strategies/ingestion/__init__.py` | **Migrated** | — |
 | `implementation/ingestion/chunker.py` | `strategies/ingestion/chunker.py` | **Partial** | RAG-Advanced: same idea (HybridChunker + simple fallback); Pydantic config, cached chunker. |
 | `implementation/ingestion/chunker_no_docling.py` | — | **Not migrated** | Optional no-Docling path; RAG-Advanced uses Docling or simple chunker only. |

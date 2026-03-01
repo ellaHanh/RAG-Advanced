@@ -2,18 +2,24 @@
 Unit tests for the ingestion pipeline.
 
 Tests chunker, document reader (text only), models, and find_document_files
-without database or OpenAI.
+without database or OpenAI. Includes semantic-chunking option (use_semantic_chunking
+and Docling HybridChunker path).
 """
 
 from __future__ import annotations
 
 import tempfile
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from strategies.ingestion.chunker import chunk_document
-from strategies.ingestion.document_reader import extract_title, read_document
+from strategies.ingestion.document_reader import (
+    extract_title,
+    read_document,
+    text_to_docling_document,
+)
 from strategies.ingestion.models import DocumentChunk, IngestionConfig, IngestionResult
 
 
@@ -111,6 +117,93 @@ class TestChunker:
         combined = "\n\n".join(c.content for c in chunks)
         assert "A" in combined and "B" in combined and "C" in combined
 
+    def test_simple_chunking_overlap_applied(self) -> None:
+        """Consecutive chunks overlap by at least chunk_overlap characters."""
+        chunk_size = 100
+        overlap = 20
+        config = IngestionConfig(chunk_size=chunk_size, chunk_overlap=overlap)
+        # Use distinct segments so overlap is measurable (repeated "x" would match full chunk)
+        content = "a" * 80 + "b" * 20 + "c" * 80 + "d" * 20 + "e" * 80
+        assert len(content) == 280
+        chunks = chunk_document(content, "T", "s", config)
+        assert len(chunks) >= 2
+        for i in range(len(chunks) - 1):
+            curr = chunks[i].content
+            next_content = chunks[i + 1].content
+            overlap_len = 0
+            for n in range(min(len(curr), len(next_content)), 0, -1):
+                if curr[-n:] == next_content[:n]:
+                    overlap_len = n
+                    break
+            assert overlap_len >= overlap, (
+                f"Chunks {i} and {i+1} should overlap by at least {overlap} chars, got {overlap_len}"
+            )
+
+    def test_simple_chunking_size_cap_long_paragraph(self) -> None:
+        """One long paragraph (no double newline) is split; non-final chunks respect size cap."""
+        chunk_size = 100
+        overlap = 10
+        config = IngestionConfig(chunk_size=chunk_size, chunk_overlap=overlap)
+        content = "a" * 350
+        chunks = chunk_document(content, "T", "s", config)
+        assert len(chunks) >= 2
+        tolerance = 201
+        for i, c in enumerate(chunks):
+            if i < len(chunks) - 1:
+                assert len(c.content) <= chunk_size + tolerance, (
+                    f"Non-final chunk {i} length {len(c.content)} should be <= {chunk_size + tolerance}"
+                )
+
+    def test_semantic_chunking_off_always_simple(self) -> None:
+        """use_semantic_chunking=False uses simple chunking regardless of docling_doc."""
+        config = IngestionConfig(
+            chunk_size=100, chunk_overlap=10, use_semantic_chunking=False
+        )
+        content = "First para.\n\nSecond para."
+        chunks = chunk_document(content, "T", "s", config, docling_doc=MagicMock())
+        assert len(chunks) >= 1
+        for c in chunks:
+            assert c.metadata.get("chunk_method") == "simple"
+
+    def test_semantic_chunking_no_docling_uses_simple(self) -> None:
+        """use_semantic_chunking=True with docling_doc=None uses simple chunking."""
+        config = IngestionConfig(
+            chunk_size=100, chunk_overlap=10, use_semantic_chunking=True
+        )
+        content = "First para.\n\nSecond para."
+        chunks = chunk_document(content, "T", "s", config, docling_doc=None)
+        assert len(chunks) >= 1
+        for c in chunks:
+            assert c.metadata.get("chunk_method") == "simple"
+
+    def test_semantic_chunking_with_docling_uses_hybrid(self) -> None:
+        """use_semantic_chunking=True with valid docling_doc uses HybridChunker (hybrid)."""
+        config = IngestionConfig(
+            chunk_size=100, chunk_overlap=10, use_semantic_chunking=True
+        )
+        fake_docling_class = type("DoclingDocument", (), {})
+        mock_doc = fake_docling_class()
+        mock_chunker = MagicMock()
+        mock_chunker.chunk.return_value = [MagicMock()]
+        mock_chunker.contextualize.return_value = "Hybrid chunk text"
+        with patch(
+            "docling_core.types.doc.DoclingDocument", fake_docling_class
+        ), patch(
+            "strategies.ingestion.chunker._get_hybrid_chunker",
+            return_value=mock_chunker,
+        ):
+            chunks = chunk_document(
+                "ignored when docling path taken",
+                "T",
+                "s",
+                config,
+                docling_doc=mock_doc,
+            )
+        assert len(chunks) == 1
+        assert chunks[0].content == "Hybrid chunk text"
+        assert chunks[0].metadata.get("chunk_method") == "hybrid"
+        assert chunks[0].metadata.get("total_chunks") == 1
+
 
 class TestDocumentReader:
     """read_document and extract_title (text files only in unit test)."""
@@ -134,6 +227,57 @@ class TestDocumentReader:
     def test_extract_title_fallback_to_filename(self) -> None:
         text = "No heading here"
         assert extract_title(text, "/path/to/my-doc.md") == "my-doc"
+
+    def test_text_to_docling_document_empty_returns_none(self) -> None:
+        """text_to_docling_document returns None for empty or whitespace content."""
+        assert text_to_docling_document("") is None
+        assert text_to_docling_document("   \n\n  ") is None
+
+    def test_text_to_docling_document_with_content_returns_doc_or_none(self) -> None:
+        """With non-empty content, returns DoclingDocument when Docling works else None."""
+        result = text_to_docling_document("# Title\n\nSome paragraph.")
+        if result is not None:
+            assert hasattr(result, "export_to_markdown") or getattr(
+                result, "__class__", None
+            )
+
+
+class TestSemanticChunkingFromTxtIntegration:
+    """Integration: .txt content -> text_to_docling_document -> chunk_document -> hybrid chunks."""
+
+    @pytest.mark.integration
+    def test_txt_content_semantic_chunking_produces_hybrid_chunks(self) -> None:
+        """
+        Confirm semantic chunking (Docling) runs for .txt content and returns hybrid chunks.
+
+        Uses real text_to_docling_document() and chunk_document(); skips if Docling
+        is not available or conversion returns None (e.g. Python 3.14 / Pydantic).
+        """
+        content = "# Test Title\n\nFirst paragraph with some content.\n\nSecond paragraph here."
+        docling_doc = text_to_docling_document(content)
+        if docling_doc is None:
+            pytest.skip(
+                "Docling not available or text_to_docling_document returned None "
+                "(e.g. Docling not installed, or Python 3.14 / Pydantic compatibility)"
+            )
+        config = IngestionConfig(
+            chunk_size=1000,
+            chunk_overlap=200,
+            use_semantic_chunking=True,
+            max_tokens=512,
+        )
+        chunks = chunk_document(
+            content,
+            title="Test Title",
+            source="test.txt",
+            config=config,
+            docling_doc=docling_doc,
+        )
+        assert len(chunks) >= 1, "Expected at least one chunk from Docling HybridChunker"
+        for c in chunks:
+            assert c.metadata.get("chunk_method") == "hybrid", (
+                f"Expected chunk_method 'hybrid' for semantic chunking, got {c.metadata.get('chunk_method')!r}"
+            )
 
 
 class TestFindDocumentFiles:

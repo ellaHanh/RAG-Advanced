@@ -1,70 +1,58 @@
-# Evaluation Datasets
+# Datasets
 
-This directory contains test datasets with ground truth for evaluating RAG strategies.
+Evaluation datasets: query sets with ground truth (relevant document/chunk IDs, optional relevance scores) for IR metrics and benchmarks.
 
-## Dataset Format
+## Quickstart
 
-Each dataset should be a JSON or JSONL file with the following structure:
-
-```json
-{
-  "metadata": {
-    "name": "dataset_name",
-    "description": "Description of the dataset",
-    "created_at": "2026-01-22T00:00:00Z",
-    "version": "1.0"
-  },
-  "queries": [
-    {
-      "query_id": "q1",
-      "query": "What is machine learning?",
-      "relevant_doc_ids": ["doc_1", "doc_2"],
-      "relevance_scores": {
-        "doc_1": 2,
-        "doc_2": 1
-      }
-    }
-  ]
-}
+```bash
+# No commands — store JSON/JSONL here. Load in code or pass to pipeline.
+# Sample format: datasets/sample/basic_queries.json
 ```
-
-## Relevance Scores
-
-- **0**: Not relevant
-- **1**: Partially relevant
-- **2**: Highly relevant
-
-## Sample datasets
-
-### sample/
-
-Contains example datasets for testing:
-
-- **basic_queries.json** — Simple factual queries. **Not from all-rag-strategies**; created for RAG-Advanced. The `relevant_doc_ids` (e.g. `doc_ml_intro`, `doc_ml_basics`) are **placeholder IDs** for schema demonstration; they do not point to real docs in your DB. To see what each ID represents, see [sample/PLACEHOLDER_IDS.md](sample/PLACEHOLDER_IDS.md). To run evaluation against your corpus, replace them with actual document or chunk IDs from your database. See [sample/README.md](sample/README.md) for details.
-- Other sample files (e.g. `complex_queries.json`, `ambiguous_queries.json`) may be added; use the same JSON format.
-
-## Creating Your Own Dataset
-
-1. Prepare your queries
-2. Run retrieval across strategies
-3. Manually label relevance or use LLM-assisted annotation
-4. Validate with the dataset manager in `evaluation.datasets`.
-
-## Usage
 
 ```python
 from evaluation.datasets import DatasetManager
 
 manager = DatasetManager()
 dataset = await manager.load("datasets/sample/basic_queries.json")
-
-# Split into train/test
-train, test = manager.split(dataset, test_ratio=0.2)
+train, test = manager.split(dataset, train_ratio=0.8)
 ```
 
-## Best Practices
+## Features
 
-1. **Minimum 20 queries** for meaningful evaluation
-2. **At least 3 relevant docs per query** for NDCG calculation
-3. **Include edge cases** (no relevant docs, many relevant docs)
-4. **Document annotation guidelines** for consistency
+- **Format** — JSON/JSONL: `name`, `description`, `queries` (each with `query_id`, `query`, `relevant_doc_ids`, optional `relevance_scores`). API/benchmarks use `ground_truth_ids` (same concept).
+- **Relevance scores** — 0 = not relevant, 1 = partial, 2 = highly relevant (NDCG).
+- **Gold/corpus xlsx** — Column mapping via config or CLI; see [evaluation/README.md](../evaluation/README.md) (pipeline).
+
+## Usage
+
+Dataset shape (see `evaluation/datasets.py` — `Dataset`, `DatasetQuery`):
+
+```json
+{
+  "name": "dataset_name",
+  "description": "Optional",
+  "queries": [
+    {
+      "query_id": "q1",
+      "query": "What is machine learning?",
+      "relevant_doc_ids": ["doc_1", "doc_2"],
+      "relevance_scores": { "doc_1": 2, "doc_2": 1 },
+      "category": "optional",
+      "metadata": {}
+    }
+  ],
+  "metadata": {}
+}
+```
+
+**sample/** — `basic_queries.json` is a format example. Its `relevant_doc_ids` are **placeholder IDs** (not real DB IDs). For real evaluation, replace with actual document or chunk IDs after ingestion. Placeholder mapping: [sample/PLACEHOLDER_IDS.md](sample/PLACEHOLDER_IDS.md). This file is not used by the evaluation pipeline or tests at runtime; pipeline gets queries from the request; tests use in-memory fixtures.
+
+## Dependencies
+
+None for folder; loading uses `evaluation.datasets` (project deps).
+
+## Related
+
+- [Root README](../README.md)
+- [evaluation/](../evaluation/README.md) — Metrics, benchmarks, pipeline
+- [sample/PLACEHOLDER_IDS.md](sample/PLACEHOLDER_IDS.md) — Placeholder ID descriptions

@@ -20,6 +20,9 @@ logger = logging.getLogger(__name__)
 _hybrid_chunker_cache: dict[int, Any] = {}
 _TOKENIZER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # same as all-rag-strategies
 
+# Max characters to look back for sentence boundary in simple chunker (no config field)
+_SIMPLE_CHUNK_SENTENCE_LOOKBACK = 200
+
 
 def chunk_document(
     content: str,
@@ -69,48 +72,54 @@ def _chunk_simple(
     config: IngestionConfig,
     base_metadata: dict[str, Any],
 ) -> list[DocumentChunk]:
-    """Paragraph-aware sliding window chunking."""
+    """
+    Character-based sliding window chunking with overlap and optional sentence-boundary break.
+
+    Enforces chunk_size (with optional break at .!?\\n within lookback), applies chunk_overlap
+    between consecutive chunks, and always advances so long paragraphs are split.
+    """
     size = config.chunk_size
     overlap = config.chunk_overlap
-    paragraphs = re.split(r"\n\s*\n", content)
     chunks: list[DocumentChunk] = []
-    current: list[str] = []
-    current_len = 0
     chunk_index = 0
+    start = 0
+    n = len(content)
 
-    for para in paragraphs:
-        para = para.strip()
-        if not para:
-            continue
-        para_len = len(para) + 2  # +2 for "\n\n"
-        if current_len + para_len <= size and current:
-            current.append(para)
-            current_len += para_len
-        else:
-            if current:
-                text = "\n\n".join(current)
-                if text.strip():
-                    chunks.append(
-                        DocumentChunk(
-                            content=text.strip(),
-                            index=chunk_index,
-                            metadata={**base_metadata, "chunk_method": "simple"},
-                        )
+    while start < n:
+        end = start + size
+
+        if end >= n:
+            chunk_text = content[start:]
+            if chunk_text.strip():
+                chunks.append(
+                    DocumentChunk(
+                        content=chunk_text.strip(),
+                        index=chunk_index,
+                        metadata={**base_metadata, "chunk_method": "simple"},
                     )
-                    chunk_index += 1
-            current = [para]
-            current_len = para_len
+                )
+                chunk_index += 1
+            break
+        end_inclusive = end - 1
+        lookback_start = max(start, end - _SIMPLE_CHUNK_SENTENCE_LOOKBACK)
+        chunk_end = end
+        for i in range(end_inclusive, lookback_start - 1, -1):
+            if i < n and content[i] in ".!?\n":
+                chunk_end = i + 1
+                break
+        chunk_text = content[start:chunk_end]
 
-    if current:
-        text = "\n\n".join(current)
-        if text.strip():
+        if chunk_text.strip():
             chunks.append(
                 DocumentChunk(
-                    content=text.strip(),
+                    content=chunk_text.strip(),
                     index=chunk_index,
                     metadata={**base_metadata, "chunk_method": "simple"},
                 )
             )
+            chunk_index += 1
+
+        start = max(start + 1, chunk_end - overlap) if overlap > 0 else chunk_end
 
     for c in chunks:
         c.metadata["total_chunks"] = len(chunks)

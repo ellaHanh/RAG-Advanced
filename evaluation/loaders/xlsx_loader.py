@@ -66,6 +66,14 @@ def _parse_relevant_ids(
     return [x.strip() for x in re.split(r"[,;|]", s) if x.strip()]
 
 
+def _cell_to_str_or_none(value: Any) -> str | None:
+    """Normalize cell value to string or None (empty/NaN -> None)."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    s = str(value).strip()
+    return s if s else None
+
+
 def load_gold_dataset_from_xlsx(
     path: Path | str,
     config: XlsxGoldConfig | None = None,
@@ -95,7 +103,10 @@ def load_gold_dataset_from_xlsx(
         raise FileNotFoundError(f"Gold xlsx not found: {path}")
     cfg = config or BIOASQ_V1_GOLD_CONFIG
     df = pd.read_excel(path, sheet_name=cfg.sheet_index, engine="openpyxl")
-    for col in (cfg.query_id_column, cfg.query_column, cfg.relevant_doc_ids_column):
+    required_cols = [cfg.query_id_column, cfg.query_column, cfg.relevant_doc_ids_column]
+    if cfg.answer_column is not None:
+        required_cols.append(cfg.answer_column)
+    for col in required_cols:
         if col not in df.columns:
             raise ValueError(
                 f"Gold xlsx missing column '{col}'. Available: {list(df.columns)}"
@@ -111,12 +122,24 @@ def load_gold_dataset_from_xlsx(
             row.get(cfg.relevant_doc_ids_column),
             cfg.list_format,
         )
+        answer: str | None = None
+        if cfg.answer_column is not None:
+            answer = _cell_to_str_or_none(row.get(cfg.answer_column))
+        gold_decision: str | None = None
+        if cfg.gold_decision_column and cfg.gold_decision_column in df.columns:
+            gold_decision = _cell_to_str_or_none(row.get(cfg.gold_decision_column))
+        gold_explanation: str | None = None
+        if cfg.gold_explanation_column and cfg.gold_explanation_column in df.columns:
+            gold_explanation = _cell_to_str_or_none(row.get(cfg.gold_explanation_column))
         queries.append(
             DatasetQuery(
                 query_id=qid,
                 query=qtext,
                 relevant_doc_ids=rel_ids,
                 metadata={"source": str(path.name)},
+                answer=answer,
+                gold_decision=gold_decision,
+                gold_explanation=gold_explanation,
             )
         )
     name = dataset_name or path.stem
