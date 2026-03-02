@@ -38,7 +38,6 @@ This document explains why the **11 RAG strategies** and **example documents** f
 
 3. **Where they live now**  
    - **RAG-Advanced/documents/** — Default folder for ingestion; contains copies of the all-rag-strategies example documents.
-   - **RAG-Advanced/strategies/examples/** — Contains the 11 pseudocode example scripts from all-rag-strategies (reference only; not runnable as-is in RAG-Advanced).
    - **RAG-Advanced/strategies/docs/** — Contains the 11 strategy markdown docs from all-rag-strategies (concepts, when to use, pros/cons).
 
 ---
@@ -49,7 +48,7 @@ This document explains why the **11 RAG strategies** and **example documents** f
 |------|-----------------|--------|-------------------------------|
 | 11 strategy **implementations** | No | PRD focused on orchestration/API/evaluation; strategies are pluggable | All 7 “Code Example” strategies + standard implemented; 4 pseudocode-only remain |
 | 11 strategy **docs** (markdown) | No | Reference material from all-rag-strategies | Copied to `strategies/docs/` |
-| 11 strategy **examples** (scripts) | No | Pseudocode for learning; not part of PRD deliverables | Copied to `strategies/examples/` with README |
+| 11 strategy **examples** (scripts) | No | Pseudocode for learning; not part of PRD deliverables | Copied to `strategies/docs/` with README |
 | Example **documents** (PDF, DOCX, etc.) | No | Ingestion was “Coming Soon”; no mandated dataset in PRD | Copied to `documents/` as default ingestion folder |
 
 The task-master tasks were scoped to **orchestration, evaluation, and API**. The 11 strategies and example documents are adopted from all-rag-strategies **alongside** that scope to maximize alignment and to give RAG-Advanced a clear path to full strategy coverage and self-contained ingestion.

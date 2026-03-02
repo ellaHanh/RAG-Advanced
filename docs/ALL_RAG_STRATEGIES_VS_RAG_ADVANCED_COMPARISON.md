@@ -16,7 +16,7 @@ This document compares [all-rag-strategies](https://github.com/coleam00/ottomato
 | all-rag-strategies | RAG-Advanced | Status | Notes |
 |--------------------|--------------|--------|-------|
 | `docs/` (11 .md) | `strategies/docs/` (11 .md + README) | **Migrated** | Copied; README added for strategy reference. |
-| `examples/` (11 .py + README) | `strategies/examples/` (11 .py + README) | **Migrated** | Copied; README updated with RAG-Advanced API equivalents. |
+ **Migrated** | Copied; README updated with RAG-Advanced API equivalents. |
 | `implementation/` | See section 2 | **Partial** | RAG-Advanced splits implementation across `strategies/`, `api/`, `orchestration/`, `evaluation/`. |
 | `README.md` | `README.md` | **Partial** | RAG-Advanced README describes orchestration, API, evaluation; references all-rag-strategies. |
 
@@ -95,7 +95,7 @@ This document compares [all-rag-strategies](https://github.com/coleam00/ottomato
 2. **Database**: RAG-Advanced uses asyncpg and pool in lifespan; all-rag-strategies uses db_utils and a global pool. Schema is similar but not identical (e.g. chunks table).
 3. **Agents**: all-rag-strategies uses Pydantic AI agents with tools; RAG-Advanced uses orchestration (registry + executor) and strategy functions `(ExecutionContext) -> list[Document]`.
 4. **Ingestion**: Same pipeline idea; RAG-Advanced has its own reader, chunker, embedder, and CLI; no contextual_enrichment or chunker_no_docling yet.
-5. **Docs/examples**: all-rag-strategies `docs/` and `examples/` are copied under `strategies/docs/` and `strategies/examples/`; READMEs updated for RAG-Advanced.
+5. **Docs/examples**: all-rag-strategies `docs/` and `examples/` are copied under `strategies/docs/` and `strategies/docs/`; READMEs updated for RAG-Advanced.
 6. **Example documents**: Copied from all-rag-strategies `implementation/documents/` to RAG-Advanced `documents/` as default ingestion folder.
 
 For why the 11 strategies and example documents were not part of the task-master PRD tasks, see [MIGRATION_AND_TASKMASTER_NOTES.md](MIGRATION_AND_TASKMASTER_NOTES.md).

@@ -7,7 +7,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue.svg)](https://www.postgresql.org/)
 
-A comprehensive framework for mixing, matching, chaining, and evaluating RAG strategies. Built on [all-rag-strategies](https://github.com/coleam00/ottomator-agents/tree/main/all-rag-strategies) with orchestration, evaluation, and REST API layers.
+Production-ready Retrieval-Augmented Generation (RAG) system with advanced retrieval strategy orchestration, generation, evaluation, and REST API layers.
 
 ---
 
@@ -33,7 +33,7 @@ A comprehensive framework for mixing, matching, chaining, and evaluating RAG str
 - **8 runnable RAG strategies** — Standard (baseline), reranking, multi-query, query expansion, self-reflective, agentic, contextual retrieval, context-aware chunking (7 from [all-rag-strategies](https://github.com/coleam00/ottomator-agents/tree/main/all-rag-strategies) + standard)
 - **Strategy Chaining** — Execute strategies sequentially (e.g., `contextual → multi-query → reranking`)
 - **Parallel Comparison** — Run multiple strategies simultaneously with side-by-side metrics
-- **Automated Evaluation** — Precision@k, Recall@k, MRR, NDCG@k with ground truth validation
+- **Automated Evaluation** — Precision@k, Recall@k, MRR, NDCG@k with ground truth validation and RAGAS generation evaluation
 - **Performance Benchmarking** — Latency (p50/p95/p99), cost tracking, token usage analysis
 - **REST API** — FastAPI service with authentication, rate limiting, and OpenAPI docs
 - **Cost Tracking** — Per-request API cost calculation with versioned pricing models
@@ -46,10 +46,16 @@ A comprehensive framework for mixing, matching, chaining, and evaluating RAG str
 ### High-Level Workflow
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Ingest     │ --> │    Store     │ --> │   Retrieve   │ --> │   Evaluate   │ --> │    Report    │
-│  Documents   │     │  PostgreSQL  │     │   Execute    │     │   Metrics    │     │  Benchmark   │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   API       │────▶│ Orchestration│────▶│ Strategies  │
+│  (FastAPI)  │     │   Layer      │     │  & Agents   │
+└─────────────┘     └──────────────┘     └─────────────┘
+       │                    │                     │
+       ▼                    ▼                     ▼
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│  Database   │     │  Generation  │     │  Evaluation │
+│  (pgvector) │     │  (LangChain) │     │   & RAGAS   │
+└─────────────┘     └──────────────┘     └─────────────┘
 ```
 
 ### System Components
@@ -258,7 +264,7 @@ curl -X POST http://localhost:8000/chain \
 - **Fast → Precise**: `standard → reranking`
 - **Contextual → Enhanced**: `contextual_retrieval → multi_query → reranking`
 
-See [strategies/examples/README.md](strategies/examples/README.md) for all combinations.
+See [strategies/docs/README.md](strategies/docs/README.md) for all combinations.
 
 ### Compare Strategies
 
@@ -752,7 +758,6 @@ See [docs/MIGRATION.md](docs/MIGRATION.md) for complete guide.
 ### Reference Material
 
 - **Strategy docs**: `strategies/docs/` (11 markdown files)
-- **Pseudocode examples**: `strategies/examples/` (reference only, not runnable)
 - **Folder comparison**: [docs/ALL_RAG_STRATEGIES_VS_RAG_ADVANCED_COMPARISON.md](docs/ALL_RAG_STRATEGIES_VS_RAG_ADVANCED_COMPARISON.md)
 
 ---
