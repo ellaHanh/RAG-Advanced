@@ -4,7 +4,7 @@ Build **RAG-Advanced** - a comprehensive strategy orchestration and evaluation s
 
 **Repository Structure**:
 - **RAG-Advanced-PDD** (this repo): Planning documents using PRP methodology
-- **RAG-Advanced**: Implementation codebase at https://github.com/CuulCat/RAG-Advanced
+- **RAG-Advanced**: Implementation codebase at https://github.com/EllaHanh/RAG-Advanced
 
 **Core Capabilities**:
 1. **Strategy Mixing & Matching**: Execute individual strategies or chain them sequentially (e.g., contextual retrieval → multi-query → reranking)

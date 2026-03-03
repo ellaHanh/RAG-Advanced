@@ -52,10 +52,10 @@ Production-ready Retrieval-Augmented Generation (RAG) system with advanced retri
 └─────────────┘     └──────────────┘     └─────────────┘
        │                    │                     │
        ▼                    ▼                     ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  Database   │     │  Generation  │     │  Evaluation │
-│  (pgvector) │     │  (LangChain) │     │   & RAGAS   │
-└─────────────┘     └──────────────┘     └─────────────┘
+┌─────────────┐     ┌──────────────┐     ┌────────────------------─┐
+│  Database   │     │  Generation  │     │  Retrieval              │
+│  (pgvector) │     │  (LangChain) │     │ & Generation Evaluation │
+└─────────────┘     └──────────────┘     └────────────------------─┘
 ```
 
 ### System Components
@@ -87,7 +87,7 @@ Production-ready Retrieval-Augmented Generation (RAG) system with advanced retri
 ### Installation
 
 ```bash
-git clone https://github.com/CuulCat/RAG-Advanced.git
+git clone https://github.com/EllaHanh/RAG-Advanced.git
 cd RAG-Advanced
 
 python -m venv venv
@@ -786,7 +786,7 @@ We welcome contributions! Please follow these guidelines:
 
 ### Bug Reports
 
-Use the [issue tracker](https://github.com/CuulCat/RAG-Advanced/issues) and include:
+Use the [issue tracker](https://github.com/EllaHanh/RAG-Advanced/issues) and include:
 - Python version
 - Steps to reproduce
 - Expected vs actual behavior
@@ -833,9 +833,9 @@ This project extends the original [all-rag-strategies](https://github.com/coleam
 
 ## 📞 Support
 
-- **Documentation**: https://github.com/CuulCat/RAG-Advanced
-- **Issues**: https://github.com/CuulCat/RAG-Advanced/issues
-- **Discussions**: https://github.com/CuulCat/RAG-Advanced/discussions
+- **Documentation**: https://github.com/EllaHanh/RAG-Advanced
+- **Issues**: https://github.com/EllaHanh/RAG-Advanced/issues
+- **Discussions**: https://github.com/EllaHanh/RAG-Advanced/discussions
 
 ---
 

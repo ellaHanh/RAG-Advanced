@@ -84,10 +84,10 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/CuulCat/RAG-Advanced"
-Documentation = "https://github.com/CuulCat/RAG-Advanced#readme"
-Repository = "https://github.com/CuulCat/RAG-Advanced"
-Issues = "https://github.com/CuulCat/RAG-Advanced/issues"
+Homepage = "https://github.com/EllaHanh/RAG-Advanced"
+Documentation = "https://github.com/EllaHanh/RAG-Advanced#readme"
+Repository = "https://github.com/EllaHanh/RAG-Advanced"
+Issues = "https://github.com/EllaHanh/RAG-Advanced/issues"
 
 [project.scripts]
 rag-advanced = "api.main:run"

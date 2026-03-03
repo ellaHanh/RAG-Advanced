@@ -35,7 +35,7 @@ Guidance for working with RAG-Advanced on your machine and syncing to GitHub, es
 
 ## 4. Remote and default branch
 
-- **Single remote:** `origin` → `https://github.com/CuulCat/RAG-Advanced.git`.
+- **Single remote:** `origin` → `https://github.com/EllaHanh/RAG-Advanced.git`.
 - **Default branch:** `main`. Create the repo on GitHub with “main” as default, or rename later in GitHub settings.
 - **Track explicitly:** First push uses `git push -u origin main` so local `main` tracks `origin/main`; later a plain `git push` is enough.
 
@@ -65,7 +65,7 @@ Already done in this repo:
 
 1. **Init and remote**
    - `git init`
-   - `git remote add origin https://github.com/CuulCat/RAG-Advanced.git`
+   - `git remote add origin https://github.com/EllaHanh/RAG-Advanced.git`
    - `git branch -M main`
 
 2. **First commit**
@@ -79,12 +79,12 @@ cd /Users/heekyung/Documents/Github/RAG-Advanced
 git push -u origin main
 ```
 
-If the repo does not exist on GitHub yet: create **CuulCat/RAG-Advanced** at https://github.com/new (no need to add a README or .gitignore). Then run the command above.
+If the repo does not exist on GitHub yet: create **EllaHanh/RAG-Advanced** at https://github.com/new (no need to add a README or .gitignore). Then run the command above.
 
-Use **HTTPS** with a personal access token, or **SSH** (e.g. `git@github.com:CuulCat/RAG-Advanced.git`) if you use SSH keys. To switch to SSH:
+Use **HTTPS** with a personal access token, or **SSH** (e.g. `git@github.com:EllaHanh/RAG-Advanced.git`) if you use SSH keys. To switch to SSH:
 
 ```bash
-git remote set-url origin git@github.com:CuulCat/RAG-Advanced.git
+git remote set-url origin git@github.com:EllaHanh/RAG-Advanced.git
 git push -u origin main
 ```
 
