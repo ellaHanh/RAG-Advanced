@@ -7,7 +7,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue.svg)](https://www.postgresql.org/)
 
-Production-ready Retrieval-Augmented Generation (RAG) system with advanced retrieval strategy orchestration, generation, evaluation, and REST API layers.
+Retrieval-Augmented Generation (RAG) system with advanced retrieval strategy orchestration, generation, evaluation, and REST API layers.
 
 ---
 
