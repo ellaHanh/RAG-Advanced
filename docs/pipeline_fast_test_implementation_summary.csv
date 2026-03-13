@@ -1,0 +1,5 @@
+path,change
+scripts/run_evaluation_pipeline.py,"Added --limit-queries N and --limit-corpus N CLI args; run_pipeline() and _run_pipeline_impl() accept limit_queries, limit_corpus; corpus and queries are sliced for quick runs"
+tests/test_evaluation/test_pipeline_integration.py,"New integration test: test_pipeline_e2e_minimal (1 query, 2 corpus docs, BioASQ v1 xlsx); runs full pipeline in ~10–30s to catch strategy-not-found and DB/schema issues"
+docs/README_development_workflow.md,"Documented --limit-queries/--limit-corpus usage; added pipeline E2E integration test to integration tests list; quick reference row for fast pipeline check"
+docs/README_tests.md,"Layout table: added test_pipeline_integration to test_evaluation description"

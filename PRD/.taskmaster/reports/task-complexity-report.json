@@ -1,0 +1,253 @@
+{
+	"meta": {
+		"generatedAt": "2026-01-22T04:07:44.356Z",
+		"tasksAnalyzed": 30,
+		"totalTasks": 30,
+		"analysisCount": 30,
+		"thresholdScore": 5,
+		"projectName": "Task Master",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 21,
+			"taskTitle": "Setup Project Repository",
+			"complexityScore": 3,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "This task involves setting up a basic project structure and initializing dependencies. It is straightforward with minimal technical challenges and no dependencies."
+		},
+		{
+			"taskId": 26,
+			"taskTitle": "Implement Sequential Strategy Executor",
+			"complexityScore": 6,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "This task requires integrating multiple components and ensuring correct sequential execution, which involves moderate complexity due to dependencies and testing requirements."
+		},
+		{
+			"taskId": 29,
+			"taskTitle": "Implement Resource Semaphore Manager",
+			"complexityScore": 5,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "Managing concurrency with semaphores involves understanding async programming and resource management, adding moderate complexity."
+		},
+		{
+			"taskId": 39,
+			"taskTitle": "Implement Atomic Key Usage Update",
+			"complexityScore": 4,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "This task involves database operations to ensure atomic updates, which is relatively straightforward but requires careful handling of concurrency."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "Build Single Strategy Execution",
+			"complexityScore": 7,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "This task involves integrating multiple modules and tracking metrics, which increases complexity due to dependencies and the need for comprehensive testing."
+		},
+		{
+			"taskId": 50,
+			"taskTitle": "Develop Query Result TTL Cache",
+			"complexityScore": 5,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "Implementing a TTL cache involves understanding caching mechanisms and ensuring correct expiration, which is moderately complex."
+		},
+		{
+			"taskId": 33,
+			"taskTitle": "Develop Benchmark Runner",
+			"complexityScore": 7,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "Running benchmarks with statistical analysis involves complex logic and handling multiple iterations, requiring careful design and testing."
+		},
+		{
+			"taskId": 34,
+			"taskTitle": "Create Ground Truth Management",
+			"complexityScore": 6,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "Managing datasets and ensuring correct schema validation involves moderate complexity, especially with LLM-assisted generation."
+		},
+		{
+			"taskId": 27,
+			"taskTitle": "Add Chain Fallback Handler",
+			"complexityScore": 6,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "No expansion needed for this task.",
+			"reasoning": "Implementing fallback mechanisms requires handling various failure scenarios and ensuring robust error logging, adding to the complexity."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "Implement Strategy Registry",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on implement strategy registry.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "Develop Cost Tracking Module",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop cost tracking module.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "Create Chain State Management",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create chain state management.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 28,
+			"taskTitle": "Develop Parallel Execution Engine",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop parallel execution engine.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 30,
+			"taskTitle": "Create Comparison Result Aggregator",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create comparison result aggregator.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 31,
+			"taskTitle": "Add Timeout and Partial Failure Handler",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on add timeout and partial failure handler.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 32,
+			"taskTitle": "Implement IR Metrics Calculation",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on implement ir metrics calculation.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 35,
+			"taskTitle": "Generate Markdown Report",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on generate markdown report.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 36,
+			"taskTitle": "Create HTML Report Generator",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create html report generator.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 37,
+			"taskTitle": "Develop JSON Report Exporter",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop json report exporter.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 38,
+			"taskTitle": "Setup API Key Hash Verification",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on setup api key hash verification.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 40,
+			"taskTitle": "Develop Redis Sliding Window Counter",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop redis sliding window counter.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 41,
+			"taskTitle": "Create Rate Limit Result Calculator",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create rate limit result calculator.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 42,
+			"taskTitle": "Add Rate Limiter Fail-Open Handler",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on add rate limiter fail-open handler.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 43,
+			"taskTitle": "Develop Strategy Endpoints",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop strategy endpoints.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 44,
+			"taskTitle": "Create Metrics Calculation Endpoint",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create metrics calculation endpoint.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 45,
+			"taskTitle": "Add Batch Metrics Endpoint",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on add batch metrics endpoint.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 46,
+			"taskTitle": "Create Async Benchmark Trigger Endpoint",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create async benchmark trigger endpoint.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 47,
+			"taskTitle": "Develop Benchmark Status Endpoint",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on develop benchmark status endpoint.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 48,
+			"taskTitle": "Setup Embedding Cache Core",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on setup embedding cache core.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 49,
+			"taskTitle": "Create Embedding Cache Key Generator",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on create embedding cache key generator.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		}
+	]
+}

@@ -1,0 +1,902 @@
+```python
+# FEEDBACK: RAG-Advanced Plan v3
+
+## CRITICAL ISSUES
+
+### 1. **ChainContext __post_init__ Violates Frozen Dataclass**
+```python
+@dataclass(frozen=True)
+class ChainContext:
+    metadata: Dict[str, Any] = None
+    
+    def __post_init__(self):
+        if self.metadata is None:
+            object.__setattr__(self, 'metadata', {})  # Frozen violation!
+```
+
+**Problem**: Cannot use `object.__setattr__` on frozen dataclass - raises FrozenInstanceError
+**Fix**: Use field default_factory
+```python
+from dataclasses import dataclass, field
+from typing import Dict, Any, Tuple
+
+@dataclass(frozen=True)
+class ChainContext:
+    query: str
+    original_query: str
+    intermediate_results: Tuple[Dict[str, Any], ...] = ()
+    metadata: Dict[str, Any] = field(default_factory=lambda: {})  # Correct
+    total_cost: float = 0.0
+    total_latency_ms: int = 0
+    error_log: Tuple[str, ...] = ()
+    step_index: int = 0
+```
+
+**However**, this still has a problem - `metadata` is mutable. For true immutability:
+```python
+from types import MappingProxyType
+
+@dataclass(frozen=True)
+class ChainContext:
+    metadata: MappingProxyType = field(
+        default_factory=lambda: MappingProxyType({})
+    )
+    
+    def with_metadata(self, **kwargs) -> 'ChainContext':
+        """Return new context with updated metadata."""
+        new_metadata = {**self.metadata, **kwargs}
+        return ChainContext(
+            query=self.query,
+            original_query=self.original_query,
+            intermediate_results=self.intermediate_results,
+            metadata=MappingProxyType(new_metadata),
+            total_cost=self.total_cost,
+            total_latency_ms=self.total_latency_ms,
+            error_log=self.error_log,
+            step_index=self.step_index
+        )
+```
+
+### 2. **API Key Verification Has TOCTOU Race Condition**
+```python
+async def verify_api_key(...) -> APIKey:
+    async with db_pool.acquire() as conn:
+        row = await conn.fetchrow(...)  # Check key
+        
+        if row:
+            await conn.execute(
+                "UPDATE api_keys SET last_used_at = NOW() WHERE id = $1",
+                row['id']
+            )  # Update timestamp - separate query!
+    
+    if not row:  # Check happens AFTER release of connection
+        raise HTTPException(...)
+```
+
+**Problem**: Between fetchrow and the final check, another request could revoke the key
+**Fix**: Use single transaction
+```python
+async def verify_api_key(
+    api_key: Optional[str] = Security(api_key_header),
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+) -> APIKey:
+    if not api_key:
+        raise HTTPException(status_code=401, detail="API key required")
+    
+    key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+    
+    async with db_pool.acquire() as conn:
+        async with conn.transaction():
+            # Atomic check and update
+            row = await conn.fetchrow(
+                """
+                UPDATE api_keys 
+                SET last_used_at = NOW() 
+                WHERE key_hash = $1 
+                  AND is_active = true
+                  AND (expires_at IS NULL OR expires_at > NOW())
+                RETURNING id, user_id, rate_limit, expires_at
+                """,
+                key_hash
+            )
+    
+    if not row:
+        raise HTTPException(status_code=403, detail="Invalid or expired API key")
+    
+    return APIKey(
+        id=str(row['id']),
+        user_id=row['user_id'],
+        rate_limit=row['rate_limit'],
+        expires_at=row['expires_at']
+    )
+```
+
+### 3. **Rate Limiter Redis Pipeline Results Not Validated**
+```python
+async with self.redis.pipeline() as pipe:
+    pipe.zremrangebyscore(redis_key, 0, window_start)
+    pipe.zcard(redis_key)
+    pipe.zadd(redis_key, {str(now): now})
+    pipe.expire(redis_key, self.window_seconds)
+    
+    results = await pipe.execute()
+
+current_count = results[1]  # What if pipeline partially failed?
+```
+
+**Problem**: Pipeline can fail partially, results[1] might not exist or be None
+**Fix**: Validate results
+```python
+try:
+    results = await pipe.execute()
+except redis.RedisError as e:
+    logger.error(f"Redis rate limit check failed: {e}")
+    # Fallback: allow request but log (fail open)
+    return RateLimitResult(allowed=True, remaining=0, reset_at=now + self.window_seconds)
+
+if len(results) < 4:
+    logger.error(f"Redis pipeline returned incomplete results: {results}")
+    return RateLimitResult(allowed=True, remaining=0, reset_at=now + self.window_seconds)
+
+current_count = results[1]
+if current_count is None:
+    logger.warning("Redis zcard returned None")
+    current_count = 0
+```
+
+### 4. **Metrics Validation Missing Type Checks**
+```python
+def calculate_metrics(
+    retrieved_doc_ids: Optional[List[str]],
+    ground_truth_doc_ids: List[str],
+    ...
+):
+    if retrieved_doc_ids is None:
+        retrieved_doc_ids = []
+    
+    if not ground_truth_doc_ids:  # What if it's not a list?
+        raise NoRelevantDocsError(...)
+```
+
+**Problem**: No validation that inputs are actually lists of strings
+**Fix**: Add type validation
+```python
+def calculate_metrics(
+    retrieved_doc_ids: Optional[List[str]],
+    ground_truth_doc_ids: List[str],
+    relevance_scores: Optional[Dict[str, int]] = None,
+    k_values: Optional[List[int]] = None
+) -> EvaluationMetrics:
+    """Calculate IR metrics with comprehensive validation."""
+    
+    # Type validation
+    if retrieved_doc_ids is not None and not isinstance(retrieved_doc_ids, list):
+        raise InvalidInputError(
+            f"retrieved_doc_ids must be a list, got {type(retrieved_doc_ids)}"
+        )
+    
+    if not isinstance(ground_truth_doc_ids, list):
+        raise InvalidInputError(
+            f"ground_truth_doc_ids must be a list, got {type(ground_truth_doc_ids)}"
+        )
+    
+    # Validate list contents
+    if retrieved_doc_ids:
+        non_strings = [x for x in retrieved_doc_ids if not isinstance(x, str)]
+        if non_strings:
+            raise InvalidInputError(
+                f"retrieved_doc_ids must contain strings, found: {non_strings[:3]}"
+            )
+    
+    if ground_truth_doc_ids:
+        non_strings = [x for x in ground_truth_doc_ids if not isinstance(x, str)]
+        if non_strings:
+            raise InvalidInputError(
+                f"ground_truth_doc_ids must contain strings, found: {non_strings[:3]}"
+            )
+    
+    # Rest of validation...
+```
+
+### 5. **PricingProvider File Loading Blocks Event Loop**
+```python
+def _load_pricing(self):
+    if not self.config_path.exists():  # Synchronous I/O
+        ...
+    
+    with open(self.config_path) as f:  # Synchronous I/O blocks
+        data = json.load(f)
+```
+
+**Problem**: Blocking file I/O in async application
+**Fix**: Use aiofiles or load at startup
+```python
+import aiofiles
+import asyncio
+
+class PricingProvider:
+    def __init__(self, config_path: str = "config/pricing.json"):
+        self.config_path = Path(config_path)
+        self.pricing_history: List[PricingVersion] = []
+        # Don't load in __init__, provide async method
+    
+    async def initialize(self):
+        """Async initialization - call at app startup."""
+        await self._load_pricing()
+    
+    async def _load_pricing(self):
+        """Load pricing from JSON config asynchronously."""
+        if not self.config_path.exists():
+            logger.warning(f"Pricing config not found: {self.config_path}")
+            self._use_default_pricing()
+            return
+        
+        try:
+            async with aiofiles.open(self.config_path) as f:
+                content = await f.read()
+                data = json.loads(content)
+            
+            # Process data...
+            
+        except Exception as e:
+            logger.error(f"Failed to load pricing config: {e}")
+            self._use_default_pricing()
+
+# Usage at app startup
+pricing_provider = PricingProvider()
+
+@app.on_event("startup")
+async def startup():
+    await pricing_provider.initialize()
+```
+
+## HIGH PRIORITY ISSUES
+
+### 6. **Database Pool Created Multiple Times**
+```python
+db_pool: Optional[asyncpg.Pool] = None
+
+async def create_pool(config: DatabaseConfig = None) -> asyncpg.Pool:
+    global db_pool
+    
+    if db_pool is not None:  # Race condition in async context
+        return db_pool
+    
+    db_pool = await asyncpg.create_pool(...)
+    return db_pool
+```
+
+**Problem**: Multiple concurrent calls can create multiple pools
+**Fix**: Use asyncio.Lock
+```python
+from asyncio import Lock
+
+_pool_lock = Lock()
+db_pool: Optional[asyncpg.Pool] = None
+
+async def create_pool(config: DatabaseConfig = None) -> asyncpg.Pool:
+    global db_pool
+    
+    async with _pool_lock:
+        if db_pool is not None:
+            return db_pool
+        
+        config = config or DatabaseConfig()
+        db_pool = await asyncpg.create_pool(...)
+        
+    return db_pool
+```
+
+Or better, use FastAPI dependency injection pattern:
+```python
+# api/database.py
+from functools import lru_cache
+
+@lru_cache
+def get_db_config() -> DatabaseConfig:
+    return DatabaseConfig()
+
+async def get_db_pool() -> asyncpg.Pool:
+    """Dependency for database pool."""
+    # FastAPI ensures this is called once and cached
+    if not hasattr(get_db_pool, "_pool"):
+        get_db_pool._pool = await asyncpg.create_pool(...)
+    return get_db_pool._pool
+```
+
+### 7. **QueryResultCache _key Method Not Defined**
+```python
+class QueryResultCache:
+    async def get_or_compute(self, strategy: str, query: str, config: Dict, ...):
+        cache = self._get_cache(strategy)
+        key = self._key(strategy, query, config)  # Method not defined!
+```
+
+**Missing method**:
+```python
+import hashlib
+import json
+
+def _key(self, strategy: str, query: str, config: Dict) -> str:
+    """Generate cache key from strategy, query, and config."""
+    # Serialize config deterministically
+    config_str = json.dumps(config, sort_keys=True, default=str)
+    content = f"{strategy}:{query}:{config_str}"
+    return hashlib.sha256(content.encode()).hexdigest()
+```
+
+### 8. **Ground Truth Agreement Calculation Flawed**
+```python
+def _calculate_agreement(
+    judgments_1: Dict[str, int], 
+    judgments_2: Dict[str, int]
+) -> float:
+    all_docs = set(judgments_1.keys()) | set(judgments_2.keys())
+    
+    agreements = sum(
+        1 for doc in all_docs 
+        if judgments_1.get(doc, 0) == judgments_2.get(doc, 0)
+    )
+    
+    return agreements / len(all_docs)
+```
+
+**Problem**: This counts "both not mentioned" as agreement (both get(doc, 0) == 0)
+**Fix**: Only compare docs that appear in at least one judgment
+```python
+def _calculate_agreement(
+    judgments_1: Dict[str, int], 
+    judgments_2: Dict[str, int]
+) -> float:
+    """
+    Calculate agreement using Cohen's Kappa (simplified).
+    
+    Only considers documents that were judged by at least one LLM.
+    Ignores documents neither LLM mentioned (not truly "agreement").
+    """
+    all_docs = set(judgments_1.keys()) | set(judgments_2.keys())
+    
+    if not all_docs:
+        return 1.0  # No judgments to compare
+    
+    # Observed agreement
+    agreements = sum(
+        1 for doc in all_docs 
+        if judgments_1.get(doc, 0) == judgments_2.get(doc, 0)
+    )
+    po = agreements / len(all_docs)
+    
+    # Expected agreement by chance
+    # (simplified - true Cohen's Kappa more complex)
+    scores = [judgments_1.get(doc, 0) for doc in all_docs]
+    scores += [judgments_2.get(doc, 0) for doc in all_docs]
+    
+    # Proportion of each rating
+    from collections import Counter
+    counts = Counter(scores)
+    total = len(scores)
+    pe = sum((count / total) ** 2 for count in counts.values())
+    
+    # Cohen's Kappa
+    if pe == 1.0:
+        return 1.0
+    
+    kappa = (po - pe) / (1 - pe)
+    return max(0.0, kappa)  # Clip to [0, 1]
+```
+
+### 9. **ResourceAwareComparator Missing execute_strategy Import**
+```python
+async def execute_with_resources(...) -> 'ExecutionResult':
+    return await asyncio.wait_for(
+        execute_strategy(strategy, query, config),  # Where is this from?
+        timeout=self.strategy_timeout
+    )
+```
+
+**Missing**:
+```python
+# orchestration/comparator.py
+from orchestration.executor import execute_strategy
+```
+
+### 10. **StrategyChainer Error Handling Loses Original Exception**
+```python
+except StrategyExecutionError as e:
+    # ...
+    context = context.with_error(
+        f"Step {i} ({step.strategy}) failed: {e}"  # String only!
+    )
+    raise ChainError(f"Chain failed at step {i}: {e}", context=context)
+```
+
+**Problem**: Original exception traceback lost, makes debugging harder
+**Fix**: Use exception chaining
+```python
+except StrategyExecutionError as e:
+    context = context.with_error(
+        f"Step {i} ({step.strategy}) failed: {type(e).__name__}: {e}"
+    )
+    raise ChainError(
+        f"Chain failed at step {i}: {e}",
+        context=context
+    ) from e  # Preserve original exception
+```
+
+## MEDIUM PRIORITY ISSUES
+
+### 11. **DatasetSplit Doesn't Actually Stratify**
+```python
+@classmethod
+def from_dataset(
+    cls, 
+    dataset: 'TestDataset', 
+    test_ratio: float = 0.2,
+    random_seed: int = 42,
+    stratify_by: str = None  # Parameter not used!
+) -> 'DatasetSplit':
+    random.seed(random_seed)
+    queries = dataset.queries.copy()
+    random.shuffle(queries)  # Just random shuffle
+```
+
+**Fix**: Implement actual stratification
+```python
+@classmethod
+def from_dataset(
+    cls, 
+    dataset: 'TestDataset', 
+    test_ratio: float = 0.2,
+    random_seed: int = 42,
+    stratify_by: Optional[str] = None
+) -> 'DatasetSplit':
+    """
+    Create stratified train/test split.
+    
+    Args:
+        stratify_by: Metadata field to stratify by (e.g., 'query_type')
+    """
+    random.seed(random_seed)
+    
+    if stratify_by is None:
+        # Simple random split
+        queries = dataset.queries.copy()
+        random.shuffle(queries)
+        split_idx = int(len(queries) * (1 - test_ratio))
+        return cls(train=queries[:split_idx], test=queries[split_idx:])
+    
+    # Stratified split
+    from collections import defaultdict
+    
+    # Group by stratification field
+    groups = defaultdict(list)
+    for query in dataset.queries:
+        key = query.metadata.get(stratify_by, 'unknown')
+        groups[key].append(query)
+    
+    train, test = [], []
+    for group_queries in groups.values():
+        random.shuffle(group_queries)
+        split_idx = int(len(group_queries) * (1 - test_ratio))
+        train.extend(group_queries[:split_idx])
+        test.extend(group_queries[split_idx:])
+    
+    return cls(train=train, test=test)
+```
+
+### 12. **Monitoring Metrics Missing Error Tracking**
+```python
+# api/monitoring.py
+strategy_requests = Counter(
+    'rag_strategy_requests_total',
+    'Total strategy execution requests',
+    ['strategy', 'status']  # status = 'success' or 'error'
+)
+```
+
+**Missing**: Which error types occur?
+```python
+strategy_errors = Counter(
+    'rag_strategy_errors_total',
+    'Strategy execution errors by type',
+    ['strategy', 'error_type']  # e.g., 'timeout', 'api_error', 'db_error'
+)
+
+# Usage
+try:
+    result = await execute_strategy(...)
+except StrategyTimeoutError:
+    strategy_errors.labels(strategy=name, error_type='timeout').inc()
+    raise
+except APIError:
+    strategy_errors.labels(strategy=name, error_type='api_error').inc()
+    raise
+```
+
+### 13. **StrategyRegistry Missing Validation**
+```python
+@classmethod
+def register(cls, name: str, description: str = "", ...):
+    def decorator(strategy_class: Type[StrategyProtocol]):
+        cls._strategies[name] = strategy_class  # What if name already exists?
+        ...
+```
+
+**Fix**: Validate before registering
+```python
+@classmethod
+def register(
+    cls, 
+    name: str,
+    description: str = "",
+    resources: 'StrategyResources' = None,
+    override: bool = False
+):
+    """
+    Decorator to register strategies.
+    
+    Args:
+        override: Allow overriding existing strategy (default: False)
+    """
+    def decorator(strategy_class: Type[StrategyProtocol]):
+        # Validate name
+        if not name or not name.replace('_', '').isalnum():
+            raise ValueError(
+                f"Invalid strategy name '{name}'. "
+                "Must be alphanumeric with underscores."
+            )
+        
+        # Check for duplicates
+        if name in cls._strategies and not override:
+            raise ValueError(
+                f"Strategy '{name}' already registered. "
+                f"Use override=True to replace."
+            )
+        
+        # Validate protocol compliance
+        if not hasattr(strategy_class, 'execute'):
+            raise TypeError(
+                f"Strategy class {strategy_class.__name__} "
+                "must implement execute() method"
+            )
+        
+        cls._strategies[name] = strategy_class
+        cls._metadata[name] = {
+            "description": description,
+            "resources": resources or StrategyResources(),
+            "class": strategy_class.__name__
+        }
+        
+        logger.info(f"Registered strategy: {name}")
+        return strategy_class
+    
+    return decorator
+```
+
+### 14. **Docker Compose Missing Volume Mounts**
+Plan mentions docker-compose.yml but template incomplete:
+```yaml
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: rag_advanced
+      POSTGRES_USER: raguser
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ragpass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./evaluation/schema_extension.sql:/docker-entrypoint-initdb.d/02_evaluation.sql
+      # MISSING: Base schema from all-rag-strategies
+      - ./strategies/utils/schema.sql:/docker-entrypoint-initdb.d/01_base.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raguser"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://raguser:${POSTGRES_PASSWORD:-ragpass}@postgres/rag_advanced
+      REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./datasets:/app/datasets:ro
+      - ./config:/app/config:ro
+      # For development
+      - ./api:/app/api
+      - ./orchestration:/app/orchestration
+      - ./evaluation:/app/evaluation
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+### 15. **Missing Dockerfile Template**
+Referenced but not provided:
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY pyproject.toml .
+RUN pip install --no-cache-dir -e .
+
+# Copy application
+COPY . .
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run application
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+## LOW PRIORITY ISSUES
+
+### 16. **InMemoryRateLimiter Cleanup Inconsistent**
+```python
+async def _cleanup_old_keys(self):
+    now = time.time()
+    if now - self._last_cleanup < self.cleanup_interval:
+        return  # Early return - lock not held
+    
+    cutoff = now - (self.window_seconds * 2)
+    # Cleanup logic - modifying self.requests without lock!
+```
+
+**Problem**: Cleanup modifies shared state outside lock
+**Fix**: Already inside lock in check() method, but make explicit:
+```python
+async def check(self, key: str, limit: Optional[int] = None) -> RateLimitResult:
+    async with self._lock:
+        self._cleanup_old_keys_unsafe()  # Rename to indicate no lock
+        # ... rest
+    
+def _cleanup_old_keys_unsafe(self):
+    """Cleanup old keys. MUST be called with lock held."""
+    now = time.time()
+    if now - self._last_cleanup < self.cleanup_interval:
+        return
+    # ... cleanup logic
+```
+
+### 17. **Coverage Requirements Not Enforced**
+```python
+# tests/coverage_requirements.py
+COVERAGE_TARGETS = {
+    "orchestration": 85,
+    "evaluation": 90,
+    "api": 75,
+    "strategies": 70
+}
+```
+
+**Missing**: pytest-cov configuration to enforce
+```ini
+# pyproject.toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--cov=orchestration",
+    "--cov=evaluation",
+    "--cov=api",
+    "--cov-report=term-missing",
+    "--cov-fail-under=80",  # Global minimum
+]
+
+# Per-module enforcement would need custom plugin
+```
+
+### 18. **Migration Guide Still Just Outline**
+Mentioned but no actual content structure:
+```markdown
+# docs/MIGRATION.md
+
+## Overview
+Migrating from all-rag-strategies to RAG-Advanced requires three main steps:
+database updates, code changes, and configuration updates.
+
+## Prerequisites
+- Python 3.11+
+- PostgreSQL 14+ with pgvector
+- Redis 7+ (new requirement)
+- Existing all-rag-strategies installation
+
+## Step 1: Database Migration
+
+### Backup Current Database
+```bash
+pg_dump -U raguser -d rag_db > backup_$(date +%Y%m%d).sql
+```
+
+### Apply Schema Extensions
+```bash
+psql -U raguser -d rag_db -f evaluation/schema_extension.sql
+```
+
+### Verify Migration
+```sql
+-- Check new tables exist
+SELECT table_name FROM information_schema.tables 
+WHERE table_schema = 'public' 
+AND table_name IN ('api_keys', 'evaluation_runs', 'strategy_metrics');
+```
+
+## Step 2: Code Changes
+
+### Function Renames
+| Old (all-rag-strategies) | New (RAG-Advanced) |
+|--------------------------|-------------------|
+| `execute_rag_agent()` | `execute_strategy()` |
+| `chunk_documents()` | `strategies.ingestion.chunk_documents()` |
+
+### Import Changes
+```python
+# Before
+from implementation.agents.rag_agent import execute_rag_agent
+
+# After
+from orchestration.executor import execute_strategy
+```
+
+### Configuration Changes
+```python
+# Before
+config = {
+    "strategy": "reranking",
+    "top_k": 5
+}
+
+# After (Pydantic models)
+from orchestration.models import StrategyConfig
+config = StrategyConfig(
+    initial_k=20,
+    final_k=5,
+    reranker_model="cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+```
+
+## Step 3: Environment Variables
+
+### Create .env File
+```bash
+cp .env.example .env
+```
+
+### Update Variables
+| Variable | all-rag-strategies | RAG-Advanced |
+|----------|-------------------|--------------|
+| `DATABASE_URL` | Required | Required (unchanged) |
+| `OPENAI_API_KEY` | Required | Required (unchanged) |
+| N/A | N/A | `REDIS_URL` (new) |
+
+## Backward Compatibility
+
+### What Still Works
+- All 11 original RAG strategies
+- Document ingestion pipeline
+- Database schema (extended, not replaced)
+- OpenAI embeddings and LLMs
+
+### Breaking Changes
+- API authentication now required
+- Rate limiting enforced
+- Async-only (no sync wrappers)
+
+## Testing Your Migration
+
+### Smoke Test
+```python
+from orchestration.executor import execute_strategy
+from orchestration.models import StrategyConfig
+
+result = await execute_strategy(
+    strategy="standard",
+    query="test query",
+    config=StrategyConfig()
+)
+assert len(result.documents) >= 0
+```
+
+## Rollback Plan
+
+If migration fails:
+```bash
+# Restore database
+psql -U raguser -d rag_db < backup_YYYYMMDD.sql
+
+# Revert to all-rag-strategies
+git checkout main
+pip install -e .
+```
+```
+
+## POSITIVE ASPECTS ✅
+
+1. **Excellent immutability approach** - frozen dataclass with functional updates
+2. **Comprehensive database-backed auth** - proper security model
+3. **Redis rate limiting** - production-ready, scalable
+4. **Thorough metrics validation** - handles all edge cases
+5. **Versioned pricing** - maintainable cost tracking
+6. **Resource-aware execution** - prevents resource exhaustion
+7. **Graceful degradation** - chain fallback improves reliability
+8. **Type-safe registry** - excellent architectural pattern
+9. **Good monitoring coverage** - Prometheus metrics
+10. **Well-organized file structure** - clear separation of concerns
+
+## OVERALL ASSESSMENT
+
+**Score: 9.0/10** (up from 8.5/10)
+
+Exceptional improvements from v2:
+- All HIGH priority items addressed (with some implementation bugs)
+- MEDIUM priority items implemented
+- LOW priority items added
+- Good architectural patterns
+
+Remaining issues:
+- Implementation bugs (ChainContext frozen violation, TOCTOU, pipeline validation)
+- Missing methods (_key in QueryResultCache)
+- Type validation gaps
+- Blocking I/O in async context
+
+**Recommendation**:
+
+**IMMEDIATE (before any code is written)**:
+1. Fix ChainContext frozen dataclass (use field default_factory + MappingProxyType)
+2. Fix API key TOCTOU race (single UPDATE ... RETURNING query)
+3. Add Redis pipeline error handling
+4. Make PricingProvider async initialization
+5. Add type validation to metrics
+
+**BEFORE FIRST RELEASE**:
+6. Fix database pool creation race
+7. Add _key method to QueryResultCache
+8. Improve agreement calculation (Cohen's Kappa)
+9. Add exception chaining in error handlers
+10. Implement actual stratification in DatasetSplit
+
+**NICE TO HAVE**:
+11. Add error type tracking to monitoring
+12. Add strategy registry validation
+13. Complete Docker Compose template
+14. Write full migration guide
+15. Add pytest coverage enforcement
+
+The plan is **ready to execute after IMMEDIATE fixes**. The architecture is solid, security model is robust, and the implementation is comprehensive. With the immediate fixes, this will be a production-ready system.

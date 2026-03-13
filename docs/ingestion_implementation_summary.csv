@@ -1,0 +1,14 @@
+path,description
+documents/,Default ingestion folder; example files copied from all-rag-strategies (self-contained)
+documents/README.md,Short readme for default documents folder
+strategies/ingestion/models.py,Pydantic models: IngestionConfig (incl. max_tokens for Docling), DocumentChunk, IngestionResult
+strategies/ingestion/chunker.py,Docling HybridChunker (cached per max_tokens) + simple fallback; aligned with all-rag-strategies
+strategies/ingestion/document_reader.py,Read .md/.txt; PDF/DOCX/audio via Docling (convert or transcribe); extract_title
+strategies/ingestion/embedder.py,Batch embed chunks using strategies.utils.embedder.embed_documents
+strategies/ingestion/ingest.py,CLI and run_ingestion(); find files, read, chunk, embed, save to PostgreSQL
+strategies/ingestion/__init__.py,Exports models + lazy run_ingestion to avoid pulling asyncpg on import
+strategies/utils/embedder.py,Added embed_documents() for batch embedding (OpenAI)
+tests/test_strategies/test_ingestion.py,Unit tests: IngestionConfig, DocumentChunk, IngestionResult, chunk_document, document_reader, find_document_files
+docs/README_ingestion.md,Usage, options, supported file types, programmatic API
+README.md,Quick Start §6: ingest CLI and link to docs/README_ingestion.md; diagram INGEST label updated
+docs/QUICKSTART_FINDINGS.md,§7 Ingestion pipeline implemented; summary table updated

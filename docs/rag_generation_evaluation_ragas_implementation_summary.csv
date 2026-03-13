@@ -1,0 +1,15 @@
+area,file,change
+Gold config,evaluation/config/bioasq_v1.json,Added answer_column gold_decision_column gold_explanation_column
+Gold config,evaluation/loaders/xlsx_config.py,XlsxGoldConfig optional answer/decision/explanation columns
+Dataset/benchmark,evaluation/datasets.py,DatasetQuery answer gold_decision gold_explanation
+Benchmark,evaluation/benchmarks.py,BenchmarkQuery ground_truth_answer gold_decision gold_explanation; StrategyResult retrieved_contexts; detailed_results include retrieved_contexts
+Gold loader,evaluation/loaders/xlsx_loader.py,Read answer/decision/explanation; _cell_to_str_or_none; require answer_column when set
+RAGAS,evaluation/ragas_eval.py,New: evaluate_generation RagasEvaluationResult _samples_to_dataset
+Pipeline,scripts/run_evaluation_pipeline.py,Config loader gold keys; _make_benchmark_executor include_retrieved_contexts; BenchmarkQuery from DatasetQuery ground_truth_*; _run_generation_eval; run_generation_eval generation_model params and CLI; write generation_metrics.json
+API,api/routes/evaluation.py,GenerationSample GenerationEvalRequest GenerationEvalResponse evaluate_generation_endpoint
+API,api/main.py,POST /evaluate/generation and imports
+Deps,pyproject.toml,ragas>=0.2.0 datasets>=2.0.0
+Docs,docs/README_evaluation_pipeline.md,Generation eval section options outputs
+Docs,docs/README_ragas_eval.md,New README for RAGAS eval
+Tests,tests/test_evaluation/test_loaders_xlsx.py,Tests for answer columns and missing answer column
+Tests,tests/test_evaluation/test_ragas_eval.py,New tests for ragas_eval

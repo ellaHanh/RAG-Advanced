@@ -1,0 +1,8 @@
+path,change
+tests/test_evaluation/test_pipeline_integration.py,"clean_before_ingest=False; docstring: test does not wipe PG, can use TEST_DATABASE_URL"
+evaluation/db_persistence.py,"New: persist_benchmark_to_db() writes evaluation_runs, benchmark_results, strategy_metrics"
+scripts/run_evaluation_pipeline.py,"Added write_db, run_name params and --write-db, --run-name CLI; call persist_benchmark_to_db when write_db"
+api/routes/strategies.py,"ChainRequest.include_step_documents; ChainStepResponse.documents; step-to-response populates documents when requested; json_schema_extra examples for Execute, Chain, Compare"
+api/routes/benchmarks.py,"json_schema_extra example for BenchmarkTriggerRequest"
+docs/README_orchestration.md,"New section: API request body examples (POST) for /execute, /chain, /compare, /benchmarks"
+docs/README_evaluation_pipeline.md,"Options table: --write-db, --run-name; New section: Populating Postgres evaluation tables"

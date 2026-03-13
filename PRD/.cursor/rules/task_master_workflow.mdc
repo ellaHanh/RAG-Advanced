@@ -1,0 +1,343 @@
+---
+description: Task Master AI execution workflow with lessons learned
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Task Master Workflow Guide
+
+## Initial Setup
+
+### 1. Configure AI Providers
+Edit `.taskmaster/config.json` to set your preferred provider:
+
+```json
+{
+  "models": {
+    "main": {
+      "provider": "openai",  // or "anthropic", "perplexity"
+      "modelId": "gpt-5.1-codex-max", //changed from "gpt-4o"
+      "maxTokens": 16000,
+      "temperature": 0.2
+    },
+    "research": {
+      "provider": "openai",  // Perplexity requires separate API key
+      "modelId": "gpt-4o-mini"
+    },
+    "fallback": {
+      "provider": "openai",
+      "modelId": "gpt-4o-mini"
+    }
+  }
+}
+```
+
+**Common Error**: "Unauthorized" or "API key not set" → Check provider matches your available API keys.
+
+### 2. Parse PRD into Tasks
+
+```bash
+npx task-master parse-prd --input .taskmaster/docs/prd.txt
+```
+
+This creates `tasks/tasks.json` with generated tasks.
+
+---
+
+## Complexity Analysis Workflow
+
+### Step 1: Analyze Complexity
+
+```bash
+npx task-master analyze-complexity --output json
+```
+
+**GOTCHA**: The `--output json` creates a file named `json` in the project root, NOT in `.taskmaster/reports/`.
+
+**Fix**: Move the output file manually:
+```bash
+mkdir -p .taskmaster/reports
+mv json .taskmaster/reports/task-complexity-report.json
+```
+
+### Step 2: View Complexity Report
+
+```bash
+npx task-master complexity-report
+```
+
+**Note**: There is NO `--threshold` option. The threshold is read from the report's metadata.
+
+### Step 3: Interpret the Report
+
+Key metrics to watch:
+- **Tasks at/below threshold**: Target 90%+ for manageable work
+- **Complexity scores**: 1-10 scale, threshold typically 5
+- **Expansion recommendations**: Which tasks need breaking down
+
+### Step 4: Expand High-Complexity Tasks
+
+```bash
+npx task-master expand --id=X --num=3
+```
+
+This creates subtasks under the parent task.
+
+**Important**: Expanding tasks does NOT reduce the parent's complexity score. To genuinely reduce complexity, you must modify the PRD to have more granular features.
+
+---
+
+## Iteration Strategy for 90% Threshold Target
+
+### If stuck at ~85-88%:
+
+1. **Identify stubborn high-complexity tasks** from complexity report
+2. **Modify the PRD** - break abstract features into concrete, atomic features
+3. **Re-parse PRD**: `npx task-master parse-prd --input .taskmaster/docs/prd.txt`
+4. **Re-analyze**: `npx task-master analyze-complexity --output json`
+5. **Check progress**: `npx task-master complexity-report`
+
+### PRD Modification Examples:
+
+**Before** (high complexity):
+```markdown
+### Feature: Sequential Chaining
+Execute strategies in sequence, passing results between steps.
+```
+
+**After** (lower complexity):
+```markdown
+### Feature: Chain State Management
+Immutable dataclass holding query, results, and metadata for chain execution.
+
+### Feature: Sequential Strategy Executor  
+Execute single strategy step using ChainState, return updated state.
+
+### Feature: Chain Fallback Handler
+Handle individual step failures with configurable fallback behavior.
+```
+
+---
+
+## Task Execution Workflow
+
+### 1. Get Next Task
+```bash
+npx task-master next
+```
+
+Returns the next dependency-resolved, executable task.
+
+### 2. View Task Details
+```bash
+npx task-master show --id=X
+```
+
+### 3. List All Tasks
+```bash
+npx task-master list
+```
+
+**Progress semantics**:
+- **List/Dashboard** shows only **top-level** tasks (e.g. "30/30 done"). Subtasks are **not** counted there.
+- **Total work items** = top-level tasks + all nested subtasks (e.g. 30 + 20 = 50). If you count pending items in `tasks.json`, you may see "20 pending" — those are subtasks whose `status` is still `"pending"`.
+- To see full picture: inspect `tasks/tasks.json` → `master.tasks[].subtasks[]` and each `status` field.
+
+**GOTCHA**: `--with-subtasks` summary can show "0/0" even when subtasks exist. Verify in `tasks.json`.
+
+### 4. Complete Task (and Subtask Discipline)
+```bash
+npx task-master complete --id=X
+```
+
+**When the parent has subtasks**: `complete --id=X` marks only the **parent** as done. It does **not** update nested `subtasks[].status`. For accurate progress and future audits:
+
+1. **After implementing** the parent, if the work covered all subtask descriptions, **update subtasks to done** in `tasks.json`:
+   - Open `.taskmaster/tasks/tasks.json`.
+   - Find the task by `id` (e.g. `"id": "24"`).
+   - For each object in `"subtasks": [...]`, set `"status": "done"` (was `"pending"`).
+
+2. **If a subtask was not implemented** (e.g. "LLM-assisted ground truth" deferred): leave that subtask as `"status": "pending"` so progress reflects remaining work.
+
+3. **Optional audit**: Before marking subtasks done, quickly verify implementation (e.g. grep for key functions or run tests). See `docs/subtask_audit_results.csv` for an audit pattern.
+
+4. **Create or update the task summary doc** (see [Task completion summary](#task-completion-summary) below): write `.taskmaster/docs/task-summaries/task-<id>.md` with what was done for this task and its subtasks.
+
+5. **Regenerate tasks.csv** whenever `tasks.json` was changed (see [Keeping tasks.csv in sync](#keeping-taskscsv-in-sync) below).
+
+### 5. Generate Task Files
+```bash
+npx task-master generate
+```
+
+Creates individual task files in `tasks/` directory.
+
+---
+
+## Critical Commands Reference
+
+| Command / Action | Purpose |
+|------------------|---------|
+| `parse-prd --input FILE` | Generate tasks from PRD |
+| `analyze-complexity --output json` | Create complexity report |
+| `complexity-report` | View complexity summary |
+| `expand --id=X --num=N` | Break task into N subtasks |
+| `next` | Get next executable task |
+| `list` | Show all tasks (top-level only) |
+| `show --id=X` | Show task details |
+| `complete --id=X` | Mark **parent** task done (does not update subtasks) |
+| Update `tasks.json` subtasks | After completing a parent, set `subtasks[].status` to `"done"` or leave `"pending"` so progress is accurate |
+| Create/update task summary doc | After completing a task, write `.taskmaster/docs/task-summaries/task-<id>.md` with what was done (parent + subtasks) |
+| `python .taskmaster/scripts/json_to_csv.py` | Regenerate `tasks.csv` from `tasks.json` (run whenever tasks.json is updated) |
+| `generate` | Create task files |
+
+---
+
+## Common Pitfalls & Solutions
+
+### 1. "No complexity report found"
+**Cause**: `analyze-complexity` output file not in expected location.
+**Fix**: `mv json .taskmaster/reports/task-complexity-report.json`
+
+### 2. API Authorization Errors
+**Cause**: Config uses provider without API key set.
+**Fix**: Update `.taskmaster/config.json` to use available provider.
+
+### 3. High-complexity tasks won't reduce after expand
+**Cause**: Parent task inherent complexity unchanged.
+**Fix**: Modify PRD to have more atomic features, then re-parse.
+
+### 4. Subtask count shows 0/0
+**Cause**: Known display issue with `list --with-subtasks`.
+**Fix**: Read `tasks/tasks.json` directly to verify subtasks exist.
+
+### 5. "50 tasks, 20 pending" vs dashboard "30/30 done"
+**Cause**: Dashboard counts only **top-level** tasks. The 20 pending are **nested subtasks** inside parents that are already marked done; their `status` was never updated when the parent was completed.
+**Fix**: After completing any parent that has subtasks, open `tasks.json` and set each implemented subtask to `"status": "done"`. Leave as `"pending"` only subtasks that were deliberately not implemented. Then progress (e.g. "49/50" if one subtask remains) is accurate.
+
+### 6. Tasks missing bootstrap/scaffolding code
+**Cause**: PRD focused on features, not deployment glue.
+**Fix**: Add "Application Bootstrap & Developer Experience" capability to PRD (see `prd_completeness.mdc` rule).
+
+---
+
+## File Locations
+
+| File | Purpose |
+|------|---------|
+| `.taskmaster/config.json` | AI provider configuration |
+| `.taskmaster/docs/prd.txt` | Product requirements document |
+| `.taskmaster/tasks/tasks.json` | Generated task hierarchy (top-level + `subtasks[]` per task) |
+| `.taskmaster/tasks/tasks.csv` | Flat CSV view of tasks.json (regenerate with `json_to_csv.py` when tasks.json changes) |
+| `.taskmaster/docs/task-summaries/task-<id>.md` | Per-task completion summary: what was done (parent + subtasks); create/update on task completion |
+| `.taskmaster/reports/task-complexity-report.json` | Complexity analysis |
+| `tasks/[id]/*` | Individual task files (after generate) |
+| `docs/subtask_audit_results.csv` | Optional: audit of subtask vs implementation (template for evidence) |
+
+---
+
+## Subtask and Progress Labeling (Lessons Learned)
+
+### Why it matters
+- **task-master** tracks only **top-level** tasks. Completing a task with `complete --id=X` sets that task's `status` to `"done"` but does **not** change any `subtasks[].status`.
+- **Progress** is therefore two-level:
+  - **Top-level**: e.g. 30/30 (what the CLI/dashboard shows).
+  - **Full**: top-level + all subtasks; e.g. 50 total, 49 done if 19 subtasks were marked done and 1 left pending.
+
+### How to keep progress accurate
+1. When you **complete a parent task** that has a non-empty `subtasks` array:
+   - If the implementation **covers all subtask descriptions**: in `tasks.json`, set every subtask in that parent to `"status": "done"`.
+   - If a subtask was **not** implemented (e.g. deferred): leave that subtask as `"status": "pending"`.
+2. Optionally run a **one-time audit**: for each parent with subtasks, map each subtask title/description to code (or tests); then set `status` to `"done"` or `"pending"` accordingly. Use `docs/subtask_audit_results.csv` as a template for recording evidence.
+
+### Where it lives in tasks.json
+- File: `.taskmaster/tasks/tasks.json`
+- Structure: `master.tasks[]` → each task has `"id"`, `"status"`, `"subtasks": [ { "id", "title", "status", ... }, ... ]`
+- Only `status` on both the task and each subtask need to be updated for correct labeling.
+
+---
+
+## Task completion summary
+
+After completing a task (and updating subtask statuses in `tasks.json`), create or update a **summary doc** so there is a single, detailed record of what was done for that task and its subtasks. This is more useful than the raw fields in `tasks.json` for handoffs and audits.
+
+### When to do it
+- After you run `npx task-master complete --id=X` and (if the task has subtasks) after you set `subtasks[].status` in `tasks.json`.
+
+### Where to save
+- **One file per task**: `.taskmaster/docs/task-summaries/task-<id>.md`  
+  Example: task 24 → `.taskmaster/docs/task-summaries/task-24.md`  
+  Create the directory `.taskmaster/docs/task-summaries/` if it does not exist.
+
+### What to include in the summary doc
+1. **From tasks.json** (for reference): task **id**, **title**, **description**, **details**, **testStrategy**, **status**.
+2. **What was done (parent task)**: Short narrative of the implementation — key modules/files, main behavior, how it fits with dependencies.
+3. **Subtasks** (if any): For each subtask, list **title** and **what was done** (e.g. “Implemented in `orchestration/executor.py`: …” or “Covered by tests in `tests/test_orchestration/test_executor.py`”).
+
+Use clear headings (e.g. `## What was done`, `### Subtask: <title>`) so the doc is scannable. Update the same file when you later refine or correct the summary for that task.
+
+### Example structure (task-24.md)
+```markdown
+# Task 24: Build Single Strategy Execution
+
+## From tasks.json
+- **Description**: Implement the execution of a single RAG strategy with configuration and metrics tracking.
+- **Details**: Develop a function to execute a strategy based on its name and configuration. Track execution metrics...
+- **testStrategy**: Mock strategy executions and verify that metrics are accurately tracked and returned.
+- **Status**: done
+
+## What was done
+- Added `orchestration/executor.py`: `StrategyExecutor.execute()`, `ExecutionContext`, `ExecutionResult`; integrates with registry and cost tracker; latency and token counts tracked.
+- Tests in `tests/test_orchestration/test_executor.py`: basic execution, cost tracking, timeout, errors, retry, metadata.
+
+### Subtask 1: Design Execution Logic
+- Design reflected in `StrategyExecutor.execute()` flow and `ExecutionContext` / `ExecutionResult` types.
+
+### Subtask 2: Implement Metrics Tracking
+- Cost and latency in `executor.py`; `TokenCounts` in `ExecutionResult`; tests in `TestCostTracking`.
+
+...
+```
+
+---
+
+## Keeping tasks.csv in sync
+
+`tasks.csv` is a flat, CSV view of the same data as `tasks.json` (one row per task and per subtask). It is easier to open in spreadsheets or scripts. **Whenever you change `tasks.json`** (e.g. after completing a task or updating subtask statuses), regenerate `tasks.csv` so the two stay in sync.
+
+### When to do it
+- After any edit to `.taskmaster/tasks/tasks.json` (e.g. `complete --id=X`, or manual updates to `status` / `subtasks[].status`).
+
+### How to regenerate tasks.csv
+From the **repository root** (e.g. RAG-Advanced-PRD):
+
+```bash
+python .taskmaster/scripts/json_to_csv.py
+```
+
+- **Default input**: `.taskmaster/tasks/tasks.json`  
+- **Output**: `.taskmaster/tasks/tasks.csv` (same directory as input, same base name, `.csv` extension).
+
+To use an explicit path:
+
+```bash
+python .taskmaster/scripts/json_to_csv.py .taskmaster/tasks/tasks.json
+```
+
+If the script is run from another directory, pass the absolute or relative path to `tasks.json` so the output CSV is written next to it.
+
+---
+
+## Workflow Summary
+
+```
+1. Configure providers → config.json
+2. Write/refine PRD → prd.txt
+3. Parse PRD → tasks.json
+4. Analyze complexity → complexity report
+5. Iterate (expand or modify PRD) until 90% under threshold
+6. Execute tasks in order (next → implement → complete → repeat)
+7. After complete: if task has subtasks, update subtasks[].status in tasks.json (done vs pending) so progress is accurate
+8. Create or update task summary doc: .taskmaster/docs/task-summaries/task-<id>.md (what was done for parent + subtasks)
+9. Whenever tasks.json is updated: regenerate tasks.csv with python .taskmaster/scripts/json_to_csv.py
+```

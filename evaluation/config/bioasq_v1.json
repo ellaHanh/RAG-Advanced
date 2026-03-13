@@ -1,0 +1,18 @@
+{
+  "gold": {
+    "sheet_index": 0,
+    "query_id_column": "id",
+    "query_column": "question",
+    "relevant_doc_ids_column": "relevant_passage_ids",
+    "list_format": "json",
+    "answer_column": "answer",
+    "gold_decision_column": "gold_decision",
+    "gold_explanation_column": "gold_explanation"
+  },
+  "corpus": {
+    "sheet_index": 0,
+    "doc_id_column": "doc_id",
+    "text_column": "passage",
+    "title_column": "title"
+  }
+}

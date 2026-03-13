@@ -1,0 +1,679 @@
+```python
+# orchestration/models.py
+from dataclasses import dataclass, field
+from typing import Tuple, Any
+from types import MappingProxyType
+from datetime import datetime
+
+
+def _empty_mapping() -> MappingProxyType:
+    """Factory for empty immutable mapping."""
+    return MappingProxyType({})
+
+
+@dataclass(frozen=True)
+class ChainContext:
+    """
+    Immutable state passed between chained strategies.
+    
+    Thread-safe: Can be safely shared across async tasks.
+    Uses frozen dataclass with tuples and MappingProxyType for immutability.
+    
+    Args:
+        query: Current query text (may be refined)
+        original_query: Original user query
+        intermediate_results: Tuple of execution step results
+        metadata: Immutable metadata dictionary
+        total_cost: Accumulated cost across steps
+        total_latency_ms: Accumulated latency across steps
+        error_log: Tuple of timestamped error messages
+        step_index: Current step number in chain
+    """
+    query: str
+    original_query: str
+    intermediate_results: Tuple[MappingProxyType, ...] = ()
+    metadata: MappingProxyType = field(default_factory=_empty_mapping)
+    total_cost: float = 0.0
+    total_latency_ms: int = 0
+    error_log: Tuple[str, ...] = ()
+    step_index: int = 0
+    
+    def with_step_result(
+        self, 
+        strategy_name: str, 
+        result: Any
+    ) -> 'ChainContext':
+        """
+        Return new context with added step result.
+        
+        Args:
+            strategy_name: Name of strategy that produced result
+            result: ExecutionResult instance
+            
+        Returns:
+            New ChainContext with updated results and metrics
+        """
+        new_result = MappingProxyType({
+            "step": self.step_index,
+            "strategy": strategy_name,
+            "result_id": result.id,
+            "doc_count": len(result.documents),
+            "cost": result.cost,
+            "latency_ms": result.latency_ms,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        return ChainContext(
+            query=self.query,
+            original_query=self.original_query,
+            intermediate_results=self.intermediate_results + (new_result,),
+            metadata=self.metadata,
+            total_cost=self.total_cost + result.cost,
+            total_latency_ms=self.total_latency_ms + result.latency_ms,
+            error_log=self.error_log,
+            step_index=self.step_index + 1
+        )
+    
+    def with_error(self, error_msg: str) -> 'ChainContext':
+        """
+        Return new context with added error.
+        
+        Args:
+            error_msg: Error message to log
+            
+        Returns:
+            New ChainContext with timestamped error added
+        """
+        timestamped_error = f"[{datetime.utcnow().isoformat()}] {error_msg}"
+        return ChainContext(
+            query=self.query,
+            original_query=self.original_query,
+            intermediate_results=self.intermediate_results,
+            metadata=self.metadata,
+            total_cost=self.total_cost,
+            total_latency_ms=self.total_latency_ms,
+            error_log=self.error_log + (timestamped_error,),
+            step_index=self.step_index
+        )
+    
+    def with_metadata(self, **kwargs: Any) -> 'ChainContext':
+        """
+        Return new context with updated metadata.
+        
+        Args:
+            **kwargs: Metadata key-value pairs to merge
+            
+        Returns:
+            New ChainContext with merged metadata
+        """
+        new_metadata = MappingProxyType({**self.metadata, **kwargs})
+        return ChainContext(
+            query=self.query,
+            original_query=self.original_query,
+            intermediate_results=self.intermediate_results,
+            metadata=new_metadata,
+            total_cost=self.total_cost,
+            total_latency_ms=self.total_latency_ms,
+            error_log=self.error_log,
+            step_index=self.step_index
+        )
+    
+    def with_refined_query(self, new_query: str) -> 'ChainContext':
+        """
+        Return new context with refined query.
+        
+        Args:
+            new_query: Refined query text
+            
+        Returns:
+            New ChainContext with updated query (original_query unchanged)
+        """
+        return ChainContext(
+            query=new_query,
+            original_query=self.original_query,
+            intermediate_results=self.intermediate_results,
+            metadata=self.metadata,
+            total_cost=self.total_cost,
+            total_latency_ms=self.total_latency_ms,
+            error_log=self.error_log,
+            step_index=self.step_index
+        )
+```
+
+```python
+# api/auth.py
+from fastapi import Security, HTTPException, Depends
+from fastapi.security import APIKeyHeader
+from datetime import datetime
+from typing import Optional
+from dataclasses import dataclass
+import hashlib
+import asyncpg
+from api.database import get_db_pool
+
+
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+
+@dataclass
+class APIKey:
+    """
+    Verified API key with metadata.
+    
+    Args:
+        id: Unique key identifier
+        user_id: Associated user identifier
+        rate_limit: Requests per hour limit
+        expires_at: Optional expiration timestamp
+    """
+    id: str
+    user_id: str
+    rate_limit: int
+    expires_at: Optional[datetime]
+
+
+async def verify_api_key(
+    api_key: Optional[str] = Security(api_key_header),
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+) -> APIKey:
+    """
+    Verify API key against database atomically.
+    
+    Uses single UPDATE...RETURNING query to prevent TOCTOU race conditions.
+    Keys are stored as SHA256 hashes for security.
+    
+    Args:
+        api_key: API key from request header
+        db_pool: Database connection pool
+        
+    Returns:
+        APIKey instance with metadata
+        
+    Raises:
+        HTTPException: 401 if no key provided, 403 if invalid/expired
+    """
+    if not api_key:
+        raise HTTPException(
+            status_code=401, 
+            detail="API key required",
+            headers={"WWW-Authenticate": "ApiKey"}
+        )
+    
+    key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+    
+    async with db_pool.acquire() as conn:
+        async with conn.transaction():
+            row = await conn.fetchrow(
+                """
+                UPDATE api_keys 
+                SET last_used_at = NOW() 
+                WHERE key_hash = $1 
+                  AND is_active = true
+                  AND (expires_at IS NULL OR expires_at > NOW())
+                RETURNING id, user_id, rate_limit, expires_at
+                """,
+                key_hash
+            )
+    
+    if not row:
+        raise HTTPException(
+            status_code=403, 
+            detail="Invalid or expired API key"
+        )
+    
+    return APIKey(
+        id=str(row['id']),
+        user_id=row['user_id'],
+        rate_limit=row['rate_limit'],
+        expires_at=row['expires_at']
+    )
+```
+
+```python
+# api/rate_limiter.py
+import redis.asyncio as redis
+import time
+from typing import Optional
+from dataclasses import dataclass
+from loguru import logger
+
+
+@dataclass
+class RateLimitResult:
+    """
+    Result of rate limit check.
+    
+    Args:
+        allowed: Whether request is allowed
+        remaining: Remaining requests in window
+        reset_at: Unix timestamp when window resets
+        error: Optional error message for debugging
+    """
+    allowed: bool
+    remaining: int
+    reset_at: float
+    error: Optional[str] = None
+
+
+class RedisRateLimiter:
+    """
+    Sliding window rate limiter using Redis sorted sets.
+    
+    Implements fail-open strategy: allows requests on Redis errors but logs them.
+    
+    Args:
+        redis_client: Redis async client
+        default_limit: Default requests per window
+        window_seconds: Time window in seconds
+        fail_open: Allow requests on Redis failure
+    """
+    
+    def __init__(
+        self, 
+        redis_client: redis.Redis,
+        default_limit: int = 100,
+        window_seconds: int = 3600,
+        fail_open: bool = True
+    ):
+        self.redis = redis_client
+        self.default_limit = default_limit
+        self.window_seconds = window_seconds
+        self.fail_open = fail_open
+    
+    async def check(
+        self, 
+        key: str, 
+        limit: Optional[int] = None
+    ) -> RateLimitResult:
+        """
+        Check rate limit with comprehensive error handling.
+        
+        Args:
+            key: Unique identifier (e.g., API key hash)
+            limit: Override default limit
+        
+        Returns:
+            RateLimitResult with allowed status and metadata
+            
+        Raises:
+            Never raises - returns RateLimitResult with error field on failure
+        """
+        limit = limit or self.default_limit
+        redis_key = f"rate_limit:{key}"
+        now = time.time()
+        window_start = now - self.window_seconds
+        
+        try:
+            async with self.redis.pipeline() as pipe:
+                pipe.zremrangebyscore(redis_key, 0, window_start)
+                pipe.zcard(redis_key)
+                pipe.zadd(redis_key, {str(now): now})
+                pipe.expire(redis_key, self.window_seconds)
+                
+                results = await pipe.execute()
+            
+            if results is None:
+                raise ValueError("Pipeline returned None")
+            
+            if len(results) < 4:
+                raise ValueError(
+                    f"Pipeline returned incomplete results: {len(results)} items"
+                )
+            
+            current_count = results[1]
+            
+            if current_count is None:
+                logger.warning(f"Redis ZCARD returned None for {redis_key}")
+                current_count = 0
+            
+            if not isinstance(current_count, int):
+                logger.warning(
+                    f"Redis ZCARD returned non-int: {type(current_count)}"
+                )
+                current_count = int(current_count)
+            
+            allowed = current_count < limit
+            
+            return RateLimitResult(
+                allowed=allowed,
+                remaining=max(0, limit - current_count - (1 if allowed else 0)),
+                reset_at=now + self.window_seconds
+            )
+            
+        except redis.RedisError as e:
+            logger.error(f"Redis rate limit check failed: {e}")
+            
+            return RateLimitResult(
+                allowed=self.fail_open,
+                remaining=0,
+                reset_at=now + self.window_seconds,
+                error=f"Redis unavailable: {e}"
+            )
+        
+        except Exception as e:
+            logger.exception(f"Unexpected error in rate limit check: {e}")
+            
+            return RateLimitResult(
+                allowed=self.fail_open,
+                remaining=0,
+                reset_at=now + self.window_seconds,
+                error=f"Internal error: {e}"
+            )
+```
+
+```python
+# api/database.py
+import asyncio
+import asyncpg
+import os
+from dataclasses import dataclass
+from typing import Optional
+from loguru import logger
+
+
+@dataclass
+class DatabaseConfig:
+    """
+    Database connection pool configuration.
+    
+    Args:
+        min_size: Minimum pool connections
+        max_size: Maximum pool connections
+        max_queries: Queries per connection before refresh
+        max_inactive_connection_lifetime: Seconds before closing idle connection
+        command_timeout: Query timeout in seconds
+        statement_cache_size: Prepared statement cache size per connection
+    """
+    min_size: int = 5
+    max_size: int = 20
+    max_queries: int = 50000
+    max_inactive_connection_lifetime: float = 300.0
+    command_timeout: float = 30.0
+    statement_cache_size: int = 100
+
+
+_pool_lock = asyncio.Lock()
+_db_pool: Optional[asyncpg.Pool] = None
+
+
+async def create_pool(config: Optional[DatabaseConfig] = None) -> asyncpg.Pool:
+    """
+    Create database connection pool with thread-safe initialization.
+    
+    Uses asyncio.Lock to prevent race condition where multiple concurrent
+    calls could create multiple pools.
+    
+    Args:
+        config: Optional database configuration
+        
+    Returns:
+        Database connection pool
+        
+    Raises:
+        ValueError: If DATABASE_URL not set
+    """
+    global _db_pool
+    
+    if _db_pool is not None:
+        return _db_pool
+    
+    async with _pool_lock:
+        if _db_pool is not None:
+            return _db_pool
+        
+        config = config or DatabaseConfig()
+        database_url = os.getenv("DATABASE_URL")
+        
+        if not database_url:
+            raise ValueError("DATABASE_URL environment variable not set")
+        
+        logger.info(
+            f"Creating database pool (min={config.min_size}, max={config.max_size})"
+        )
+        
+        _db_pool = await asyncpg.create_pool(
+            dsn=database_url,
+            min_size=config.min_size,
+            max_size=config.max_size,
+            max_queries=config.max_queries,
+            max_inactive_connection_lifetime=config.max_inactive_connection_lifetime,
+            command_timeout=config.command_timeout,
+            statement_cache_size=config.statement_cache_size
+        )
+        
+        logger.info("Database pool created successfully")
+        return _db_pool
+
+
+async def get_db_pool() -> asyncpg.Pool:
+    """
+    FastAPI dependency for database pool.
+    
+    Returns:
+        Database connection pool
+        
+    Raises:
+        RuntimeError: If pool not initialized
+    """
+    if _db_pool is None:
+        raise RuntimeError(
+            "Database pool not initialized. "
+            "Ensure create_pool() is called at startup."
+        )
+    return _db_pool
+
+
+async def close_pool() -> None:
+    """Close database pool gracefully."""
+    global _db_pool
+    
+    async with _pool_lock:
+        if _db_pool is not None:
+            await _db_pool.close()
+            _db_pool = None
+            logger.info("Database pool closed")
+```
+
+```python
+# orchestration/pricing.py
+import aiofiles
+import json
+from datetime import datetime
+from typing import Dict, List, Optional
+from dataclasses import dataclass
+from pathlib import Path
+from loguru import logger
+
+
+@dataclass
+class ModelPricing:
+    """
+    Pricing for a specific model.
+    
+    Args:
+        input_per_1k: Cost per 1000 input tokens
+        output_per_1k: Cost per 1000 output tokens
+        currency: Currency code
+    """
+    input_per_1k: float
+    output_per_1k: float
+    currency: str = "USD"
+
+
+@dataclass
+class PricingVersion:
+    """
+    Pricing configuration at a point in time.
+    
+    Args:
+        effective_date: When this pricing became effective
+        currency: Currency code
+        models: Model name to pricing mapping
+    """
+    effective_date: datetime
+    currency: str
+    models: Dict[str, ModelPricing]
+
+
+class PricingProvider:
+    """
+    Async pricing provider with versioned configuration.
+    
+    Must call initialize() at app startup before using calculate_cost().
+    
+    Args:
+        config_path: Path to pricing JSON configuration
+    """
+    
+    def __init__(self, config_path: str = "config/pricing.json"):
+        self.config_path = Path(config_path)
+        self.pricing_history: List[PricingVersion] = []
+        self._initialized = False
+    
+    async def initialize(self) -> None:
+        """
+        Async initialization - call at app startup.
+        
+        Safe to call multiple times (idempotent).
+        """
+        if self._initialized:
+            return
+        
+        await self._load_pricing()
+        self._initialized = True
+    
+    def _ensure_initialized(self) -> None:
+        """
+        Raise if not initialized.
+        
+        Raises:
+            RuntimeError: If initialize() not called
+        """
+        if not self._initialized:
+            raise RuntimeError(
+                "PricingProvider not initialized. "
+                "Call 'await pricing.initialize()' at startup."
+            )
+    
+    async def _load_pricing(self) -> None:
+        """Load pricing from JSON config asynchronously."""
+        if not self.config_path.exists():
+            logger.warning(f"Pricing config not found: {self.config_path}")
+            self._use_default_pricing()
+            return
+        
+        try:
+            async with aiofiles.open(self.config_path, 'r') as f:
+                content = await f.read()
+            
+            data = json.loads(content)
+            
+            for entry in data.get("pricing_history", []):
+                models = {
+                    name: ModelPricing(
+                        input_per_1k=m["input_per_1k"],
+                        output_per_1k=m["output_per_1k"],
+                        currency=entry.get("currency", "USD")
+                    )
+                    for name, m in entry["models"].items()
+                }
+                self.pricing_history.append(PricingVersion(
+                    effective_date=datetime.fromisoformat(
+                        entry["effective_date"].replace("Z", "+00:00")
+                    ),
+                    currency=entry.get("currency", "USD"),
+                    models=models
+                ))
+            
+            self.pricing_history.sort(
+                key=lambda p: p.effective_date, 
+                reverse=True
+            )
+            
+            logger.info(
+                f"Loaded {len(self.pricing_history)} pricing versions "
+                f"from {self.config_path}"
+            )
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in pricing config: {e}")
+            self._use_default_pricing()
+            
+        except Exception as e:
+            logger.error(f"Failed to load pricing config: {e}")
+            self._use_default_pricing()
+    
+    def _use_default_pricing(self) -> None:
+        """Fallback to hardcoded defaults."""
+        logger.warning("Using default hardcoded pricing (Jan 2026)")
+        self.pricing_history = [
+            PricingVersion(
+                effective_date=datetime(2025, 1, 1),
+                currency="USD",
+                models={
+                    "text-embedding-3-small": ModelPricing(0.00002, 0.0),
+                    "text-embedding-3-large": ModelPricing(0.00013, 0.0),
+                    "gpt-4o-mini": ModelPricing(0.00015, 0.0006),
+                    "gpt-4o": ModelPricing(0.0025, 0.01),
+                    "gpt-4-turbo": ModelPricing(0.01, 0.03),
+                    "claude-3-5-sonnet": ModelPricing(0.003, 0.015),
+                    "claude-3-haiku": ModelPricing(0.00025, 0.00125),
+                    "cross-encoder/ms-marco-MiniLM-L-6-v2": ModelPricing(0.0, 0.0),
+                }
+            )
+        ]
+    
+    def get_pricing(
+        self, 
+        model_name: str, 
+        as_of: Optional[datetime] = None
+    ) -> ModelPricing:
+        """
+        Get pricing for model at specific date.
+        
+        Args:
+            model_name: Model identifier
+            as_of: Optional datetime for historical pricing
+            
+        Returns:
+            ModelPricing instance (defaults to 0.0 if not found)
+        """
+        self._ensure_initialized()
+        
+        if as_of is None:
+            as_of = datetime.utcnow()
+        
+        for version in self.pricing_history:
+            if version.effective_date <= as_of:
+                if model_name in version.models:
+                    return version.models[model_name]
+        
+        logger.warning(f"No pricing found for model: {model_name}")
+        return ModelPricing(0.0, 0.0)
+    
+    def calculate_cost(
+        self,
+        model_name: str,
+        input_tokens: int,
+        output_tokens: int = 0,
+        as_of: Optional[datetime] = None
+    ) -> float:
+        """
+        Calculate cost for model usage.
+        
+        Args:
+            model_name: Model identifier
+            input_tokens: Number of input tokens
+            output_tokens: Number of output tokens
+            as_of: Optional datetime for historical pricing
+            
+        Returns:
+            Cost in USD (or configured currency), rounded to 8 decimals
+        """
+        pricing = self.get_pricing(model_name, as_of)
+        cost = (input_tokens / 1000) * pricing.input_per_1k
+        cost += (output_tokens / 1000) * pricing.output_per_1k
+        return round(cost, 8)
+
+
+pricing_provider = PricingProvider()
+```

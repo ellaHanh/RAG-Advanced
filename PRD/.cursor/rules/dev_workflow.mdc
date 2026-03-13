@@ -1,0 +1,34 @@
+---
+description: Task Master AI execution workflow
+globs: ["**/*"]
+alwaysApply: false
+# note: this is original from task-master repo, now it's updated to task_master_workflow with more completeness and thorough instructions.
+---
+
+# Task Master Workflow
+
+## ALWAYS Follow This Order:
+1. **Query next task**: Run `task-master next` to get dependency-resolved task
+2. **Read task files**: Check `tasks/[id]/` for spec, acceptance criteria, artifacts
+3. **Implement ONLY that task** - no planning, no unrelated changes
+4. **Test thoroughly** using `testStrategy` from task file
+5. **Mark complete**: `task-master complete --id=X`
+6. **Repeat**: Query `task-master next`
+
+## Critical Commands:
+task-master next # Get next executable task
+task-master list # Current status
+task-master complete --id=X # Mark done
+task-master generate # Refresh task files
+
+## NEVER:
+- Implement tasks out of order
+- Skip `task-master next`
+- Work on high-complexity tasks (>5)
+- Make unrelated changes
+- Plan/brainstorm during execution
+
+## Context Files (Auto-loaded):
+- `tasks.json` - full hierarchy
+- `.taskmaster/docs/prd.txt` - requirements
+- `tasks/[id]/*` - current task details

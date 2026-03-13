@@ -1,0 +1,204 @@
+[project]
+name = "rag-advanced"
+version = "0.1.0"
+description = "Strategy Orchestration and Evaluation System for RAG"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "RAG-Advanced Team"}
+]
+keywords = ["RAG", "retrieval", "evaluation", "orchestration", "LLM"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    # API Framework
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    
+    # Agent Framework
+    "pydantic-ai>=0.0.14",
+    
+    # Database
+    "asyncpg>=0.30.0",
+    
+    # Cache (Redis)
+    "redis>=5.2.0",
+    
+    # Embeddings & LLM
+    "openai>=1.60.0",
+    "anthropic>=0.42.0",
+    # RAG generation (LangChain); chains live in langchain-classic for LangChain 1.x
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-classic>=1.0.0",
+    
+    # IR Metrics
+    "ir-measures>=0.3.7",
+    
+    # Reranking
+    "sentence-transformers>=3.4.0",
+    
+    # Document Processing
+    "docling[vlm]>=2.55.0",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "aiohttp>=3.11.0",
+    "aiofiles>=24.1.0",
+    "numpy>=2.0.0",
+    "structlog>=24.4.0",
+    # Evaluation pipeline (xlsx loading)
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    # RAG generation evaluation (RAGAS)
+    "ragas>=0.2.0",
+    "datasets>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "black>=24.10.0",
+    "ruff>=0.9.0",
+    "mypy>=1.14.0",
+    "pre-commit>=4.0.0",
+    "httpx>=0.28.0",  # For testing FastAPI
+]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/EllaHanh/RAG-Advanced"
+Documentation = "https://github.com/EllaHanh/RAG-Advanced#readme"
+Repository = "https://github.com/EllaHanh/RAG-Advanced"
+Issues = "https://github.com/EllaHanh/RAG-Advanced/issues"
+
+[project.scripts]
+rag-advanced = "api.main:run"
+
+[build-system]
+requires = ["setuptools>=75.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["api*", "orchestration*", "evaluation*", "generation*", "strategies*", "config*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | __pycache__
+    | \.pytest_cache
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "W",      # pycodestyle warnings
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez
+    "T10",    # flake8-debugger
+    "ISC",    # flake8-implicit-str-concat
+    "ICN",    # flake8-import-conventions
+    "PIE",    # flake8-pie
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "ARG",    # flake8-unused-arguments
+    "ERA",    # eradicate
+    "RUF",    # Ruff-specific rules
+]
+ignore = [
+    "E501",   # Line too long (handled by black)
+    "B008",   # Do not perform function calls in argument defaults
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api", "orchestration", "evaluation", "generation", "strategies"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests (require database/redis)",
+    "e2e: End-to-end tests",
+    "slow: Slow running tests",
+]
+filterwarnings = [
+    "ignore:builtin type SwigPyPacked has no __module__:DeprecationWarning",
+    "ignore:builtin type SwigPyObject has no __module__:DeprecationWarning",
+    "ignore:Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater:UserWarning",
+]
+
+[tool.coverage.run]
+source = ["api", "orchestration", "evaluation", "generation", "strategies"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
+fail_under = 80
+show_missing = true
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+strict = false
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true

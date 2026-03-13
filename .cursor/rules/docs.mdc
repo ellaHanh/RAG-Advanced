@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+READMEs use consistent structure: Badges, TOC, Sections as below. Prioritize brevity, code snippets, and GitHub-flavored Markdown. Audit for accuracy post-changes.
+Provide workflow chart whenever applicable/helpful.
+
+| Section    | Purpose                 | Key Updates                         |
+| ---------- | ----------------------- | ----------------------------------- |
+| Quickstart | One-command setup       | Added venv check mbernier​          |
+| Features   | Bullet list w/ examples | Synced to current scripts linkedin​ |

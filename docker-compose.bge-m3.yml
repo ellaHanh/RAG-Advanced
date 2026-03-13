@@ -1,0 +1,20 @@
+# =============================================================================
+# Override for BGE-M3 (1024-dim) embedding backend
+# =============================================================================
+# Use with a fresh Postgres volume so init runs with schema_1024.sql.
+# Example: docker-compose -f docker-compose.yml -f docker-compose.bge-m3.yml up -d
+# If you already have postgres_data with 1536-dim schema, remove it first:
+#   docker-compose down -v
+#   docker-compose -f docker-compose.yml -f docker-compose.bge-m3.yml up -d
+# =============================================================================
+
+services:
+  postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./strategies/utils/schema_1024.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./evaluation/schema_extension.sql:/docker-entrypoint-initdb.d/02_evaluation.sql:ro
+
+  api:
+    environment:
+      EMBEDDING_BACKEND: bge-m3

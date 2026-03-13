@@ -1,0 +1,92 @@
+---
+description: PRD completeness checklist to prevent missing scaffolding/bootstrap tasks
+globs: ["**/*.md", "**/prd*", "**/*.txt"]
+alwaysApply: false
+---
+
+# PRD Completeness Checklist
+
+## Lesson Learned
+PRDs that focus only on *domain capabilities* tend to miss *bootstrap/scaffolding/glue code* that is essential for the system to actually run. Task Master and similar tools will not generate tasks for "obvious" infrastructure unless explicitly specified.
+
+## ALWAYS Include These Capabilities in PRDs:
+
+### 1. Application Bootstrap & Entrypoint
+- [ ] **Main application file** (e.g., `api/main.py` for FastAPI)
+  - App instance creation
+  - Router/route registration
+  - Lifespan manager (startup/shutdown hooks)
+  - Middleware configuration (CORS, logging, etc.)
+- [ ] **CLI/Script entrypoint** that matches `pyproject.toml` scripts section
+  - Example: `rag-advanced = "api.main:run"` requires `api/main.py:run()`
+- [ ] **Health check endpoint** (`/health` or `/healthz`)
+- [ ] **OpenAPI/Swagger docs** endpoint if API project
+
+### 2. Configuration & Environment
+- [ ] **Environment template** (`.env.example`) with ALL required variables
+- [ ] **Settings/config module** that loads from environment
+- [ ] **Configuration validation** on startup (fail fast if missing)
+- [ ] **Secrets management** approach documented
+
+### 3. Database/Infrastructure Setup
+- [ ] **Schema initialization** (migrations or setup scripts)
+- [ ] **Connection pool initialization** in app lifespan
+- [ ] **Database seeding** if required for testing/demo
+- [ ] **Redis/cache initialization** if used
+
+### 4. Developer Experience
+- [ ] **Quick start smoke test**: "server starts, health returns 200, docs load"
+- [ ] **Local development setup** instructions
+- [ ] **Test fixtures** and mock data
+- [ ] **Pre-commit hooks** configuration
+
+### 5. Deployment Contracts
+- [ ] **Dockerfile** entry command matches code
+- [ ] **docker-compose.yml** service dependencies and health checks
+- [ ] **Container startup order** (wait-for-it patterns)
+- [ ] **Volume mounts** for persistent data
+
+## PRD Section Template
+
+Add this section to PRDs:
+
+```markdown
+### Capability: Application Bootstrap & Developer Experience
+
+#### Feature: Application Entrypoint
+- **Description**: FastAPI application with proper initialization
+- **Files**: `api/main.py`
+- **Outputs**: `app` instance, `run()` function
+- **Behavior**: 
+  - Register all routers from `api/routes/`
+  - Initialize database pool in lifespan
+  - Initialize pricing provider in lifespan
+  - Expose `/health` endpoint returning 200 OK
+  - Serve OpenAPI docs at `/docs`
+
+#### Feature: Environment Configuration
+- **Description**: Environment variable template and validation
+- **Files**: `.env.example`, `config/settings.py`
+- **Behavior**: Fail fast on missing required variables
+
+#### Feature: Development Smoke Test
+- **Description**: Verify basic system functionality
+- **Acceptance Criteria**:
+  - `uvicorn api.main:app` starts without errors
+  - `curl localhost:8000/health` returns 200
+  - `localhost:8000/docs` renders OpenAPI UI
+```
+
+## When Reviewing PRDs, Ask:
+1. "Can I actually START the application with what's specified?"
+2. "Is every file referenced in pyproject.toml/Dockerfile defined?"
+3. "Is there a health check and docs endpoint?"
+4. "Is there an .env.example or config documentation?"
+5. "Can a new developer run this in 5 minutes?"
+
+## Common Gaps That Break Deployments:
+- Missing `main.py` / app entrypoint
+- Missing `.env.example` (devs don't know what vars to set)
+- Missing health endpoint (k8s probes fail)
+- Missing lifespan init (DB pools not created)
+- Dockerfile CMD doesn't match actual module path
